@@ -1,0 +1,44 @@
+image: 247on/bitbucket-pipelines
+
+pipelines:
+  branches:
+    master:
+      - step:
+          caches:
+            - composer
+            - symfony-phpunit
+            - phpcs
+          script:
+            - composer install
+            #- bin/console doctrine:database:create --env=test -q
+            #- bin/console doctrine:schema:create --env=test -q
+            - bin/phpunit install
+            - bin/phpunit
+            - vendor/bin/php-cs-fixer fix --diff --dry-run -v
+            - php -d memory_limit=4G vendor/bin/phpstan analyse src tests --level max
+            - vendor/bin/phpmd src text phpmd.xml
+            - vendor/bin/phpmd src/Entity/ text phpmd-entities.xml
+            - bin/console lint:twig templates
+            - bin/console security:check
+  pull-requests:
+    '**':
+      - step:
+          caches:
+            - composer
+            - symfony-phpunit
+            - phpcs
+          script:
+            - composer install
+            #- bin/console doctrine:database:create --env=test -q
+            #- bin/console doctrine:schema:create --env=test -q
+            - bin/phpunit install
+            - bin/phpunit
+            - vendor/bin/php-cs-fixer fix --diff --dry-run -v
+            - php -d memory_limit=4G vendor/bin/phpstan analyse src tests --level max
+            - vendor/bin/phpmd src text phpmd.xml
+            - vendor/bin/phpmd src/Entity/ text phpmd-entities.xml
+            - bin/console lint:twig templates
+definitions:
+  caches:
+    symfony-phpunit: bin/.phpunit
+    phpcs: var/phpcs
