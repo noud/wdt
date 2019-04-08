@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class PageServiceTest extends KernelTestCase
 {
-    private const VALID_NAME = 'test@test.nl';
+    private const SLUG = '/register';
 
     /**
      * @var PageService
@@ -25,7 +25,7 @@ class PageServiceTest extends KernelTestCase
     }
 
     /**
-     * Test a valid call to create a ResetPasswordRequest for a username.
+     * Test a valid call to get a page by id.
      */
     public function testGetPageById(): void
     {
@@ -33,6 +33,18 @@ class PageServiceTest extends KernelTestCase
         $page = $this->pageService->getPageById(1);
         $slug = $page->getSlug();
 
-        $this->assertSame('/register', $slug);
+        $this->assertSame(self::SLUG, $slug);
+    }
+    
+    /**
+     * Test a valid call to get a page by slug.
+     */
+    public function getPageBySlug(): void
+    {
+        /** @var \App\Entity\Page $page */
+        $page = $this->pageService->getPageBySlug(self::SLUG);
+        $id = $page->getid();
+        
+        $this->assertSame(1, $id);
     }
 }
