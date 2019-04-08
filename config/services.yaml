@@ -5,6 +5,8 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'nl'
+    mailer_default_from_email: "%env(MAILER_DEFAULT_FROM_EMAIL)%"
+    mailer_default_from_name: "%env(MAILER_DEFAULT_FROM_NAME)%"
 
 services:
     # default configuration for services in *this* file
@@ -26,3 +28,21 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Doctrine\HashPasswordListener:
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
+    App\Service\MailerService:
+        arguments:
+            - "@mailer"
+            - "@twig"
+            - "%env(MAILER_DEFAULT_FROM_EMAIL)%"
+            - "%env(MAILER_DEFAULT_FROM_NAME)%"
+            
+    # makes classes in src/DataFixtures available to be used as services
+    # and have a tag that allows actions to type-hint services
+    App\DataFixtures\:
+        resource: '../src/DataFixtures'
+        tags: ['doctrine.fixture.orm']
+            

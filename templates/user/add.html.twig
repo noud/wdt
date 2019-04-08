@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+{% trans_default_domain 'user' %}
+
+{% block navbar %}navbar-dark bg-dark border-bottom{% endblock %}
+{% block title %}{{ page.title }}{% endblock %}
+{% block body %}
+    <div class="main-content">
+        <section class="header-account-page bg-dark d-flex align-items-end" data-offset-top="#header-main">
+            <!-- Header container -->
+            <div class="container pt-4 pt-lg-0">
+                <div class="row">
+                    <div class=" col-lg-12">
+                        <div class="row align-items-center mb-4">
+                            <div class="col-md-5 mb-4 mb-md-0">
+{#                                 <span class="h2 mb-0 text-white d-block">{{ 'company.join.label.bicycle_plan'|trans }} {{ company.companyName }}</span>#}
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="btn btn-icon btn-group-nav shadow btn-neutral">
+                                <span class="btn-inner--icon"><i class="fas fa-user-plus"></i></span>
+                                <span class="btn-inner--text">{{ 'company.join.label.join_bicycle_plan'|trans }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="slice">
+            <div class="container py-5 px-md-0 d-flex align-items-center">
+                <div class="w-100">
+                    <div class="row row-grid justify-content-center justify-content-lg-between">
+                        <div class="col-12 order-lg-2">
+                            <div class="card shadow zindex-100 mb-0">
+                                <div class="card-body px-md-5 py-5">
+                                    <div class="mb-5">
+                                        <h6 class="h3">{{ 'company.join.label.join'|trans }}</h6>
+                                        <p class="text-muted mb-0">{{ 'company.join.label.join_text'|trans }}</p>
+                                    </div>
+                                    <span class="clearfix"></span>
+                                    {{ form_start(form, {'attr': {'autocomplete' : 'off'}}) }}
+
+                                    {{ form_errors(form) }}
+                                    {{ form_row(form.companyName) }}
+                                    {{ form_row(form.firstName) }}
+                                    {{ form_row(form.lastName) }}
+                                    {{ form_row(form.email) }}
+
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12">
+                                            {{ form_row(form.password) }}
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <button type="submit" class="btn btn-sm btn-primary btn-icon rounded-pill">
+                                        <span class="btn-inner--text">{{ 'user.add.field.submit_join'|trans }}</span>
+                                        <span class="btn-inner--icon"><i class="fas fa-long-arrow-alt-right"></i></span>
+                                    </button>
+                                    {{ form_end(form) }}
+                                </div>
+                                <div class="card-footer px-md-5"><small>{{ 'user.add.label.already_user'|trans }}</small>
+{#                                     <a href="{{ path('company_login', {'slug':company.slug}) }}">{{ 'user.add.label.sign_in'|trans }}</a>#}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

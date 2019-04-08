@@ -1,0 +1,10 @@
+user:
+  add:
+    field:
+      company_name: 'Bedrijfsnaam'
+      first_name: 'Voornaam'
+      last_name: 'Achternaam'
+      email: 'E-mailadres'
+      password: 'Wachtwoord'
+      password_repeat: 'Wachtwoord nogmaals'
+      submit_join: 'Account registreren'

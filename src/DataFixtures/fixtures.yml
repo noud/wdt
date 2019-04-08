@@ -1,0 +1,30 @@
+App\Entity\Page:
+    register:
+        slug: '/register'
+        title: 'Account aanmaken'
+        metaTitle: 'Create Account'
+        metaDescription: ''
+        introduction: ''
+        content: 'Hier komt tekst te staan over de werkwijze van het aanmaken van een account. Deze moet te beheren zijn.'
+    register-thanks:
+        slug: '/register-thanks'
+        title: 'Bedankt voor je registratie'
+        metaTitle: 'Thanks creating your Account'
+        metaDescription: ''
+        introduction: ''
+        content: 'Hier komt tekst te staan.'
+    register-activate:
+        slug: '/register-activate'
+        title: 'Activeer Account'
+        metaTitle: 'Activating an Account'
+        metaDescription: ''
+        introduction: ''
+        content: 'Hier komt tekst te staan.'
+    register-activate-thanks:
+        slug: '/register-activate-thanks'
+        title: 'Bedankt voor het activeren'
+        metaTitle: 'Thanks activating an Account'
+        metaDescription: ''
+        introduction: ''
+        content: 'Hier komt tekst te staan.'
+        
