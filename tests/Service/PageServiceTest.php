@@ -3,9 +3,9 @@
 namespace App\Tests\Service;
 
 use App\Service\PageService;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use App\Tests\ServiceKernelTestCase;
 
-class PageServiceTest extends KernelTestCase
+class PageServiceTest extends ServiceKernelTestCase
 {
     private const SLUG = '/register';
 
@@ -19,7 +19,7 @@ class PageServiceTest extends KernelTestCase
      */
     public function setUp()
     {
-        self::bootKernel();
+        parent::setUp();
 
         $this->pageService = self::$container->get(PageService::class);
     }
@@ -35,7 +35,7 @@ class PageServiceTest extends KernelTestCase
 
         $this->assertSame(self::SLUG, $slug);
     }
-    
+
     /**
      * Test a valid call to get a page by slug.
      */
@@ -44,7 +44,7 @@ class PageServiceTest extends KernelTestCase
         /** @var \App\Entity\Page $page */
         $page = $this->pageService->getPageBySlug(self::SLUG);
         $id = $page->getid();
-        
+
         $this->assertSame(1, $id);
     }
 }
