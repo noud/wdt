@@ -98,7 +98,7 @@ class UserController extends AbstractController
         $this->entityManager->flush();
         $this->mailSender->sendUserActivatedMessage('Gebruiker geactiveerd', $user);
 
-        return $this->redirectToRoute('user_register_thanks');
+        return $this->redirectToRoute('user_register_activate_thanks');
     }
 
     /**
