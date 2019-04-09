@@ -58,40 +58,4 @@ class UserServiceTest extends ServiceKernelTestCase
 
         $this->assertSame(self::EMAIL, $email);
     }
-
-    /**
-     * Test activating a user.
-     */
-    public function testActivate(): void
-    {
-        $data = new UserAddData();
-        $data->email = self::EMAIL;
-        $data->companyName = 'test';
-        $data->firstName = 'test';
-        $data->lastName = 'test';
-        $data->password = 'test';
-        $user = $this->userService->add($data);
-        $user = $this->userService->activate($user);
-        $status = $user->isActive();
-
-        $this->assertTrue($status);
-    }
-
-    /**
-     * Test activating a user and sending an email.
-     */
-    public function testActivateAndEmail(): void
-    {
-        $data = new UserAddData();
-        $data->email = self::EMAIL;
-        $data->companyName = 'test';
-        $data->firstName = 'test';
-        $data->lastName = 'test';
-        $data->password = 'test';
-        $user = $this->userService->add($data);
-        $user = $this->userService->activateAndEmail($user);
-        $status = $user->isActive();
-
-        $this->assertTrue($status);
-    }
 }

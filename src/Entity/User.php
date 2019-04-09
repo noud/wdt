@@ -47,12 +47,6 @@ class User implements UserInterface
     private $lastName;
 
     /**
-     * @var string
-     * @ORM\Column(type="string")
-     */
-    private $token;
-
-    /**
      * @var array
      * @ORM\Column(type="json")
      */
@@ -220,15 +214,5 @@ class User implements UserInterface
     public function setLastName(string $lastName)
     {
         $this->lastName = $lastName;
-    }
-
-    public function getToken(): string
-    {
-        return $this->token;
-    }
-
-    public function setToken(string $token)
-    {
-        $this->token = $token;
     }
 }

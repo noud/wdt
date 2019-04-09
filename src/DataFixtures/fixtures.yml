@@ -13,18 +13,4 @@ App\Entity\Page:
         metaDescription: ''
         introduction: ''
         content: 'Hier komt tekst te staan.'
-    register-activate:
-        slug: '/register-activate'
-        title: 'Activeer Account'
-        metaTitle: 'Activating an Account'
-        metaDescription: ''
-        introduction: ''
-        content: 'Hier komt tekst te staan.'
-    register-activate-thanks:
-        slug: '/register-activate-thanks'
-        title: 'Bedankt voor het activeren'
-        metaTitle: 'Thanks activating an Account'
-        metaDescription: ''
-        introduction: ''
-        content: 'Hier komt tekst te staan.'
-        
+    
