@@ -48,10 +48,7 @@ class UserAddHandler
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var \App\Form\Data\UserAddData $userData */
             $userData = $form->getData();
-            $user = $this->userService->add($userData);
-
-            $this->entityManager->flush();
-            $this->mailSender->sendUserAddedMessage('Gebruiker toegevoegd', $user);
+            $this->userService->addAndEmail($userData);
 
             return true;
         }

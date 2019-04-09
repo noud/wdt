@@ -14,17 +14,17 @@ class UserService
      * @var EntityManagerInterface
      */
     private $entityManager;
-    
+
     /**
      * @var UserRepository
      */
     private $userRepository;
-    
+
     /**
      * @var MailSender
      */
     private $mailSender;
-    
+
     public function __construct(
         EntityManagerInterface $entityManager,
         UserRepository $userRepository,
@@ -53,6 +53,18 @@ class UserService
         return $user;
     }
 
+    /**
+     * @return User
+     */
+    public function addAndEmail(UserAddData $data)
+    {
+        $user = $this->add($data);
+        $this->entityManager->flush();
+        $this->mailSender->sendUserAddedMessage('Gebruiker toegevoegd', $user);
+
+        return $user;
+    }
+
     public function activate(User $user): User
     {
         $user->setActive(true);
@@ -60,13 +72,13 @@ class UserService
 
         return $user;
     }
-    
+
     public function activateAndEmail(User $user): User
     {
         $user = $this->activate($user);
         $this->entityManager->flush();
         $this->mailSender->sendUserActivatedMessage('Gebruiker geactiveerd', $user);
-        
+
         return $user;
     }
 }
