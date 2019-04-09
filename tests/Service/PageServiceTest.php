@@ -12,7 +12,7 @@ class PageServiceTest extends ServiceKernelTestCase
     private const PAGE_SLUG = '/register';
     private const SECOND_PAGE_ID = 5;
     private const SECOND_PAGE_SLUG = '/login';
-    
+
     /**
      * @var PageService
      */
@@ -51,7 +51,7 @@ class PageServiceTest extends ServiceKernelTestCase
 
         $this->assertSame(self::PAGE_ID, $id);
     }
-    
+
     /**
      * Test a valid call to add a page.
      */
@@ -63,12 +63,13 @@ class PageServiceTest extends ServiceKernelTestCase
         $page->setTitle('something');
         $this->pageService->definePage($page);
         $this->entityManager->flush();
+        /** @var \App\Entity\Page $page */
         $page = $this->pageService->getPageBySlug(self::SECOND_PAGE_SLUG);
         $id = $page->getId();
-        
+
         $this->assertSame(self::SECOND_PAGE_ID, $id);
     }
-    
+
     /**
      * Test a valid call to remove a page.
      */
@@ -83,7 +84,7 @@ class PageServiceTest extends ServiceKernelTestCase
         $this->pageService->removePage($page);
         $this->entityManager->flush();
         $page = $this->pageService->getPageBySlug(self::SECOND_PAGE_SLUG);
-        
+
         $this->assertNull($page);
     }
 }
