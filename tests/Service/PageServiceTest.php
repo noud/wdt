@@ -2,13 +2,17 @@
 
 namespace App\Tests\Service;
 
+use App\Entity\Page;
 use App\Service\PageService;
 use App\Tests\ServiceKernelTestCase;
 
 class PageServiceTest extends ServiceKernelTestCase
 {
-    private const SLUG = '/register';
-
+    private const PAGE_ID = 1;
+    private const PAGE_SLUG = '/register';
+    private const SECOND_PAGE_ID = 5;
+    private const SECOND_PAGE_SLUG = '/login';
+    
     /**
      * @var PageService
      */
@@ -30,21 +34,56 @@ class PageServiceTest extends ServiceKernelTestCase
     public function testGetPageById(): void
     {
         /** @var \App\Entity\Page $page */
-        $page = $this->pageService->getPageById(1);
+        $page = $this->pageService->getPageById(self::PAGE_ID);
         $slug = $page->getSlug();
 
-        $this->assertSame(self::SLUG, $slug);
+        $this->assertSame(self::PAGE_SLUG, $slug);
     }
 
     /**
      * Test a valid call to get a page by slug.
      */
-    public function getPageBySlug(): void
+    public function testGetPageBySlug(): void
     {
         /** @var \App\Entity\Page $page */
-        $page = $this->pageService->getPageBySlug(self::SLUG);
-        $id = $page->getid();
+        $page = $this->pageService->getPageBySlug(self::PAGE_SLUG);
+        $id = $page->getId();
 
-        $this->assertSame(1, $id);
+        $this->assertSame(self::PAGE_ID, $id);
+    }
+    
+    /**
+     * Test a valid call to add a page.
+     */
+    public function testDefinePage(): void
+    {
+        $page = new Page();
+        $page->setSlug(self::SECOND_PAGE_SLUG);
+        $page->setContent('something');
+        $page->setTitle('something');
+        $this->pageService->definePage($page);
+        $this->entityManager->flush();
+        $page = $this->pageService->getPageBySlug(self::SECOND_PAGE_SLUG);
+        $id = $page->getId();
+        
+        $this->assertSame(self::SECOND_PAGE_ID, $id);
+    }
+    
+    /**
+     * Test a valid call to remove a page.
+     */
+    public function testRemovePage(): void
+    {
+        $page = new Page();
+        $page->setSlug(self::SECOND_PAGE_SLUG);
+        $page->setContent('something');
+        $page->setTitle('something');
+        $this->pageService->definePage($page);
+        $this->entityManager->flush();
+        $this->pageService->removePage($page);
+        $this->entityManager->flush();
+        $page = $this->pageService->getPageBySlug(self::SECOND_PAGE_SLUG);
+        
+        $this->assertNull($page);
     }
 }
