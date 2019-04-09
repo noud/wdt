@@ -118,11 +118,6 @@ class User implements UserInterface
     }
 
     /**
-     * @ORM\Entity(repositoryClass="App\Repository\BicycleDealerRepository")
-     * @UniqueEntity("emailAddress")
-     */
-
-    /**
      * @param array $roles
      */
     public function setRoles($roles): self

@@ -66,7 +66,6 @@ class UserAddType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => UserAddData::class,
-            //'data_class' => null,
             'translation_domain' => 'user',
         ]);
     }
