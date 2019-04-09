@@ -2,7 +2,6 @@
 
 namespace App\Tests\Service;
 
-use App\Entity\Page;
 use App\Service\MailerService;
 use App\Tests\ServiceKernelTestCase;
 
@@ -35,14 +34,14 @@ class MailerServiceTest extends ServiceKernelTestCase
 
         $this->assertSame(self::EMAIL_ADDRESS, $email);
     }
-    
+
     /**
      * Test getting default email name.
      */
     public function testgetDefaultFromName(): void
     {
         $email = $this->mailerService->getDefaultFromName();
-        
+
         $this->assertSame(self::EMAIL_NAME, $email);
     }
 }
