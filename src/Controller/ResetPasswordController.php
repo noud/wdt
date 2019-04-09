@@ -8,6 +8,7 @@ use App\Form\Handler\ResetPasswordHandler;
 use App\Form\Handler\ResetPasswordRequestHandler;
 use App\Form\Type\ResetPasswordRequestType;
 use App\Form\Type\ResetPasswordType;
+use App\Service\PageService;
 use App\Service\ResetPasswordRequestService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,12 +28,19 @@ class ResetPasswordController extends AbstractController
      */
     private $translator;
 
+    /**
+     * @var PageService
+     */
+    private $pageService;
+
     public function __construct(
         ResetPasswordRequestService $resetPasswordRequestService,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        PageService $pageService
     ) {
         $this->resetPasswordRequestService = $resetPasswordRequestService;
         $this->translator = $translator;
+        $this->pageService = $pageService;
     }
 
     /**
@@ -49,15 +57,18 @@ class ResetPasswordController extends AbstractController
 
         return $this->render('security/reset_password_request.html.twig', [
             'form' => $form->createView(),
+            'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
         ]);
     }
 
     /**
      * @Route("/wachtwoord-vergeten-bedankt", name="app_reset_password_request_thanks")
      */
-    public function resetPasswordRequestThanks(): Response
+    public function resetPasswordRequestThanks(Request $request): Response
     {
-        return $this->render('security/reset_password_request_thanks.html.twig', []);
+        return $this->render('security/reset_password_request_thanks.html.twig', [
+            'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
+        ]);
     }
 
     /**
@@ -87,8 +98,12 @@ class ResetPasswordController extends AbstractController
             return $result;
         }
 
+        $path = $request->getPathInfo();
+        $slug = explode('/', $path);
+
         return $this->render('security/reset_password.html.twig', [
             'form' => $form->createView(),
+            'page' => $this->pageService->getPageBySlug('/'.$slug[1]),
         ]);
     }
 }
