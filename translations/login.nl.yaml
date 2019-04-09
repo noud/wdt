@@ -1,0 +1,20 @@
+login:
+  form:
+    title: 'Inloggen'
+  label:
+    email: 'E-mailadres'
+    password: 'Wachtwoord'
+  button:
+    submit: 'Inloggen'
+    logout: 'Uitloggen'
+  messages:
+    user_not_found: 'E-mailadres en/of wachtwoord is onjuist.'
+    token_invalid: 'Token is ongeldig.'
+    data_invalid: 'Gegevens zijn ongeldig.'
+    invalid_user_class: 'Ongeldige gebruiker class %user_class%.'
+    locked: 'Uw account is tijdelijk geblokkeerd wegens 3 foutieve inlogpogingen.'
+    user_not_active: 'Dit is account is niet meer actief.'
+    not_user_company: 'Dit account is niet gekoppeld aan het betreffende bedrijf'
+2fa:
+  form:
+    title: 'Google Authenticatie'
