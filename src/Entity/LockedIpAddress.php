@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\LockedIpAddressRepository")
- * @ORM\Table(name="cms_locked_ip_address")
+ * @ORM\Table(name="locked_ip_address")
  */
 class LockedIpAddress
 {

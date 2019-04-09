@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FailedLoginAttemptRepository")
- * @ORM\Table(name="cms_failed_login_attempt")
+ * @ORM\Table(name="failed_login_attempt")
  */
 class FailedLoginAttempt
 {
