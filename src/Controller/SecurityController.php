@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\PageService;
 use App\Service\UserService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,10 +17,18 @@ class SecurityController extends AbstractController
      * @var UserService
      */
     private $userService;
-
-    public function __construct(UserService $userService)
-    {
+    
+    /**
+     * @var PageService
+     */
+    private $pageService;
+    
+    public function __construct(
+        UserService $userService,
+        PageService $pageService
+    ) {
         $this->userService = $userService;
+        $this->pageService = $pageService;
     }
 
     /**
@@ -43,6 +52,7 @@ class SecurityController extends AbstractController
             'last_username' => $lastUsername,
             'error' => $error,
             'welcomeText' => $welcomeText,
+            'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
         ]);
     }
 

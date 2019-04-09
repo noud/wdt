@@ -48,3 +48,11 @@ App\Entity\Page:
         metaDescription: ''
         introduction: ''
         content: 'Vul je nieuwe wachtwoord in.'
+    login:
+        slug: '/inloggen'
+        title: 'Inloggen'
+        metaTitle: 'Vul je e-mail adres en wachtwoord in om in te loggen'
+        metaDescription: ''
+        introduction: ''
+        content: 'Vul je e-mail adres en wachtwoord in om in te loggen.'
+        
