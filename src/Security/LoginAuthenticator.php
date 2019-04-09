@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Entity\User;
+use App\Service\LockingService;
 //use App\Service\LockingService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,9 +41,9 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
     private $csrfTokenManager;
 
     /**
-     * @ var LockingService
+     * @var LockingService
      */
-    //private $lockingService;
+    private $lockingService;
 
     /**
      * @var UserPasswordEncoderInterface
@@ -60,13 +61,13 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         CsrfTokenManagerInterface $csrfTokenManager,
-        //LockingService $lockingService,
+        LockingService $lockingService,
         UserPasswordEncoderInterface $userPasswordEncoder,
         TranslatorInterface $translator
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
-        //$this->lockingService = $lockingService;
+        $this->lockingService = $lockingService;
         $this->userPasswordEncoder = $userPasswordEncoder;
         $this->translator = $translator;
     }
@@ -83,11 +84,9 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
 
     private function isIpAddressLocked(Request $request): bool
     {
-        //$ipAddress = (string)
-        $request->getClientIp();
+        $ipAddress = (string) $request->getClientIp();
 
-        return false;
-        //return $this->lockingService->checkIsLockedIpAddress($ipAddress);
+        return $this->lockingService->checkIsLockedIpAddress($ipAddress);
     }
 
     /**
@@ -159,8 +158,8 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): RedirectResponse
     {
-        //$ipAddress = $request->getClientIp();
-        //$this->lockingService->removeFailedIp((string) $ipAddress);
+        $ipAddress = $request->getClientIp();
+        $this->lockingService->removeFailedIp((string) $ipAddress);
 
         return new RedirectResponse($this->urlGenerator->generate('app_index'));
     }
