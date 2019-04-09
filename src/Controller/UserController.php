@@ -70,4 +70,28 @@ class UserController extends AbstractController
             'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
         ]);
     }
+    
+    /**
+     * @Route("/register-activate/{token}", name="user_register_activate")
+     *
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function activate(User $user): Response
+    {
+        $user = $this->userService->activateAndEmail($user);
+        
+        return $this->redirectToRoute('user_register_activate_thanks');
+    }
+    
+    /**
+     * @Route("/register-activate-thanks", name="user_register_activate_thanks")
+     *
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function activateThanks(Request $request): Response
+    {
+        return $this->render('user/thanks.html.twig', [
+            'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
+        ]);
+    }
 }

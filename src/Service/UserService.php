@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Form\Data\UserAddData;
+use App\Mailer\MailSender;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -18,13 +19,20 @@ class UserService
      * @var UserRepository
      */
     private $userRepository;
-
+    
+    /**
+     * @var MailSender
+     */
+    private $mailSender;
+    
     public function __construct(
         EntityManagerInterface $entityManager,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        MailSender $mailSender
     ) {
         $this->entityManager = $entityManager;
         $this->userRepository = $userRepository;
+        $this->mailSender = $mailSender;
     }
 
     /**
@@ -38,6 +46,7 @@ class UserService
         $user->setFirstName($data->firstName);
         $user->setLastName($data->lastName);
         $user->setPlainPassword($data->password);
+        $user->setToken(uniqid('', true));
 
         $this->userRepository->add($user);
 
@@ -51,7 +60,25 @@ class UserService
     {
         $user = $this->add($data);
         $this->entityManager->flush();
-
+        $this->mailSender->sendUserAddedMessage('Gebruiker toegevoegd', $user);
+        
+        return $user;
+    }
+    
+    public function activate(User $user): User
+    {
+        $user->setActive(true);
+        $user->setToken('');
+        
+        return $user;
+    }
+    
+    public function activateAndEmail(User $user): User
+    {
+        $user = $this->activate($user);
+        $this->entityManager->flush();
+        $this->mailSender->sendUserActivatedMessage('Gebruiker geactiveerd', $user);
+        
         return $user;
     }
 }
