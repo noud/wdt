@@ -70,7 +70,7 @@ class UserController extends AbstractController
             'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
         ]);
     }
-    
+
     /**
      * @Route("/register-activate/{token}", name="user_register_activate")
      *
@@ -79,10 +79,10 @@ class UserController extends AbstractController
     public function activate(User $user): Response
     {
         $user = $this->userService->activateAndEmail($user);
-        
+
         return $this->redirectToRoute('user_register_activate_thanks');
     }
-    
+
     /**
      * @Route("/register-activate-thanks", name="user_register_activate_thanks")
      *

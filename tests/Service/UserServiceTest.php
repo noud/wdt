@@ -58,7 +58,7 @@ class UserServiceTest extends ServiceKernelTestCase
 
         $this->assertSame(self::EMAIL, $email);
     }
-    
+
     /**
      * Test activating a user.
      */
@@ -73,10 +73,10 @@ class UserServiceTest extends ServiceKernelTestCase
         $user = $this->userService->add($data);
         $user = $this->userService->activate($user);
         $status = $user->isActive();
-        
+
         $this->assertTrue($status);
     }
-    
+
     /**
      * Test activating a user and sending an email.
      */
@@ -91,7 +91,7 @@ class UserServiceTest extends ServiceKernelTestCase
         $user = $this->userService->add($data);
         $user = $this->userService->activateAndEmail($user);
         $status = $user->isActive();
-        
+
         $this->assertTrue($status);
     }
 }
