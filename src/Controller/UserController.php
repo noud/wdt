@@ -21,19 +21,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
      * @var UserService
      */
     private $userService;
-
-    /**
-     * @var MailSender
-     */
-    private $mailSender;
 
     /**
      * @var PageService
@@ -44,14 +34,10 @@ class UserController extends AbstractController
      * JoinHandler constructor.
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
         UserService $userService,
-        MailSender $mailSender,
         PageService $pageService
     ) {
-        $this->entityManager = $entityManager;
         $this->userService = $userService;
-        $this->mailSender = $mailSender;
         $this->pageService = $pageService;
     }
 
@@ -94,9 +80,7 @@ class UserController extends AbstractController
      */
     public function activate(User $user): Response
     {
-        $user = $this->userService->activate($user);
-        $this->entityManager->flush();
-        $this->mailSender->sendUserActivatedMessage('Gebruiker geactiveerd', $user);
+        $user = $this->userService->activateAndEmail($user);
 
         return $this->redirectToRoute('user_register_activate_thanks');
     }
