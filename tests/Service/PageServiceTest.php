@@ -10,7 +10,7 @@ class PageServiceTest extends ServiceKernelTestCase
 {
     private const PAGE_ID = 1;
     private const PAGE_SLUG = '/register';
-    private const SECOND_PAGE_ID = 8;
+    private const SECOND_PAGE_ID = 9;
     private const SECOND_PAGE_SLUG = '/login';
 
     /**
