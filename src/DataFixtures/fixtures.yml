@@ -27,4 +27,32 @@ App\Entity\Page:
         metaDescription: ''
         introduction: ''
         content: 'Hier komt tekst te staan.'
+    reset-password-request:
+        slug: '/wachtwoord-vergeten'
+        title: 'Wachtwoord vergeten'
+        metaTitle: 'Vul je e-mail adres in om je wachtwoord te herstellen.'
+        metaDescription: ''
+        introduction: ''
+        content: 'Vul je e-mail adres in om je wachtwoord te herstellen.'
+    reset-password-request-thanks:
+        slug: '/wachtwoord-vergeten-bedankt'
+        title: 'Wachtwoord vergeten link gestuurd'
+        metaTitle: 'Password reset link sent.'
+        metaDescription: ''
+        introduction: ''
+        content: 'Hier komt tekst te staan.'
+    reset-password:
+        slug: '/wachtwoord-herstellen'
+        title: 'Wachtwoord herstellen'
+        metaTitle: 'Vul je nieuwe wachtwoord in'
+        metaDescription: ''
+        introduction: ''
+        content: 'Vul je nieuwe wachtwoord in.'
+    login:
+        slug: '/inloggen'
+        title: 'Inloggen'
+        metaTitle: 'Vul je e-mail adres en wachtwoord in om in te loggen'
+        metaDescription: ''
+        introduction: ''
+        content: 'Vul je e-mail adres en wachtwoord in om in te loggen.'
         

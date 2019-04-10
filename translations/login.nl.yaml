@@ -1,0 +1,17 @@
+login:
+  form:
+    title: 'Inloggen'
+  label:
+    email: 'E-mailadres'
+    password: 'Wachtwoord'
+  button:
+    submit: 'Inloggen'
+    logout: 'Uitloggen'
+  messages:
+    user_not_found: 'E-mailadres en/of wachtwoord is onjuist.'
+    token_invalid: 'Token is ongeldig.'
+    data_invalid: 'Gegevens zijn ongeldig.'
+    invalid_user_class: 'Ongeldige gebruiker class %user_class%.'
+    locked: 'Uw account is tijdelijk geblokkeerd wegens 3 foutieve inlogpogingen.'
+    user_not_active: 'Dit is account is niet meer actief.'
+    user_not_in_backend: 'Dit is account is niet actief in de back-end'
