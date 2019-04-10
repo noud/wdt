@@ -16,6 +16,6 @@ class DefaultController extends AbstractController
      */
     public function add(): Response
     {
-        return new Response('<html><body>'.'Welcome!'.'</body></html>');
+        return $this->render('index.html.twig');
     }
 }

@@ -236,4 +236,9 @@ class User implements UserInterface
     {
         $this->token = $token;
     }
+
+    public function getFullName(): string
+    {
+        return trim($this->firstName.' '.$this->lastName);
+    }
 }
