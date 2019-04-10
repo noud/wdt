@@ -47,13 +47,9 @@ class SecurityController extends AbstractController
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        $welcomeText = 'Door aan de rechterzijde van het scherm in te loggen krijg je toegang.';
-        dump($request->getPathInfo());
-
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
-            'welcomeText' => $welcomeText,
             'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
         ]);
     }
