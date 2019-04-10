@@ -7,6 +7,15 @@ parameters:
     locale: 'nl'
     mailer_default_from_email: "%env(MAILER_DEFAULT_FROM_EMAIL)%"
     mailer_default_from_name: "%env(MAILER_DEFAULT_FROM_NAME)%"
+    zoho.client_id: '1000.IDE5U5CS77V948467WHXY67CFUBGZR'
+    zoho.client_secret: "d09e27dccb51dc003ee6c7f7ab5eb7793bc03e738d"
+    zoho.redirect_uri: 'http://webdesigntilburg.nl'
+    zoho.currentUserEmail: 'noud@webdesigntilburg.nl' # @TODO should be from logged in user
+    zoho.log_path: '%kernel.project_dir%/var/zoho'
+    zoho.api_base_url: "www.zohoapis.eu"
+    zoho.accounts_url: "https://accounts.zoho.eu"
+    zoho.grantToken: '1000.0f0764a8e73cb0afd0f47c0b7323b656.a2f4e8ee5d0fe4b30f79f9af49f12ea1'
+    zoho.refreshToken: 'xx'
 
 services:
     # default configuration for services in *this* file
@@ -45,4 +54,15 @@ services:
     App\DataFixtures\:
         resource: '../src/DataFixtures'
         tags: ['doctrine.fixture.orm']
-            
+
+    App\Service\Zoho\ContactsService:
+         arguments:
+            - '%zoho.client_id%'
+            - '%zoho.client_secret%'
+            - '%zoho.redirect_uri%'
+            - '%zoho.currentUserEmail%'
+            - '%zoho.log_path%'
+            - '%zoho.api_base_url%'
+            - '%zoho.accounts_url'
+            - '%zoho.grantToken%'
+            - '%zoho.refreshToken%'

@@ -4,7 +4,7 @@ namespace App\Security;
 
 use App\Entity\User;
 use App\Service\LockingService;
-//use App\Service\LockingService;
+use App\Service\Zoho\ContactsService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -56,6 +56,11 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
     private $translator;
 
     /**
+     * @var ContactsService
+     */
+    private $contactsService;
+
+    /**
      * LoginAuthenticator constructor.
      */
     public function __construct(
@@ -63,13 +68,15 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
         CsrfTokenManagerInterface $csrfTokenManager,
         LockingService $lockingService,
         UserPasswordEncoderInterface $userPasswordEncoder,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        ContactsService $contactsService
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->lockingService = $lockingService;
         $this->userPasswordEncoder = $userPasswordEncoder;
         $this->translator = $translator;
+        $this->contactsService = $contactsService;
     }
 
     /**
@@ -136,6 +143,12 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
 
         if (!$user->isActive()) {
             throw new CustomUserMessageAuthenticationException($this->translator->trans('login.messages.user_not_active', [], 'login'));
+        }
+
+        /** @var string $email */
+        $email = $user->getEmail();
+        if (!$this->contactsService->hasAccessToPortal($email)) {
+            throw new CustomUserMessageAuthenticationException($this->translator->trans('login.messages.user_not_in_backend', [], 'login'));
         }
 
         return $user;
