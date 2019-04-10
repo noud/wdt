@@ -85,6 +85,7 @@ class Webservice
             try {
                 $filesystem->mkdir($this->logPath);
                 $filesystem->touch($tokenPersistenceFile);
+                $filesystem->touch($this->logPath.'/ZCRMClientLibrary.log');
                 $tokenPersistenceFileCreated = true;
             } catch (IOExceptionInterface $exception) {
                 echo 'An error occurred while creating your file at '.$exception->getPath();
@@ -107,18 +108,19 @@ class Webservice
             'currentUserEmail' => $this->currentUserEmail,
             'token_persistence_path' => $this->logPath,    // zcrm_oauthtokens.txt
             'apiBaseUrl' => $this->apiBaseUrl,
-            'accountsUrl' => $this->accountsUrl,
+            'accounts_url' => $this->accountsUrl,
             'applicationLogFilePath' => $this->logPath,
         ];
 
         \ZCRMRestClient::initialize($configuration);
     }
 
-    public function generateAccessToken()
+    public function generateAccessToken(string $grantToken = null)
     {
+        // SCOPE = aaaserver.profile.ALL,ZohoCRM.modules.ALL
         $this->init();
         $oAuthClient = \ZohoOAuth::getClientInstance();
-        $oAuthClient->generateAccessToken($this->grantToken);
+        $oAuthClient->generateAccessToken($grantToken ?: $this->grantToken);
     }
 
     public function generateAccessTokenFromRefreshToken()

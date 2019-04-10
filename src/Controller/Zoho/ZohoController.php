@@ -23,12 +23,24 @@ class ZohoController extends AbstractController
     /**
      * @Route("/zoho-has-access-to-portal/{email}", name="zoho_has_access_to_portal")
      */
-    public function allContacts(string $email): Response
+    public function hasAccessToPortal(string $email): Response
     {
         $access = $this->contactsService->hasAccessToPortal($email);
 
         return new Response(
             '<html><body>'.$access.'</body></html>'
+        );
+    }
+
+    /**
+     * @Route("/generate-access-token/{grantToken}", name="zoho_generate_access_token")
+     */
+    public function generateAccessToken(string $grantToken)
+    {
+        $this->contactsService->generateAccessToken($grantToken);
+
+        return new Response(
+            '<html><body>Grant Token gegenereerd.</body></html>'
         );
     }
 }

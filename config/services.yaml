@@ -14,7 +14,7 @@ parameters:
     zoho.log_path: '%kernel.project_dir%/var/zoho'
     zoho.api_base_url: "www.zohoapis.eu"
     zoho.accounts_url: "https://accounts.zoho.eu"
-    zoho.grantToken: '1000.0f0764a8e73cb0afd0f47c0b7323b656.a2f4e8ee5d0fe4b30f79f9af49f12ea1'
+    zoho.grantToken: '1000.685010abd89af24585937d6b03557c14.e74f61a76a188023fe89e84d89648960'
     zoho.refreshToken: 'xx'
 
 services:
@@ -63,6 +63,6 @@ services:
             - '%zoho.currentUserEmail%'
             - '%zoho.log_path%'
             - '%zoho.api_base_url%'
-            - '%zoho.accounts_url'
+            - '%zoho.accounts_url%'
             - '%zoho.grantToken%'
             - '%zoho.refreshToken%'
