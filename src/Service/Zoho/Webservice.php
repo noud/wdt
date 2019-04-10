@@ -119,8 +119,9 @@ class Webservice
     {
         // SCOPE = aaaserver.profile.ALL,ZohoCRM.modules.ALL
         $this->init();
+        $this->grantToken = $grantToken ?: $this->grantToken;
         $oAuthClient = \ZohoOAuth::getClientInstance();
-        $oAuthClient->generateAccessToken($grantToken ?: $this->grantToken);
+        $oAuthClient->generateAccessToken($this->grantToken);
     }
 
     public function generateAccessTokenFromRefreshToken()
