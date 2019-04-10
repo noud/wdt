@@ -35,4 +35,22 @@ $(document).ready(function() {
 			$('button[name=submit]').prop("disabled", true);
 		}
 	});
+	
+	$('#reset_password_plainPassword_first').password(options);
+	$('#reset_password_plainPassword_second').password(options);
+	
+	$('#reset_password_plainPassword_first').on('password.score', (e, score) => {
+		if (score > 35) {
+			$('button[name=submit]').prop("disabled", false);
+		} else {
+			$('button[name=submit]').prop("disabled", true);
+		}
+	});
+	$('#reset_password_plainPassword_second').on('password.score', (e, score) => {
+		if (score > 35) {
+			$('button[name=submit]').prop("disabled", false);
+		} else {
+			$('button[name=submit]').prop("disabled", true);
+		}
+	});
 });
