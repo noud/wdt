@@ -145,9 +145,7 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
             throw new CustomUserMessageAuthenticationException($this->translator->trans('login.messages.user_not_active', [], 'login'));
         }
 
-        /** @var string $email */
-        $email = $user->getEmail();
-        if (!$this->contactsService->hasAccessToPortal($email)) {
+        if (!$this->contactsService->hasAccessToPortal($user)) {
             throw new CustomUserMessageAuthenticationException($this->translator->trans('login.messages.user_not_in_backend', [], 'login'));
         }
 

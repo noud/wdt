@@ -2,6 +2,7 @@
 
 namespace App\Controller\Zoho;
 
+use App\Entity\User;
 use App\Service\Zoho\ContactsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,9 +24,9 @@ class ZohoController extends AbstractController
     /**
      * @Route("/zoho-has-access-to-portal/{email}", name="zoho_has_access_to_portal")
      */
-    public function hasAccessToPortal(string $email): Response
+    public function hasAccessToPortal(User $user): Response
     {
-        $access = $this->contactsService->hasAccessToPortal($email);
+        $access = $this->contactsService->hasAccessToPortal($user);
 
         return new Response(
             '<html><body>'.$access.'</body></html>'
