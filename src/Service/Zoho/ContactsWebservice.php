@@ -4,7 +4,7 @@ namespace App\Service\Zoho;
 
 use App\Entity\User;
 
-class ContactsService extends Webservice
+class ContactsWebservice extends Webservice
 {
     public function hasAccessToPortal(User $user)
     {

@@ -55,7 +55,7 @@ services:
         resource: '../src/DataFixtures'
         tags: ['doctrine.fixture.orm']
 
-    App\Service\Zoho\ContactsService:
+    App\Service\Zoho\ContactsWebservice:
          arguments:
             - '%zoho_crm_client_id%'
             - '%zoho_crm_client_secret%'

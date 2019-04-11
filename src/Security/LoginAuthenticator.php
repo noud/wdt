@@ -4,7 +4,7 @@ namespace App\Security;
 
 use App\Entity\User;
 use App\Service\LockingService;
-use App\Service\Zoho\ContactsService;
+use App\Service\Zoho\ContactsWebservice;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -56,9 +56,9 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
     private $translator;
 
     /**
-     * @var ContactsService
+     * @var ContactsWebservice
      */
-    private $contactsService;
+    private $contactsWebservice;
 
     /**
      * LoginAuthenticator constructor.
@@ -69,14 +69,14 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
         LockingService $lockingService,
         UserPasswordEncoderInterface $userPasswordEncoder,
         TranslatorInterface $translator,
-        ContactsService $contactsService
+        ContactsWebservice $contactsWebservice
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->lockingService = $lockingService;
         $this->userPasswordEncoder = $userPasswordEncoder;
         $this->translator = $translator;
-        $this->contactsService = $contactsService;
+        $this->contactsWebservice = $contactsWebservice;
     }
 
     /**
@@ -145,7 +145,7 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
             throw new CustomUserMessageAuthenticationException($this->translator->trans('login.messages.user_not_active', [], 'login'));
         }
 
-        if (!$this->contactsService->hasAccessToPortal($user)) {
+        if (!$this->contactsWebservice->hasAccessToPortal($user)) {
             throw new CustomUserMessageAuthenticationException($this->translator->trans('login.messages.user_not_in_backend', [], 'login'));
         }
 
