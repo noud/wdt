@@ -50,7 +50,7 @@ class User implements UserInterface
      * @var array
      * @ORM\Column(type="json")
      */
-    private $roles;
+    private $roles = ["ROLE_USER"];
 
     /**
      * @var string|null
