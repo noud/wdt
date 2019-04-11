@@ -32,10 +32,3 @@ services:
     App\Doctrine\HashPasswordListener:
         tags:
             - { name: doctrine.event_subscriber, connection: default }
-            
-    # makes classes in src/DataFixtures available to be used as services
-    # and have a tag that allows actions to type-hint services
-    App\DataFixtures\:
-        resource: '../src/DataFixtures'
-        tags: ['doctrine.fixture.orm']
-            
