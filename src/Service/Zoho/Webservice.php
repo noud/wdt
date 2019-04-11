@@ -5,7 +5,7 @@ namespace App\Service\Zoho;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-class Webservice
+abstract class Webservice
 {
     /**
      * @var string
