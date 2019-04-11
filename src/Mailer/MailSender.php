@@ -13,11 +13,11 @@ class MailSender
     private $mailerService;
 
     /**
-     * ContactSender constructor.
+     * MailSender constructor.
      */
     public function __construct(
         MailerService $mailerService
-        ) {
+    ) {
         $this->mailerService = $mailerService;
     }
 
