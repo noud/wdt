@@ -40,7 +40,7 @@ class PageRepository extends ServiceEntityRepository
     /**
      * Add a new page.
      */
-    public function add(Page $page): void
+    public function add(Page $page)
     {
         $this->getEntityManager()->persist($page);
     }

@@ -27,10 +27,7 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
-    /**
-     * @return User
-     */
-    public function add(UserAddData $data)
+    public function add(UserAddData $data): User
     {
         $user = new User();
         $user->setEmail($data->email);
@@ -44,10 +41,7 @@ class UserService
         return $user;
     }
 
-    /**
-     * @return User
-     */
-    public function addAndEmail(UserAddData $data)
+    public function addAndEmail(UserAddData $data): User
     {
         $user = $this->add($data);
         $this->entityManager->flush();
