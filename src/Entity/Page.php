@@ -140,11 +140,11 @@ class Page
         /** @var string|null $introduction */
         $introduction = $this->getIntroduction();
 
-        return !(null === $introduction || 0 === mb_strlen(trim($introduction)));
+        return $introduction && '' !== trim($introduction);
     }
 
     public function __toString(): string
     {
-        return (string) $this->getTitle();
+        return $this->getTitle();
     }
 }
