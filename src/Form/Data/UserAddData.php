@@ -6,12 +6,13 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ UniqueEntity("email")
+ * @UniqueEntity("email")
  */
 class UserAddData
 {
     /**
      * @var string
+     * @Assert\NotBlank()
      * @Assert\Email()
      */
     public $email;
