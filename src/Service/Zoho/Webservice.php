@@ -92,8 +92,6 @@ abstract class Webservice
                 throw new IOException('An error occurred while creating your file at '.$exception->getPath());
             }
         }
-        // sometimes i need
-        // /var/www/klantportaal/vendor/zohocrm/php-sdk/src/com/zoho/oauth/common/../logger/OAuth.log
 
         $this->init();
 
