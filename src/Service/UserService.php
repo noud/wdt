@@ -85,7 +85,7 @@ class UserService
     {
         $user = $this->activate($user);
         $this->entityManager->flush();
-        $this->mailSender->sendUserActivatedMessage('Gebruiker geactiveerd', $user);
+        $this->mailSender->sendUserActivatedMessage('Je account is geactiveerd', $user);
 
         return $user;
     }

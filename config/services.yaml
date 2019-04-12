@@ -37,6 +37,6 @@ services:
         arguments:
             - "@mailer"
             - "@twig"
-            - "%env(MAILER_DEFAULT_FROM_EMAIL)%"
-            - "%env(MAILER_DEFAULT_FROM_NAME)%"
+            - "%mailer_default_from_email%"
+            - "%mailer_default_from_name%"
             
