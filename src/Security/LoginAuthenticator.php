@@ -56,7 +56,7 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
         UrlGeneratorInterface $urlGenerator,
         CsrfTokenManagerInterface $csrfTokenManager,
         LockingService $lockingService,
-        UserPasswordEncoderInterface $userPasswordEncoder,
+        UserPasswordEncoderInterface $userPasswordEncoder
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
