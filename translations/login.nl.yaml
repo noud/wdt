@@ -9,8 +9,4 @@ login:
     logout: 'Uitloggen'
   messages:
     data_invalid: 'Gegevens zijn ongeldig.'
-<<<<<<< HEAD
     invalid_user_class: 'Ongeldige gebruiker class %user_class%.'
-=======
-    invalid_user_class: 'Ongeldige gebruiker class %user_class%.'
->>>>>>> a20a7a599f1161152e7f6b26b9fddb0b56e688cb
