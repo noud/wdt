@@ -67,7 +67,7 @@ class User implements UserInterface
     /**
      * A non-persisted field that's used to create the encoded password.
      *
-     * @var string
+     * @var ?string
      */
     private $plainPassword;
 
@@ -88,10 +88,7 @@ class User implements UserInterface
         return $this->email;
     }
 
-    /**
-     * @param string $email
-     */
-    public function setEmail($email): self
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -117,10 +114,7 @@ class User implements UserInterface
         return array_unique($roles);
     }
 
-    /**
-     * @param array $roles
-     */
-    public function setRoles($roles): self
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
 
@@ -135,28 +129,19 @@ class User implements UserInterface
         return (string) $this->password;
     }
 
-    /**
-     * @param string $password
-     */
-    public function setPassword($password): self
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getPlainPassword()
+    public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
 
-    /**
-     * @param string $plainPassword
-     */
-    public function setPlainPassword($plainPassword)
+    public function setPlainPassword(string $plainPassword)
     {
         $this->plainPassword = $plainPassword;
         // forces the object to look "dirty" to Doctrine. Avoids
@@ -179,7 +164,7 @@ class User implements UserInterface
     public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->plainPassword = null;
     }
 
     public function isActive(): bool

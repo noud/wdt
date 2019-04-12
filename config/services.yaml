@@ -39,4 +39,3 @@ services:
             - "@twig"
             - "%mailer_default_from_email%"
             - "%mailer_default_from_name%"
-            
