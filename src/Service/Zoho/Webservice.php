@@ -46,12 +46,12 @@ abstract class Webservice
     /**
      * @var string
      */
-    private $grantToken;
+    protected $grantToken;
 
     /**
      * @var string
      */
-    private $refreshToken;
+    protected $refreshToken;
 
     /**
      * Webservice constructor.
@@ -120,7 +120,7 @@ abstract class Webservice
 
     public function generateAccessToken(string $grantToken = null)
     {
-        // SCOPE = aaaserver.profile.ALL,ZohoCRM.modules.ALL
+        // SCOPE = aaaserver.profile.ALL,ZohoCRM.modules.ALL,ZohoBooks.fullaccess.all
         $this->init();
         $this->grantToken = $grantToken ?: $this->grantToken;
         $oAuthClient = \ZohoOAuth::getClientInstance();

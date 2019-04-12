@@ -16,6 +16,7 @@ parameters:
     zoho_crm_accounts_url: "%env(ZOHO_CRM_ACCOUNTS_URL)%"
     zoho_crm_grantToken: "%env(ZOHO_CRM_GRANT_TOKEN)%"
     zoho_crm_refreshToken: 'xx'
+    zoho_books_organization_id: "%env(ZOHO_BOOKS_ORGANIZATION_ID)%"
 
 services:
     # default configuration for services in *this* file
@@ -56,6 +57,18 @@ services:
         tags: ['doctrine.fixture.orm']
 
     App\Service\Zoho\ContactsWebservice:
+         arguments:
+            - '%zoho_crm_client_id%'
+            - '%zoho_crm_client_secret%'
+            - '%zoho_crm_redirect_uri%'
+            - '%zoho_crm_currentUserEmail%'
+            - '%zoho_crm_log_path%'
+            - '%zoho_crm_api_base_url%'
+            - '%zoho_crm_accounts_url%'
+            - '%zoho_crm_grantToken%'
+            - '%zoho_crm_refreshToken%'
+
+    App\Service\Zoho\BooksWebservice:
          arguments:
             - '%zoho_crm_client_id%'
             - '%zoho_crm_client_secret%'

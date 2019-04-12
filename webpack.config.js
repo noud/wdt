@@ -40,8 +40,6 @@ Encore
     .enableVersioning()
     .enableLessLoader()
     .addPlugin(new CopyWebpackPlugin([
-        {from: './assets/static'},
-        {from: './assets/img', to: '../img'}
     ]))
     .autoProvideVariables({
         $: 'jquery',
