@@ -80,7 +80,7 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
     {
         $route = $request->attributes->get('_route');
 
-        return \in_array($route, ['app_login'], true) && $request->isMethod('POST');
+        return 'app_login' === $route && $request->isMethod('POST');
     }
 
     private function isIpAddressLocked(Request $request): bool

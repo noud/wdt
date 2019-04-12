@@ -46,8 +46,8 @@ services:
         arguments:
             - "@mailer"
             - "@twig"
-            - "%env(MAILER_DEFAULT_FROM_EMAIL)%"
-            - "%env(MAILER_DEFAULT_FROM_NAME)%"
+            - "%mailer_default_from_email%"
+            - "%mailer_default_from_name%"
             
     # makes classes in src/DataFixtures available to be used as services
     # and have a tag that allows actions to type-hint services
