@@ -97,7 +97,7 @@ class ZohoController extends AbstractController
         }
 
         return new Response(
-            '<html><body>Contacts: '.$result->code.' '.$result->message.'<br />'.$invoicesInfo.'</body></html>'
+            '<html><body>Invoices: '.$result->code.' '.$result->message.'<br />'.$invoicesInfo.'</body></html>'
         );
     }
 }
