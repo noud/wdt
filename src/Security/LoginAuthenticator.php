@@ -18,7 +18,6 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 use Symfony\Component\Security\Guard\AuthenticatorInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @SuppressWarnings("PMD.CouplingBetweenObjects")
@@ -43,23 +42,16 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
     private $userPasswordEncoder;
 
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * LoginAuthenticator constructor.
      */
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         CsrfTokenManagerInterface $csrfTokenManager,
-        UserPasswordEncoderInterface $userPasswordEncoder,
-        TranslatorInterface $translator
+        UserPasswordEncoderInterface $userPasswordEncoder
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->userPasswordEncoder = $userPasswordEncoder;
-        $this->translator = $translator;
     }
 
     /**
@@ -100,7 +92,7 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
     {
         $token = new CsrfToken('authenticate', $credentials['csrf_token']);
         if (!$this->csrfTokenManager->isTokenValid($token)) {
-            throw new InvalidCsrfTokenException($this->translator->trans('login.messages.token_invalid', [], 'login'));
+            throw new InvalidCsrfTokenException();
         }
 
         // Load / create our user however you need.
@@ -109,11 +101,11 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
         $user = $userProvider->loadUserByUsername($credentials['email']);
 
         if (!$user instanceof User) {
-            throw new CustomUserMessageAuthenticationException($this->translator->trans('login.messages.user_not_found', [], 'login'));
+            throw new UsernameNotFoundException();
         }
 
         if (!$user->isActive()) {
-            throw new CustomUserMessageAuthenticationException($this->translator->trans('login.messages.user_not_active', [], 'login'));
+            throw new CustomUserMessageAuthenticationException('login.messages.user_not_active');
         }
 
         return $user;
@@ -125,7 +117,7 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
     public function checkCredentials($credentials, UserInterface $user): bool
     {
         if (!$this->userPasswordEncoder->isPasswordValid($user, $credentials['password'])) {
-            throw new CustomUserMessageAuthenticationException($this->translator->trans('login.messages.data_invalid', [], 'login'));
+            throw new BadCredentialsException();
         }
 
         return true;
