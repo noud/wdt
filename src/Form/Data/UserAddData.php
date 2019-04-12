@@ -19,16 +19,19 @@ class UserAddData
 
     /**
      * @var string
+     * @Assert\NotBlank()
      */
     public $companyName;
 
     /**
      * @var string
+     * @Assert\NotBlank()
      */
     public $firstName;
 
     /**
      * @var string
+     * @Assert\NotBlank()
      */
     public $lastName;
 
