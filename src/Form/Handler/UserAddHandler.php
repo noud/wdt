@@ -2,40 +2,24 @@
 
 namespace App\Form\Handler;
 
-use App\Mailer\MailSender;
 use App\Service\UserService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserAddHandler
 {
     /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
      * @var UserService
      */
     private $userService;
 
     /**
-     * @var MailSender
-     */
-    private $mailSender;
-
-    /**
-     * JoinHandler constructor.
+     * UserAddHandler constructor.
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
-        UserService $userService,
-        MailSender $mailSender
+        UserService $userService
     ) {
-        $this->entityManager = $entityManager;
         $this->userService = $userService;
-        $this->mailSender = $mailSender;
     }
 
     /**

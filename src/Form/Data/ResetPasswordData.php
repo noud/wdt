@@ -12,7 +12,7 @@ class ResetPasswordData
      * @var string
      * @Assert\Length(
      *      min = 6,
-     *      minMessage = "Wachtwoord moet minstens {{ limit }} characters lang zijn.",
+     *      minMessage = "password_length",
      * )
      * @Assert\NotBlank
      */

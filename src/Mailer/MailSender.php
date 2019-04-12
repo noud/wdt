@@ -13,11 +13,11 @@ class MailSender
     private $mailerService;
 
     /**
-     * ContactSender constructor.
+     * MailSender constructor.
      */
     public function __construct(
         MailerService $mailerService
-        ) {
+    ) {
         $this->mailerService = $mailerService;
     }
 
@@ -35,7 +35,7 @@ class MailSender
                     'user' => $user,
                 ]
             ),
-        'text/plain'
+            'text/plain'
         );
 
         $message->addTo($this->mailerService->getDefaultFromEmail());
@@ -58,7 +58,7 @@ class MailSender
                     'user' => $user,
                 ]
             ),
-        'text/plain'
+            'text/plain'
         );
 
         /** @var string $email */

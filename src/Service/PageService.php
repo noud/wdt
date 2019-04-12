@@ -27,9 +27,9 @@ class PageService
         return $this->pageRepository->getBySlug($slug);
     }
 
-    public function definePage(Page $page)
+    public function definePage(Page $page): void
     {
-        return $this->pageRepository->add($page);
+        $this->pageRepository->add($page);
     }
 
     public function removePage(Page $page): void

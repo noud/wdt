@@ -39,10 +39,7 @@ Encore
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning()
     .enableLessLoader()
-    .addPlugin(new CopyWebpackPlugin([
-        {from: './assets/static'},
-        {from: './assets/img', to: '../img'}
-    ]))
+    .addPlugin(new CopyWebpackPlugin())
     .autoProvideVariables({
         $: 'jquery',
         jQuery: 'jquery',
