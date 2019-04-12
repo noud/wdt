@@ -23,7 +23,7 @@ class PageFixtures extends Fixture
         $page->setMetaTitle('Thanks creating your Account');
         $page->setContent('Hier komt tekst te staan.');
         $manager->persist($page);
-        
+
         $manager->flush();
     }
 }
