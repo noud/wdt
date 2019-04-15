@@ -22,8 +22,10 @@ class ZohoController extends AbstractController
     private $booksWebservice;
 
     public function __construct(
-        ContactsWebservice $contactsWebservice,
-        BooksWebservice $booksWebservice
+//         ContactsWebservice $contactsWebservice,
+//         BooksWebservice $booksWebservice
+        ZohoCrmApiService $contactsWebservice,
+        ZohoBooksApiService $booksWebservice
     ) {
         $this->contactsWebservice = $contactsWebservice;
         $this->booksWebservice = $booksWebservice;
