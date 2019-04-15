@@ -24,7 +24,8 @@ class BooksWebservice extends Webservice
         string $accountsUrl,
         string $grantToken,
         string $refreshToken
-    ) {
+    )
+    {
         parent::__construct(
             $clientId,
             $clientSecret,
@@ -42,11 +43,15 @@ class BooksWebservice extends Webservice
     private function getAccessToken(): void
     {
         $file = $this->logPath . '/zcrm_oauthtokens.txt';
-        $fileContent = file_get_contents($file);
-        $fileArray = unserialize($fileContent);
-        $this->accessToken = $fileArray[0]->getAccessToken();
+        if (file_exists($file)) {
+            $fileContent = file_get_contents($file);
+            $fileArray = unserialize($fileContent);
+            if ($fileArray) {
+                $this->accessToken = $fileArray[0]->getAccessToken();
+            }
+        }
     }
-    
+
     private function getRequest(string $url)
     {
         /** @var resource $ch */
@@ -57,7 +62,7 @@ class BooksWebservice extends Webservice
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/x-www-form-urlencoded;charset=UTF-8',
-            'Authorization: Zoho-oauthtoken '.$this->accessToken,
+            'Authorization: Zoho-oauthtoken ' . $this->accessToken,
         ]);
         /** @var string $result */
         $result = curl_exec($ch);
@@ -75,7 +80,7 @@ class BooksWebservice extends Webservice
 
     public function getOrganizations()
     {
-        $url = $this->urlBase.'organizations';
+        $url = $this->urlBase . 'organizations';
 
         return $this->getRequest($url);
     }
@@ -90,7 +95,7 @@ class BooksWebservice extends Webservice
     public function getContacts()
     {
         $this->organizationId = $this->getOrganizationId();
-        $url = $this->urlBase.'contacts?organization_id='.$this->organizationId;
+        $url = $this->urlBase . 'contacts?organization_id=' . $this->organizationId;
 
         return $this->getRequest($url);
     }
@@ -98,7 +103,7 @@ class BooksWebservice extends Webservice
     public function getInvoices()
     {
         $this->organizationId = $this->getOrganizationId();
-        $url = $this->urlBase.'invoices?organization_id='.$this->organizationId;
+        $url = $this->urlBase . 'invoices?organization_id=' . $this->organizationId;
 
         return $this->getRequest($url);
     }
