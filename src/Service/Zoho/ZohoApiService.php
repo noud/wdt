@@ -10,8 +10,10 @@ class ZohoApiService
      */
     protected $apiBaseUrl;
     
-    public function __construct(ZohoAccessTokenService $zohoAccessTokenService, $apiBaseUrl)
-    {
+    public function __construct(
+        $apiBaseUrl,
+        ZohoAccessTokenService $zohoAccessTokenService
+    ) {
         $this->zohoAccessTokenService = $zohoAccessTokenService;
         $this->apiBaseUrl = $apiBaseUrl;
     }
