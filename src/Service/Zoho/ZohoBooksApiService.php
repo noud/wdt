@@ -4,15 +4,16 @@ namespace App\Service\Zoho;
 
 class ZohoBooksApiService
 {
-    public function __construct(ZohoApiService $zohoCrmApiService)
+    public function __construct(ZohoApiService $zohoApiService)
     {
-        $this->apiService = $zohoCrmApiService;
+        $this->apiService = $zohoApiService;
         $this->getAccessToken();
     }
     
     private function getAccessToken(): void
     {
-        $file = $this->logPath . '/zcrm_oauthtokens.txt';
+        //$file = $this->logPath . '/zcrm_oauthtokens.txt';
+        $file = $this->apiService->zohoAccessTokenService->logPath . '/zcrm_oauthtokens.txt';
         if (file_exists($file)) {
             $fileContent = file_get_contents($file);
             $fileArray = unserialize($fileContent);

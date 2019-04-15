@@ -6,7 +6,8 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-abstract class ZohoAccessTokenService
+//abstract 
+class ZohoAccessTokenService
 {
     /**
      * @var string
@@ -31,7 +32,7 @@ abstract class ZohoAccessTokenService
     /**
      * @var string
      */
-    protected $logPath;
+    public $logPath;
 
     /**
      * @var string
