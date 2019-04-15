@@ -36,9 +36,17 @@ class BooksWebservice extends Webservice
             $grantToken,
             $refreshToken
         );
-        $this->organizationId = $this->getOrganizationId();
+        $this->getAccessToken();
     }
 
+    private function getAccessToken(): void
+    {
+        $file = $this->logPath . '/zcrm_oauthtokens.txt';
+        $fileContent = file_get_contents($file);
+        $fileArray = unserialize($fileContent);
+        $this->accessToken = $fileArray[0]->getAccessToken();
+    }
+    
     private function getRequest(string $url)
     {
         /** @var resource $ch */
@@ -49,7 +57,7 @@ class BooksWebservice extends Webservice
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/x-www-form-urlencoded;charset=UTF-8',
-            'Authorization: Zoho-oauthtoken '.$this->grantToken,
+            'Authorization: Zoho-oauthtoken '.$this->accessToken,
         ]);
         /** @var string $result */
         $result = curl_exec($ch);
@@ -57,7 +65,7 @@ class BooksWebservice extends Webservice
 
         if (57 === $result->code) {
             // @TODO refresh the token..
-            $this->generateAccessToken();
+            //$this->generateAccessToken();
             // now how do i recall this getRequest function?
             throw new \Exception('refresh the token..');
         }
@@ -81,6 +89,7 @@ class BooksWebservice extends Webservice
 
     public function getContacts()
     {
+        $this->organizationId = $this->getOrganizationId();
         $url = $this->urlBase.'contacts?organization_id='.$this->organizationId;
 
         return $this->getRequest($url);
@@ -88,6 +97,7 @@ class BooksWebservice extends Webservice
 
     public function getInvoices()
     {
+        $this->organizationId = $this->getOrganizationId();
         $url = $this->urlBase.'invoices?organization_id='.$this->organizationId;
 
         return $this->getRequest($url);

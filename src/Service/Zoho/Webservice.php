@@ -31,7 +31,7 @@ abstract class Webservice
     /**
      * @var string
      */
-    private $logPath;
+    protected $logPath;
 
     /**
      * @var string
@@ -53,6 +53,8 @@ abstract class Webservice
      */
     protected $refreshToken;
 
+    protected $accessToken;
+    
     /**
      * Webservice constructor.
      */
@@ -124,7 +126,8 @@ abstract class Webservice
         $this->init();
         $this->grantToken = $grantToken ?: $this->grantToken;
         $oAuthClient = \ZohoOAuth::getClientInstance();
-        $oAuthClient->generateAccessToken($this->grantToken);
+        $accessTokens = $oAuthClient->generateAccessToken($this->grantToken);
+        $this->accessToken = $accessTokens->getAccessToken();
     }
 
     public function generateAccessTokenFromRefreshToken()
