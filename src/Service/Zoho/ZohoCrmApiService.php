@@ -4,10 +4,10 @@ namespace App\Service\Zoho;
 
 class ZohoCrmApiService
 {
-    public function __construct(ZohoApiService $zohoCrmApiService)
-    {
-        $this->apiService = $zohoCrmApiService;
-    }
+//     public function __construct(ZohoApiService $zohoCrmApiService)
+//     {
+//         $this->apiService = $zohoCrmApiService;
+//     }
     
     public function hasAccessToPortal(User $user)
     {

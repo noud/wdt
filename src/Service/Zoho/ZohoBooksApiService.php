@@ -4,11 +4,11 @@ namespace App\Service\Zoho;
 
 class ZohoBooksApiService
 {
-    public function __construct(ZohoApiService $zohoApiService)
-    {
-        $this->apiService = $zohoApiService;
-        $this->getAccessToken();
-    }
+//     public function __construct(ZohoApiService $zohoApiService)
+//     {
+//         $this->apiService = $zohoApiService;
+//         $this->getAccessToken();
+//     }
     
     private function getAccessToken(): void
     {
