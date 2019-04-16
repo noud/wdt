@@ -20,7 +20,7 @@ class ZohoCrmApiService
     {
         $email = $user->getEmail();
 
-        $this->apiService->zohoAccessTokenService->init();
+        $this->apiService->init();
         $rest = \ZCRMModule::getInstance('Contacts');
         $criteria = 'Email:equals:'.$email;
         try {
