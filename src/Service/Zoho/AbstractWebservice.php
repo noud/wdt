@@ -6,7 +6,7 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-abstract class Webservice
+abstract class AbstractWebservice
 {
     /**
      * @var string
