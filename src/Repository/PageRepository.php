@@ -21,10 +21,7 @@ class PageRepository extends ServiceEntityRepository
 
     public function get(int $id): ?Page
     {
-        /** @var \App\Entity\Page $page */
-        $page = $this->find($id);
-
-        return $page;
+        return $this->find($id);
     }
 
     public function getBySlug(string $slug): ?Page
