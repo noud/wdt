@@ -36,17 +36,17 @@ class PageServiceTest extends ServiceKernelTestCase
         $this->entityManager->persist($page);
 
         $this->entityManager->flush();
-        
+
         return $page;
     }
-    
+
     /**
      * Test a valid call to get a page by id.
      */
     public function testGetPageById(): void
     {
         $this->createPage();
-        
+
         /** @var \App\Entity\Page $page */
         $page = $this->pageService->getPageById(self::PAGE_ID);
         $slug = $page->getSlug();
@@ -60,7 +60,7 @@ class PageServiceTest extends ServiceKernelTestCase
     public function testGetPageBySlug(): void
     {
         $this->createPage();
-        
+
         /** @var \App\Entity\Page $page */
         $page = $this->pageService->getPageBySlug(self::PAGE_SLUG);
         $id = $page->getId();
