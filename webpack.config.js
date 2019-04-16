@@ -38,7 +38,7 @@ Encore
     .enableBuildNotifications()
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning()
-    .enableLessLoader()
+    .autoProvidejQuery()
     .addPlugin(new CopyWebpackPlugin())
     .autoProvideVariables({
         $: 'jquery',
