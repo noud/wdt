@@ -122,7 +122,7 @@ class ZohoAccessTokenService
 
     public function generateAccessToken(string $grantToken = null)
     {
-        // SCOPE = aaaserver.profile.ALL,ZohoCRM.modules.ALL,ZohoBooks.fullaccess.all,Desk.basic.READ,Desk.settings.READ,Desk.tickets.READ,Desk.tickets.CREATE
+        // SCOPE = aaaserver.profile.ALL,ZohoCRM.modules.ALL,ZohoBooks.fullaccess.all,Desk.basic.READ,Desk.settings.READ,Desk.tickets.READ,Desk.tickets.CREATE,Desk.contacts.READ
         $this->init();
         $this->grantToken = $grantToken ?: $this->grantToken;
         $oAuthClient = \ZohoOAuth::getClientInstance();

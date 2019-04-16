@@ -27,7 +27,7 @@ class ZohoApiService
         $this->zohoAccessTokenService->init();
     }
 
-    public function getRequest(string $url, $orgId = null)
+    public function getRequest(string $url, $orgId = null, $data = null)
     {
         $this->zohoAccessTokenService->setAccessToken();
 
@@ -50,10 +50,14 @@ class ZohoApiService
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        if ($data) {
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        }
         /** @var string $result */
         $result = curl_exec($ch);
         $result = json_decode($result);
-
+dump($result);
         if (!$orgId && 57 === $result->code) {
             // @TODO check refresh the token..
             //$this->apiService->zohoAccessTokenService->generateAccessTokenFromRefreshToken();

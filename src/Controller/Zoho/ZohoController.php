@@ -120,7 +120,7 @@ class ZohoController extends AbstractController
     /**
      * @Route("/desk/tickets", name="zoho_desk_tickets")
      */
-    public function getTickets()
+    public function getDeskTickets()
     {
         $result = $this->deskWebservice->getTickets();
         dump($result);
@@ -131,6 +131,70 @@ class ZohoController extends AbstractController
 
         return new Response(
             '<html><body>Tickets: <br />'.$ticketsInfo.'</body></html>'
+            );
+    }
+    
+    /**
+     * @Route("/desk/organizations", name="zoho_desk_organizations")
+     */
+    public function getDeskOrganizations()
+    {
+        $result = $this->deskWebservice->getOrganizations();
+        dump($result);
+        $organizationsInfo = '';
+        foreach ($result->data as $organization) {
+            $organizationsInfo .= $organization->id.' '.$organization->companyName.'<br />';
+        }
+        
+        return new Response(
+            '<html><body>Organizations: <br />'.$organizationsInfo.'</body></html>'
+            );
+    }
+    
+    /**
+     * @Route("/desk/departments", name="zoho_desk_departments")
+     */
+    public function getDeskDepartments()
+    {
+        $result = $this->deskWebservice->getDepartments();
+        dump($result);
+        $ticketsInfo = '';
+        foreach ($result->data as $department) {
+            $ticketsInfo .= $department->id.' '.$department->name.'<br />';
+        }
+        
+        return new Response(
+            '<html><body>Departments: <br />'.$ticketsInfo.'</body></html>'
+            );
+    }
+    
+    /**
+     * @Route("/desk/contacts", name="zoho_desk_contacts")
+     */
+    public function getDeskContacts()
+    {
+        $result = $this->deskWebservice->getContacts();
+        dump($result);
+        $contactsInfo = '';
+        foreach ($result->data as $contact) {
+            $contactsInfo .= $contact->id.' '.$contact->email.'<br />';
+        }
+        
+        return new Response(
+            '<html><body>Contacts: <br />'.$contactsInfo.'</body></html>'
+            );
+    }
+    
+    /**
+     * @Route("/desk/ticket/create", name="zoho_desk_tickets_create")
+     */
+    public function createDeskTicket()
+    {
+        $result = $this->deskWebservice->createTicket();
+        dump($result);
+        
+        return new Response(
+            '<html><body>Ticket created</body></html>'
             );
     }
 }
