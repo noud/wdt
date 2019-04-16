@@ -4,27 +4,25 @@ namespace App\Service\Zoho;
 
 class ZohoBooksApiService
 {
-    public function __construct(ZohoApiService $zohoApiService)
+    /**
+     * @var ZohoApiService
+     */
+    private $apiService;
+
+    /**
+     * @var string
+     */
+    private $organizationId;
+
+    public function __construct(ZohoApiService $zohoBooksApiService)
     {
-        $this->apiService = $zohoApiService;
-        $this->getAccessToken();
+        $this->apiService = $zohoBooksApiService;
     }
-    
-    private function getAccessToken(): void
-    {
-        //$file = $this->logPath . '/zcrm_oauthtokens.txt';
-        $file = $this->apiService->zohoAccessTokenService->logPath . '/zcrm_oauthtokens.txt';
-        if (file_exists($file)) {
-            $fileContent = file_get_contents($file);
-            $fileArray = unserialize($fileContent);
-            if ($fileArray) {
-                $this->accessToken = $fileArray[0]->getAccessToken();
-            }
-        }
-    }
-    
+
     private function getRequest(string $url)
     {
+        $this->apiService->zohoAccessTokenService->setAccessToken();
+
         /** @var resource $ch */
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_VERBOSE, true);
@@ -33,49 +31,52 @@ class ZohoBooksApiService
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/x-www-form-urlencoded;charset=UTF-8',
-            'Authorization: Zoho-oauthtoken ' . $this->accessToken,
+            'Authorization: Zoho-oauthtoken '.$this->apiService->zohoAccessTokenService->getAccessToken(),
         ]);
         /** @var string $result */
         $result = curl_exec($ch);
         $result = json_decode($result);
-        
+
         if (57 === $result->code) {
-            // @TODO refresh the token..
-            //$this->generateAccessToken();
+            // @TODO check refresh the token..
+            //$this->apiService->zohoAccessTokenService->generateAccessTokenFromRefreshToken();
+            // @TODO now i should re-call this method..
+            //$this->getRequest($url);
+            // @TODO and i should keep a timer about how many times..
             // now how do i recall this getRequest function?
-            throw new \Exception('refresh the token..');
+            throw new \Exception('refresh the token..in getRequest..');
         }
-        
+
         return $result;
     }
-    
+
     public function getOrganizations()
     {
-        $url = $this->urlBase . 'organizations';
-        
+        $url = $this->apiService->apiBaseUrl.'organizations';
+
         return $this->getRequest($url);
     }
-    
+
     public function getOrganizationId(): string
     {
         $organizations = $this->getOrganizations();
-        
+
         return $organizations->organizations[0]->organization_id;
     }
-    
+
     public function getContacts()
     {
         $this->organizationId = $this->getOrganizationId();
-        $url = $this->urlBase . 'contacts?organization_id=' . $this->organizationId;
-        
+        $url = $this->apiService->apiBaseUrl.'contacts?organization_id='.$this->organizationId;
+
         return $this->getRequest($url);
     }
-    
+
     public function getInvoices()
     {
         $this->organizationId = $this->getOrganizationId();
-        $url = $this->urlBase . 'invoices?organization_id=' . $this->organizationId;
-        
+        $url = $this->apiService->apiBaseUrl.'invoices?organization_id='.$this->organizationId;
+
         return $this->getRequest($url);
     }
 }

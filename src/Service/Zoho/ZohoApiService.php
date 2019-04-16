@@ -4,15 +4,19 @@ namespace App\Service\Zoho;
 
 class ZohoApiService
 {
+    /**
+     * @var ZohoAccessTokenService
+     */
     public $zohoAccessTokenService;
+
     /**
      * @var string
      */
-    protected $apiBaseUrl;
-    
+    public $apiBaseUrl;
+
     public function __construct(
-        $apiBaseUrl,
-        ZohoAccessTokenService $zohoAccessTokenService
+        ZohoAccessTokenService $zohoAccessTokenService,
+        $apiBaseUrl
     ) {
         $this->zohoAccessTokenService = $zohoAccessTokenService;
         $this->apiBaseUrl = $apiBaseUrl;

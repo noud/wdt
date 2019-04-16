@@ -3,11 +3,9 @@
 namespace App\Controller\Zoho;
 
 use App\Entity\User;
-// use App\Service\Zoho\BooksWebservice;
-// use App\Service\Zoho\ContactsWebservice;
+use App\Service\Zoho\ZohoAccessTokenService;
 use App\Service\Zoho\ZohoBooksApiService;
 use App\Service\Zoho\ZohoCrmApiService;
-use App\Service\Zoho\ContactsWebservice;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,23 +13,28 @@ use Symfony\Component\Routing\Annotation\Route;
 class ZohoController extends AbstractController
 {
     /**
-     * @var ContactsWebservice
+     * @var ZohoCrmApiService
      */
     private $contactsWebservice;
 
     /**
-     * @var BooksWebservice
+     * @var ZohoBooksApiService
      */
     private $booksWebservice;
 
+    /**
+     * @var ZohoAccessTokenService
+     */
+    private $zohoAccessTokenService;
+
     public function __construct(
-//         ContactsWebservice $contactsWebservice,
-//         BooksWebservice $booksWebservice
-        ZohoCrmApiService $contactsWebservice,
-        ZohoBooksApiService $booksWebservice
+        ZohoCrmApiService $zohoCrmService,
+        ZohoBooksApiService $zohoBooksService,
+        ZohoAccessTokenService $zohoAccessTokenService
     ) {
-        $this->contactsWebservice = $contactsWebservice;
-        $this->booksWebservice = $booksWebservice;
+        $this->contactsWebservice = $zohoCrmService;
+        $this->booksWebservice = $zohoBooksService;
+        $this->zohoAccessTokenService = $zohoAccessTokenService;
     }
 
     /**
@@ -51,7 +54,7 @@ class ZohoController extends AbstractController
      */
     public function generateAccessToken(string $grantToken)
     {
-        $this->contactsWebservice->generateAccessToken($grantToken);
+        $this->zohoAccessTokenService->generateAccessToken($grantToken);
 
         return new Response(
             '<html><body>Grant Token gegenereerd.</body></html>'

@@ -60,31 +60,7 @@ services:
     App\DataFixtures\:
         resource: '../src/DataFixtures'
         tags: ['doctrine.fixture.orm']
-
-    App\Service\Zoho\ContactsWebservice:
-         arguments:
-            - '%zoho_crm_client_id%'
-            - '%zoho_crm_client_secret%'
-            - '%zoho_crm_redirect_uri%'
-            - '%zoho_crm_currentUserEmail%'
-            - '%zoho_crm_log_path%'
-            - '%zoho_crm_api_base_url%'
-            - '%zoho_crm_accounts_url%'
-            - '%zoho_crm_grantToken%'
-            - '%zoho_crm_refreshToken%'
-
-    App\Service\Zoho\BooksWebservice:
-         arguments:
-            - '%zoho_crm_client_id%'
-            - '%zoho_crm_client_secret%'
-            - '%zoho_crm_redirect_uri%'
-            - '%zoho_crm_currentUserEmail%'
-            - '%zoho_crm_log_path%'
-            - '%zoho_crm_api_base_url%'
-            - '%zoho_crm_accounts_url%'
-            - '%zoho_crm_grantToken%'
-            - '%zoho_crm_refreshToken%'
-            
+           
     App\Service\Zoho\ZohoAccessTokenService:
          arguments:
             - '%zoho_crm_client_id%'
@@ -100,9 +76,11 @@ services:
     zoho.books.api.service:
         class: App\Service\Zoho\ZohoApiService
         arguments:
+            - ''
             - '%zoho.books.api.base_url%'
             
     zoho.crm.api.service:
         class: App\Service\Zoho\ZohoApiService
         arguments:
+            - ''
             - '%zoho.crm.api.base_url%'

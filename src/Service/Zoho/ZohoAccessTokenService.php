@@ -6,7 +6,6 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-//abstract 
 class ZohoAccessTokenService
 {
     /**
@@ -54,8 +53,8 @@ class ZohoAccessTokenService
      */
     protected $refreshToken;
 
-    protected $accessToken;
-    
+    private $accessToken;
+
     /**
      * Webservice constructor.
      */
@@ -129,6 +128,46 @@ class ZohoAccessTokenService
         $oAuthClient = \ZohoOAuth::getClientInstance();
         $accessTokens = $oAuthClient->generateAccessToken($this->grantToken);
         $this->accessToken = $accessTokens->getAccessToken();
+    }
+
+    public function setAccessToken(): void
+    {
+        $file = $this->logPath.'/zcrm_oauthtokens.txt';
+        if (file_exists($file)) {
+            /** @var string $fileContent */
+            $fileContent = file_get_contents($file);
+            $fileArray = unserialize($fileContent);
+            if ($fileArray) {
+                try {
+                    $this->accessToken = $fileArray[0]->getAccessToken();
+                } catch (\Exception $e) {
+                    $this->generateAccessTokenFromRefreshToken();
+                    $this->setRefreshToken();
+                }
+            }
+        }
+    }
+
+    public function getAccessToken(): string
+    {
+        return $this->accessToken;
+    }
+
+    private function setRefreshToken(): void
+    {
+        $file = $this->logPath.'/zcrm_oauthtokens.txt';
+        if (file_exists($file)) {
+            /** @var string $fileContent */
+            $fileContent = file_get_contents($file);
+            $fileArray = unserialize($fileContent);
+            if ($fileArray) {
+                try {
+                    $this->refreshToken = $fileArray[0]->getRefreshToken();
+                } catch (\Exception $e) {
+                    throw new \Exception('setRefreshToken does not work.');
+                }
+            }
+        }
     }
 
     public function generateAccessTokenFromRefreshToken()
