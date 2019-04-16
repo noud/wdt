@@ -27,9 +27,21 @@ class ZohoApiService
         $this->zohoAccessTokenService->init();
     }
 
-    public function getRequest(string $url)
+    public function getRequest(string $url, $orgId = null)
     {
         $this->zohoAccessTokenService->setAccessToken();
+
+        if ($orgId) {
+            $header = [
+                'orgId: '.$orgId,
+                'Authorization: Zoho-oauthtoken '.$this->zohoAccessTokenService->getAccessToken(),
+            ];
+        } else {
+            $header = [
+                'Content-Type: application/x-www-form-urlencoded;charset=UTF-8',
+                'Authorization: Zoho-oauthtoken '.$this->zohoAccessTokenService->getAccessToken(),
+            ];
+        }
 
         /** @var resource $ch */
         $ch = curl_init($url);
@@ -37,15 +49,12 @@ class ZohoApiService
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/x-www-form-urlencoded;charset=UTF-8',
-            'Authorization: Zoho-oauthtoken '.$this->zohoAccessTokenService->getAccessToken(),
-        ]);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         /** @var string $result */
         $result = curl_exec($ch);
         $result = json_decode($result);
 
-        if (57 === $result->code) {
+        if (!$orgId && 57 === $result->code) {
             // @TODO check refresh the token..
             //$this->apiService->zohoAccessTokenService->generateAccessTokenFromRefreshToken();
             // @TODO now i should re-call this method..

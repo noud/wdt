@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Service\Zoho\ZohoAccessTokenService;
 use App\Service\Zoho\ZohoBooksApiService;
 use App\Service\Zoho\ZohoCrmApiService;
+use App\Service\Zoho\ZohoDeskApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,6 +24,11 @@ class ZohoController extends AbstractController
     private $booksWebservice;
 
     /**
+     * @var ZohoDeskApiService
+     */
+    private $deskWebservice;
+
+    /**
      * @var ZohoAccessTokenService
      */
     private $zohoAccessTokenService;
@@ -30,10 +36,12 @@ class ZohoController extends AbstractController
     public function __construct(
         ZohoCrmApiService $zohoCrmService,
         ZohoBooksApiService $zohoBooksService,
+        ZohoDeskApiService $zohoDeskService,
         ZohoAccessTokenService $zohoAccessTokenService
     ) {
         $this->contactsWebservice = $zohoCrmService;
         $this->booksWebservice = $zohoBooksService;
+        $this->deskWebservice = $zohoDeskService;
         $this->zohoAccessTokenService = $zohoAccessTokenService;
     }
 
@@ -107,5 +115,22 @@ class ZohoController extends AbstractController
         return new Response(
             '<html><body>Invoices: '.$result->code.' '.$result->message.'<br />'.$invoicesInfo.'</body></html>'
         );
+    }
+
+    /**
+     * @Route("/desk/tickets", name="zoho_desk_tickets")
+     */
+    public function getTickets()
+    {
+        $result = $this->deskWebservice->getTickets();
+        dump($result);
+        $ticketsInfo = '';
+        foreach ($result->data as $ticket) {
+            $ticketsInfo .= $ticket->ticketNumber.' '.$ticket->subject.'<br />';
+        }
+
+        return new Response(
+            '<html><body>Tickets: <br />'.$ticketsInfo.'</body></html>'
+            );
     }
 }
