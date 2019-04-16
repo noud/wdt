@@ -34,7 +34,7 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/inloggen", name="app_login")
-     * @ Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
+     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
      */
     public function login(AuthenticationUtils $authenticationUtils, Request $request): Response
     {

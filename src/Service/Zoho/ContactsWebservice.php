@@ -2,10 +2,14 @@
 
 namespace App\Service\Zoho;
 
-class ContactsService extends Webservice
+use App\Entity\User;
+
+class ContactsWebservice extends AbstractWebservice
 {
-    public function hasAccessToPortal(string $email)
+    public function hasAccessToPortal(User $user)
     {
+        $email = $user->getEmail();
+
         $this->init();
         $rest = \ZCRMModule::getInstance('Contacts');
         $criteria = 'Email:equals:'.$email;

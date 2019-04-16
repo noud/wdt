@@ -1,0 +1,4 @@
+login:
+  messages:
+    user_not_active: 'Dit is account is niet meer actief.'
+    user_not_in_backend: 'Dit is account is niet actief in de back-end.'

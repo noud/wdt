@@ -4,7 +4,6 @@ security:
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        in_memory: { memory: ~ }
         users:
             id: App\Security\UserProvider
     firewalls:
@@ -41,6 +40,9 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/$, role: ROLE_USER }
-        - { path: ^/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/inloggen, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/wachtwoord-vergeten*, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/wachtwoord-herstellen, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, role: ROLE_USER }
         

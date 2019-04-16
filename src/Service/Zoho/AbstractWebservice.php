@@ -2,10 +2,11 @@
 
 namespace App\Service\Zoho;
 
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-class Webservice
+abstract class AbstractWebservice
 {
     /**
      * @var string
@@ -88,7 +89,7 @@ class Webservice
                 $filesystem->touch($this->logPath.'/ZCRMClientLibrary.log');
                 $tokenPersistenceFileCreated = true;
             } catch (IOExceptionInterface $exception) {
-                echo 'An error occurred while creating your file at '.$exception->getPath();
+                throw new IOException('An error occurred while creating your file at '.$exception->getPath());
             }
         }
 

@@ -2,7 +2,8 @@
 
 namespace App\Controller\Zoho;
 
-use App\Service\Zoho\ContactsService;
+use App\Entity\User;
+use App\Service\Zoho\ContactsWebservice;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,22 +11,22 @@ use Symfony\Component\Routing\Annotation\Route;
 class ZohoController extends AbstractController
 {
     /**
-     * @var ContactsService
+     * @var ContactsWebservice
      */
-    private $contactsService;
+    private $contactsWebservice;
 
     public function __construct(
-        ContactsService $contactsService
+        ContactsWebservice $contactsWebservice
     ) {
-        $this->contactsService = $contactsService;
+        $this->contactsWebservice = $contactsWebservice;
     }
 
     /**
      * @Route("/zoho-has-access-to-portal/{email}", name="zoho_has_access_to_portal")
      */
-    public function hasAccessToPortal(string $email): Response
+    public function hasAccessToPortal(User $user): Response
     {
-        $access = $this->contactsService->hasAccessToPortal($email);
+        $access = $this->contactsWebservice->hasAccessToPortal($user);
 
         return new Response(
             '<html><body>'.$access.'</body></html>'
@@ -37,7 +38,7 @@ class ZohoController extends AbstractController
      */
     public function generateAccessToken(string $grantToken)
     {
-        $this->contactsService->generateAccessToken($grantToken);
+        $this->contactsWebservice->generateAccessToken($grantToken);
 
         return new Response(
             '<html><body>Grant Token gegenereerd.</body></html>'
