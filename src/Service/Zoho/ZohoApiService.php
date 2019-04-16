@@ -21,16 +21,16 @@ class ZohoApiService
         $this->zohoAccessTokenService = $zohoAccessTokenService;
         $this->apiBaseUrl = $apiBaseUrl;
     }
-    
+
     public function init(): void
     {
         $this->zohoAccessTokenService->init();
     }
-    
+
     public function getRequest(string $url)
     {
         $this->zohoAccessTokenService->setAccessToken();
-        
+
         /** @var resource $ch */
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_VERBOSE, true);
@@ -44,7 +44,7 @@ class ZohoApiService
         /** @var string $result */
         $result = curl_exec($ch);
         $result = json_decode($result);
-        
+
         if (57 === $result->code) {
             // @TODO check refresh the token..
             //$this->apiService->zohoAccessTokenService->generateAccessTokenFromRefreshToken();
@@ -54,7 +54,7 @@ class ZohoApiService
             // now how do i recall this getRequest function?
             throw new \Exception('refresh the token..in getRequest..');
         }
-        
+
         return $result;
     }
 }
