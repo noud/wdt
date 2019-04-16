@@ -1,6 +1,8 @@
 import $ from 'jquery';
 import 'password-strength-meter';
 
+const passwordOkayScore = 35;
+
 $(document).ready(function() {
 	let options = {
 	  shortPass: 'Het wachtwoord is te kort',
@@ -21,36 +23,22 @@ $(document).ready(function() {
 	$('#user_add_password_first').password(options);
 	$('#user_add_password_second').password(options);
 	
-	$('#user_add_password_first').on('password.score', (e, score) => {
-		if (score > 35) {
-			$('button[name=submit]').prop("disabled", false);
-		} else {
-			$('button[name=submit]').prop("disabled", true);
-		}
-	});
-	$('#user_add_password_second').on('password.score', (e, score) => {
-		if (score > 35) {
-			$('button[name=submit]').prop("disabled", false);
-		} else {
-			$('button[name=submit]').prop("disabled", true);
-		}
-	});
+	onPasswordScore('#user_add_password_first');
+	onPasswordScore('#user_add_password_second');
 	
 	$('#reset_password_plainPassword_first').password(options);
 	$('#reset_password_plainPassword_second').password(options);
 	
-	$('#reset_password_plainPassword_first').on('password.score', (e, score) => {
-		if (score > 35) {
-			$('button[name=submit]').prop("disabled", false);
-		} else {
-			$('button[name=submit]').prop("disabled", true);
-		}
-	});
-	$('#reset_password_plainPassword_second').on('password.score', (e, score) => {
-		if (score > 35) {
-			$('button[name=submit]').prop("disabled", false);
-		} else {
-			$('button[name=submit]').prop("disabled", true);
-		}
-	});
+	onPasswordScore('#reset_password_plainPassword_first');
+	onPasswordScore('#reset_password_plainPassword_second');	
 });
+
+function onPasswordScore(id) {
+	$(id).on('password.score', (e, score) => {
+		if (score > passwordOkayScore) {
+			$('button[name=submit]').prop("disabled", false);
+		} else {
+			$('button[name=submit]').prop("disabled", true);
+		}
+	});
+};
