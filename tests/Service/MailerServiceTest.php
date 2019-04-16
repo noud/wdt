@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Mailer\MailSender;
 use App\Service\MailerService;
 use App\Tests\ServiceKernelTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Swift_Mailer;
 
 class MailerServiceTest extends ServiceKernelTestCase
@@ -17,34 +18,35 @@ class MailerServiceTest extends ServiceKernelTestCase
      * @var MailerService
      */
     private $mailerService;
-    
+
     /**
      * @var MockObject
      */
     private $mailer;
-    
+
     /**
      * @var MailSender
      */
     private $mailSender;
-    
+
     /**
      * {@inheritdoc}
      */
     public function setUp()
     {
         parent::setUp();
-        
+
         $this->mailer = $this->createMock(Swift_Mailer::class);
-        
+
         $this->mailerService = new MailerService(
             $this->mailer,
             self::$container->get('twig'),
             self::$container->getParameter('mailer_default_from_email'),
             self::$container->getParameter('mailer_default_from_name')
         );
-        
-        $this->mailSender = self::$container->get(MailSender::class);
+
+        //$this->mailSender = self::$container->get(MailSender::class);
+        $this->mailSender = new MailSender($this->mailerService);
     }
 
     /**
@@ -66,9 +68,13 @@ class MailerServiceTest extends ServiceKernelTestCase
 
         $this->assertSame(self::EMAIL_NAME, $email);
     }
-    
+
     public function testSendUserAddedMessage()
     {
+        $this->mailer
+            ->expects($this->once())
+            ->method('send');
+
         $user = new User();
         $user->setEmail('test@test.nl');
         $user->setCompanyName('test');
