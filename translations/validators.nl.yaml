@@ -1,0 +1,4 @@
+user:
+  add:
+    error:
+      password_not_matching: 'Wachtwoorden komen niet overeen, voer ze nogmaals in.'

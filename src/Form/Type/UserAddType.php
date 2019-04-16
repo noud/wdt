@@ -9,24 +9,9 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserAddType extends AbstractType
 {
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-
-    /**
-     * JoinType constructor.
-     */
-    public function __construct(
-        TranslatorInterface $translator
-    ) {
-        $this->translator = $translator;
-    }
-
     /**
      * {@inheritdoc}
      *
@@ -53,7 +38,7 @@ class UserAddType extends AbstractType
             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'invalid_message' => $this->translator->trans('user.add.error.password_not_matching', [], 'user'),
+                'invalid_message' => 'user.add.error.password_not_matching',
                 'options' => ['attr' => ['class' => 'password-field']],
                 'required' => true,
                 'first_options' => ['label' => 'user.add.field.password'],
@@ -66,7 +51,6 @@ class UserAddType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => UserAddData::class,
-            //'data_class' => null,
             'translation_domain' => 'user',
         ]);
     }
