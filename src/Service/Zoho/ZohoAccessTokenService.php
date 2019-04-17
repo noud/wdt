@@ -94,7 +94,7 @@ class ZohoAccessTokenService
                 throw new IOException('An error occurred while creating your file at '.$exception->getPath());
             }
         }
-        
+
         $this->init();
 
         if ($tokenPersistenceFileCreated) {
