@@ -1,0 +1,13 @@
+Dag,
+
+Er heeft zich een nieuwe gebruiker aangemeld met
+bedrijfsnaam {{ user.companyName }}
+voornaam {{ user.firstName }}
+achternaam {{ user.lastName }}
+email {{ user.email }}
+
+Wil je deze gebruiker actief maken?
+{{ url('user_register_activate', {token: user.token}) }}
+
+Groet,
+Klantportaal WebdesignTilburg
