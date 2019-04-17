@@ -46,9 +46,8 @@ class ZohoDeskApiService
     {
         $this->orgId = $this->getOrganizationId();
         $accountId = $this->getAccountIdByEmail($email);
-        $url = $this->apiService->apiBaseUrl.'accounts/'.$accountId.'/tickets?include=assignee,departments,team,isRead';
 
-        $result = $this->apiService->getRequest($url, $this->orgId);
+        $result = $this->apiService->getRequest('accounts/'.$accountId.'/tickets?include=assignee,departments,team,isRead', $this->orgId);
         $tickets = [];
         foreach ($result->data as $ticketData) {
             $ticket = new Ticket();
