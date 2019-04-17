@@ -59,6 +59,13 @@ class PageFixtures extends Fixture
         $page->setContent('Vul je nieuwe wachtwoord in.');
         $manager->persist($page);
 
+        $page = new Page();
+        $page->setSlug('/inloggen');
+        $page->setTitle('Inloggen');
+        $page->setMetaTitle('Vul je e-mail adres en wachtwoord in om in te loggen');
+        $page->setContent('Vul je e-mail adres en wachtwoord in om in te loggen.');
+        $manager->persist($page);
+
         $manager->flush();
     }
 }

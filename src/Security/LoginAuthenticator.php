@@ -3,6 +3,8 @@
 namespace App\Security;
 
 use App\Entity\User;
+use App\Service\LockingService;
+use App\Service\Zoho\ContactsWebservice;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -11,6 +13,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
+use Symfony\Component\Security\Core\Exception\LockedException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -39,9 +42,19 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
     private $csrfTokenManager;
 
     /**
+     * @var LockingService
+     */
+    private $lockingService;
+
+    /**
      * @var UserPasswordEncoderInterface
      */
     private $userPasswordEncoder;
+
+    /**
+     * @var ContactsWebservice
+     */
+    private $contactsWebservice;
 
     /**
      * LoginAuthenticator constructor.
@@ -49,11 +62,15 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         CsrfTokenManagerInterface $csrfTokenManager,
-        UserPasswordEncoderInterface $userPasswordEncoder
+        LockingService $lockingService,
+        UserPasswordEncoderInterface $userPasswordEncoder,
+        ContactsWebservice $contactsWebservice
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
+        $this->lockingService = $lockingService;
         $this->userPasswordEncoder = $userPasswordEncoder;
+        $this->contactsWebservice = $contactsWebservice;
     }
 
     /**
@@ -66,11 +83,23 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
         return 'app_login' === $route && $request->isMethod('POST');
     }
 
+    private function isIpAddressLocked(Request $request): bool
+    {
+        $ipAddress = (string) $request->getClientIp();
+
+        return $this->lockingService->checkIsLockedIpAddress($ipAddress);
+    }
+
     /**
      * {@inheritdoc}
      */
     public function getCredentials(Request $request): array
     {
+        // Check if the account is locked
+        if ($this->isIpAddressLocked($request)) {
+            throw new LockedException();
+        }
+
         $credentials = [
             'email' => $request->request->get('email'),
             'password' => $request->request->get('password'),
@@ -110,6 +139,10 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
             throw new CustomUserMessageAuthenticationException('login.messages.user_not_active');
         }
 
+        if (!$this->contactsWebservice->hasAccessToPortal($user)) {
+            throw new CustomUserMessageAuthenticationException('login.messages.user_not_in_backend');
+        }
+
         return $user;
     }
 
@@ -130,6 +163,9 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): RedirectResponse
     {
+        $ipAddress = $request->getClientIp();
+        $this->lockingService->removeFailedIp((string) $ipAddress);
+
         return new RedirectResponse($this->urlGenerator->generate('app_index'));
     }
 

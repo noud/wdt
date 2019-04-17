@@ -27,7 +27,8 @@
         "symfony/validator": "4.2.*",
         "symfony/web-link": "4.2.*",
         "symfony/webpack-encore-bundle": "^1.4",
-        "symfony/yaml": "4.2.*"
+        "symfony/yaml": "4.2.*",
+        "zohocrm/php-sdk": "^1.1"
     },
     "require-dev": {
         "dama/doctrine-test-bundle": "^5.0",
