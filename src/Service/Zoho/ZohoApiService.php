@@ -27,7 +27,13 @@ class ZohoApiService
         $this->zohoAccessTokenService->init();
     }
 
-    public function getRequest(string $urlPart, $orgId = null, $data = null)
+    /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     *
+     * @throws \Exception
+     */
+    public function getRequest(string $urlPart, $orgId = null, $data = null): string
     {
         $url = $this->apiBaseUrl.$urlPart;
 
