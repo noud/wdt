@@ -12,7 +12,7 @@ class ZohoApiService
     /**
      * @var string
      */
-    public $apiBaseUrl;
+    private $apiBaseUrl;
 
     public function __construct(
         ZohoAccessTokenService $zohoAccessTokenService,
@@ -25,6 +25,11 @@ class ZohoApiService
     public function init(): void
     {
         $this->zohoAccessTokenService->init();
+    }
+
+    public function getApiBaseUrl(): string
+    {
+        return $this->apiBaseUrl;
     }
 
     public function getRequest(string $url)

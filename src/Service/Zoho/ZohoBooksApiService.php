@@ -21,7 +21,7 @@ class ZohoBooksApiService
 
     public function getOrganizations()
     {
-        $url = $this->apiService->apiBaseUrl.'organizations';
+        $url = $this->apiService->getApiBaseUrl().'organizations';
 
         return $this->apiService->getRequest($url);
     }
@@ -36,7 +36,7 @@ class ZohoBooksApiService
     public function getContacts()
     {
         $this->organizationId = $this->getOrganizationId();
-        $url = $this->apiService->apiBaseUrl.'contacts?organization_id='.$this->organizationId;
+        $url = $this->apiService->getApiBaseUrl().'contacts?organization_id='.$this->organizationId;
 
         return $this->apiService->getRequest($url);
     }
@@ -44,7 +44,7 @@ class ZohoBooksApiService
     public function getInvoices()
     {
         $this->organizationId = $this->getOrganizationId();
-        $url = $this->apiService->apiBaseUrl.'invoices?organization_id='.$this->organizationId;
+        $url = $this->apiService->getApiBaseUrl().'invoices?organization_id='.$this->organizationId;
 
         return $this->apiService->getRequest($url);
     }
