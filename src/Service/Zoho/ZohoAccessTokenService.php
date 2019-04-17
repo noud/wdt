@@ -58,7 +58,15 @@ class ZohoAccessTokenService
      */
     protected $refreshToken;
 
+    /**
+     * @var string
+     */
     private $accessToken;
+
+    /**
+     * @var float
+     */
+    private $accessTokenExpiryTime;
 
     /**
      * Webservice constructor.
@@ -154,6 +162,8 @@ class ZohoAccessTokenService
             if ($fileArray) {
                 try {
                     $this->accessToken = $fileArray[0]->getAccessToken();
+                    $this->accessTokenExpiryTime = $fileArray[0]->getExpiryTime();
+                    dump($this->accessTokenExpiryTime);
                 } catch (\Exception $e) {
                     $this->generateAccessTokenFromRefreshToken();
                     $this->setRefreshToken();
@@ -165,6 +175,11 @@ class ZohoAccessTokenService
     public function getAccessToken(): string
     {
         return $this->accessToken;
+    }
+
+    public function getAccessTokenExpiryTime(): ?float
+    {
+        return $this->accessTokenExpiryTime;
     }
 
     private function setRefreshToken(): void

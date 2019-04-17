@@ -30,7 +30,12 @@ class ZohoApiService
     public function getRequest(string $urlPart)
     {
         $url = $this->apiBaseUrl.$urlPart;
+
         $this->zohoAccessTokenService->setAccessToken();
+        $accessTokenExpiryTime = $this->zohoAccessTokenService->getAccessTokenExpiryTime();
+        if ($accessTokenExpiryTime < round(microtime(true) * 1000)) {
+            $this->zohoAccessTokenService->generateAccessTokenFromRefreshToken();
+        }
 
         /** @var resource $ch */
         $ch = curl_init($url);
@@ -62,12 +67,7 @@ class ZohoApiService
         }
 
         if (57 === $result->code) {
-            // @TODO check refresh the token..
-            //$this->apiService->zohoAccessTokenService->generateAccessTokenFromRefreshToken();
-            // @TODO now i should re-call this method..
-            //$this->getRequest($url);
-            // @TODO and i should keep a timer about how many times..
-            // now how do i recall this getRequest function?
+            // this should not happen
             curl_close($ch);
             throw new \Exception('refresh the token..in getRequest..');
         } elseif (0 !== $result->code) {
