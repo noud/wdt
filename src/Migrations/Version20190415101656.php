@@ -14,7 +14,7 @@ final class Version20190415101656 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Create bruteforce tables.';
     }
 
     public function up(Schema $schema): void

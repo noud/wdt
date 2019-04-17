@@ -41,6 +41,7 @@ class TicketAddType extends AbstractType
                 'required' => true,
                 'choices' => [
                     'High' => 'High',
+                    'Medium' => 'Medium',
                     'Low' => 'Low',
                 ],
             ])

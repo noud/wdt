@@ -25,9 +25,7 @@ class ZohoDeskApiService
 
     public function getOrganizations()
     {
-        $url = $this->apiService->apiBaseUrl.'organizations';
-
-        return $this->apiService->getRequest($url, true);
+        return $this->apiService->getRequest('organizations', true);
     }
 
     public function getOrganizationId(): string
@@ -40,9 +38,8 @@ class ZohoDeskApiService
     public function getTicketsAll()
     {
         $this->orgId = $this->getOrganizationId();
-        $url = $this->apiService->apiBaseUrl.'tickets?include=contacts,assignee,departments,team,isRead';
 
-        return $this->apiService->getRequest($url, $this->orgId);
+        return $this->apiService->getRequest('tickets?include=contacts,assignee,departments,team,isRead', $this->orgId);
     }
 
     public function getTickets(string $email)
@@ -67,9 +64,8 @@ class ZohoDeskApiService
     public function getDepartments()
     {
         $this->orgId = $this->getOrganizationId();
-        $url = $this->apiService->apiBaseUrl.'departments?isEnabled=true&chatStatus=AVAILABLE';
 
-        return $this->apiService->getRequest($url, $this->orgId);
+        return $this->apiService->getRequest('departments?isEnabled=true&chatStatus=AVAILABLE', $this->orgId);
     }
 
     public function getDepartmentId()
@@ -82,25 +78,22 @@ class ZohoDeskApiService
     public function getContacts()
     {
         $this->orgId = $this->getOrganizationId();
-        $url = $this->apiService->apiBaseUrl.'contacts?include=accounts';
 
-        return $this->apiService->getRequest($url, $this->orgId);
+        return $this->apiService->getRequest('contacts?include=accounts', $this->orgId);
     }
 
     public function getAccounts()
     {
         $this->orgId = $this->getOrganizationId();
-        $url = $this->apiService->apiBaseUrl.'accounts';
 
-        return $this->apiService->getRequest($url, $this->orgId);
+        return $this->apiService->getRequest('accounts', $this->orgId);
     }
 
     public function getAccountContacts(string $accountId)
     {
         $this->orgId = $this->getOrganizationId();
-        $url = $this->apiService->apiBaseUrl.'accounts/'.$accountId.'/contacts';
 
-        return $this->apiService->getRequest($url, $this->orgId);
+        return $this->apiService->getRequest('accounts/'.$accountId.'/contacts', $this->orgId);
     }
 
     public function getAccountContactIdByEmail(string $email): ?string
@@ -150,7 +143,6 @@ class ZohoDeskApiService
     public function createTicket(Ticket $ticket)
     {
         $this->orgId = $this->getOrganizationId();
-        $url = $this->apiService->apiBaseUrl.'tickets';
         $data = [
             // required
             'subject' => $ticket->getSubject(),
@@ -161,6 +153,6 @@ class ZohoDeskApiService
             'priority' => $ticket->getPriority(),
         ];
 
-        return $this->apiService->getRequest($url, $this->orgId, $data);
+        return $this->apiService->getRequest('tickets', $this->orgId, $data);
     }
 }

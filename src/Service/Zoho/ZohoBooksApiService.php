@@ -21,9 +21,7 @@ class ZohoBooksApiService
 
     public function getOrganizations()
     {
-        $url = $this->apiService->apiBaseUrl.'organizations';
-
-        return $this->apiService->getRequest($url);
+        return $this->apiService->getRequest('organizations');
     }
 
     public function getOrganizationId(): string
@@ -36,16 +34,14 @@ class ZohoBooksApiService
     public function getContacts()
     {
         $this->organizationId = $this->getOrganizationId();
-        $url = $this->apiService->apiBaseUrl.'contacts?organization_id='.$this->organizationId;
 
-        return $this->apiService->getRequest($url);
+        return $this->apiService->getRequest('contacts?organization_id='.$this->organizationId);
     }
 
     public function getInvoices()
     {
         $this->organizationId = $this->getOrganizationId();
-        $url = $this->apiService->apiBaseUrl.'invoices?organization_id='.$this->organizationId;
 
-        return $this->apiService->getRequest($url);
+        return $this->apiService->getRequest('invoices?organization_id='.$this->organizationId);
     }
 }
