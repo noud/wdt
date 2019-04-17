@@ -1,1 +1,5 @@
 password_length: "Wachtwoord moet minstens {{ limit }} characters lang zijn."
+user:
+  add:
+    error:
+      password_not_matching: 'Wachtwoorden komen niet overeen, voer ze nogmaals in.'

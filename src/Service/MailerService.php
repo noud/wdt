@@ -64,7 +64,7 @@ class MailerService
         return $this->mailer->send($mailMessage);
     }
 
-    public function sendMessage(Swift_Message $message): int
+    public function sendMessage(Swift_Message $message): ?int
     {
         return $this->mailer->send($message);
     }
