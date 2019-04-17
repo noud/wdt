@@ -37,6 +37,7 @@ class UserAddData
 
     /**
      * @var string
+     * @Assert\NotBlank()
      */
     public $password;
 
