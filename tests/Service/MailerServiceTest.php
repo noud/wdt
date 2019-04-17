@@ -45,28 +45,7 @@ class MailerServiceTest extends ServiceKernelTestCase
             self::$container->getParameter('mailer_default_from_name')
         );
 
-        //$this->mailSender = self::$container->get(MailSender::class);
         $this->mailSender = new MailSender($this->mailerService);
-    }
-
-    /**
-     * Test getting default email address.
-     */
-    public function testgetDefaultFromEmail(): void
-    {
-        $email = $this->mailerService->getDefaultFromEmail();
-
-        $this->assertSame(self::EMAIL_ADDRESS, $email);
-    }
-
-    /**
-     * Test getting default email name.
-     */
-    public function testgetDefaultFromName(): void
-    {
-        $email = $this->mailerService->getDefaultFromName();
-
-        $this->assertSame(self::EMAIL_NAME, $email);
     }
 
     public function testSendUserAddedMessage()
