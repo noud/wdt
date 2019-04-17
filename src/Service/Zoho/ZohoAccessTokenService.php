@@ -111,9 +111,6 @@ class ZohoAccessTokenService
             }
         }
 
-        // sometimes i need
-        // /var/www/klantportaal/vendor/zohocrm/php-sdk/src/com/zoho/oauth/common/../logger/OAuth.log
-
         $this->init();
 
         if ($tokenPersistenceFileCreated) {
