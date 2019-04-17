@@ -33,7 +33,7 @@ class ZohoApiService
      *
      * @throws \Exception
      */
-    public function getRequest(string $urlPart, $orgId = null, $data = null): string
+    public function getRequest(string $urlPart, $orgId = null, $data = null)
     {
         $url = $this->apiBaseUrl.$urlPart;
 
