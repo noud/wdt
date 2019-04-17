@@ -11,6 +11,7 @@ parameters:
     zoho_crm_client_secret: "%env(ZOHO_CRM_CLIENT_SECRET)%"
     zoho_crm_redirect_uri: "%env(ZOHO_CRM_REDIRECT_URL)%"
     zoho_crm_currentUserEmail: "%env(ZOHO_CRM_CURRENT_USER_EMAIL)%" # @TODO should be from logged in user
+    zoho_crm_auth_path: "%kernel.project_dir%%env(ZOHO_CRM_AUTH_PATH)%"
     zoho_crm_log_path: "%kernel.project_dir%%env(ZOHO_CRM_LOG_PATH)%"
     zoho_crm_api_base_url: "%env(ZOHO_CRM_API_BASE_URL)%"
     zoho_crm_accounts_url: "%env(ZOHO_CRM_ACCOUNTS_URL)%"
@@ -27,9 +28,9 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
-                 $zohoCrmApiService: '@zoho.crm.api.service'
-                 $zohoBooksApiService: '@zoho.books.api.service'
-                 $zohoDeskApiService: '@zoho.desk.api.service'
+            $zohoCrmApiService: '@zoho.crm.api.service'
+            $zohoBooksApiService: '@zoho.books.api.service'
+            $zohoDeskApiService: '@zoho.desk.api.service'
                  
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -69,6 +70,7 @@ services:
             - '%zoho_crm_client_secret%'
             - '%zoho_crm_redirect_uri%'
             - '%zoho_crm_currentUserEmail%'
+            - '%zoho_crm_auth_path%'
             - '%zoho_crm_log_path%'
             - '%zoho_crm_api_base_url%'
             - '%zoho_crm_accounts_url%'
