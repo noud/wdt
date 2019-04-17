@@ -62,6 +62,7 @@ class ZohoAccessTokenService
 
     /**
      * Webservice constructor.
+     *
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -136,7 +137,6 @@ class ZohoAccessTokenService
 
     public function generateAccessToken(string $grantToken = null)
     {
-        // SCOPE = aaaserver.profile.ALL,ZohoCRM.modules.ALL,ZohoBooks.fullaccess.all
         $this->init();
         $this->grantToken = $grantToken ?: $this->grantToken;
         $oAuthClient = \ZohoOAuth::getClientInstance();

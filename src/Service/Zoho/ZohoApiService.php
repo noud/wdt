@@ -27,13 +27,9 @@ class ZohoApiService
         $this->zohoAccessTokenService->init();
     }
 
-    public function getApiBaseUrl(): string
+    public function getRequest(string $urlPart)
     {
-        return $this->apiBaseUrl;
-    }
-
-    public function getRequest(string $url)
-    {
+        $url = $this->apiBaseUrl.$urlPart;
         $this->zohoAccessTokenService->setAccessToken();
 
         /** @var resource $ch */
