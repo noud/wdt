@@ -163,7 +163,6 @@ class ZohoAccessTokenService
                 try {
                     $this->accessToken = $fileArray[0]->getAccessToken();
                     $this->accessTokenExpiryTime = $fileArray[0]->getExpiryTime();
-                    dump($this->accessTokenExpiryTime);
                 } catch (\Exception $e) {
                     $this->generateAccessTokenFromRefreshToken();
                     $this->setRefreshToken();
