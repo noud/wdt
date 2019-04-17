@@ -68,4 +68,29 @@ class MailSender
 
         $this->mailerService->sendMessage($message);
     }
+
+    public function sendResetPasswordRequestMessage(string $subject, string $email, string $token): void
+    {
+        $body = $this->mailerService->render('email/reset_password_request.html.twig', [
+            'name' => $email,
+            'token' => $token,
+        ]);
+
+        $message = $this->mailerService->createMessage($subject, $body, 'text/html');
+        $message->addPart(
+            $this->mailerService->render(
+                'email/reset_password_request.txt.twig',
+                [
+                    'name' => $email,
+                    'token' => $token,
+                ]
+                ),
+            'text/plain'
+            );
+
+        $message->addTo($email);
+        $message->setReplyTo($this->mailerService->getDefaultFromEmail());
+
+        $this->mailerService->sendMessage($message);
+    }
 }

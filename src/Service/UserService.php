@@ -7,6 +7,7 @@ use App\Form\Data\UserAddData;
 use App\Mailer\MailSender;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class UserService
 {
@@ -21,6 +22,11 @@ class UserService
     private $userRepository;
 
     /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
      * @var MailSender
      */
     private $mailSender;
@@ -28,10 +34,12 @@ class UserService
     public function __construct(
         EntityManagerInterface $entityManager,
         UserRepository $userRepository,
+        TokenStorageInterface $tokenStorage,
         MailSender $mailSender
     ) {
         $this->entityManager = $entityManager;
         $this->userRepository = $userRepository;
+        $this->tokenStorage = $tokenStorage;
         $this->mailSender = $mailSender;
     }
 
@@ -72,6 +80,32 @@ class UserService
         $user = $this->activate($user);
         $this->entityManager->flush();
         $this->mailSender->sendUserActivatedMessage('Je account is geactiveerd', $user);
+
+        return $user;
+    }
+
+    public function logoutUser(): void
+    {
+        $this->tokenStorage->setToken(null);
+    }
+
+    public function loadUserByEmail(string $email): ?User
+    {
+        /** @var \App\Entity\User $user */
+        $user = $this->userRepository->findOneBy([
+            'email' => $email,
+        ]);
+
+        return $user;
+    }
+
+    public function changePassword(string $email, string $newPassword): ?User
+    {
+        $user = $this->loadUserByEmail($email);
+        if ($user) {
+            $user->setPlainPassword($newPassword);
+            $this->entityManager->flush();
+        }
 
         return $user;
     }
