@@ -4,6 +4,7 @@ namespace App\Security;
 
 use App\Entity\User;
 use App\Service\LockingService;
+use App\Service\Zoho\ContactsWebservice;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -51,18 +52,25 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
     private $userPasswordEncoder;
 
     /**
+     * @var ContactsWebservice
+     */
+    private $contactsWebservice;
+
+    /**
      * LoginAuthenticator constructor.
      */
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         CsrfTokenManagerInterface $csrfTokenManager,
         LockingService $lockingService,
-        UserPasswordEncoderInterface $userPasswordEncoder
+        UserPasswordEncoderInterface $userPasswordEncoder,
+        ContactsWebservice $contactsWebservice
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->lockingService = $lockingService;
         $this->userPasswordEncoder = $userPasswordEncoder;
+        $this->contactsWebservice = $contactsWebservice;
     }
 
     /**
@@ -129,6 +137,10 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
 
         if (!$user->isActive()) {
             throw new CustomUserMessageAuthenticationException('login.messages.user_not_active');
+        }
+
+        if (!$this->contactsWebservice->hasAccessToPortal($user)) {
+            throw new CustomUserMessageAuthenticationException('login.messages.user_not_in_backend');
         }
 
         return $user;
