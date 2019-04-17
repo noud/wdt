@@ -1,0 +1,9 @@
+ticket:
+  add:
+    field:
+      contact_name: 'Contactpersoon naam'
+      email: 'E-mailadres'
+      subject: 'Onderwerp'
+      description: 'Beschrijving'
+      priority: 'Prioriteit'
+      submit: 'Ticket registreren'

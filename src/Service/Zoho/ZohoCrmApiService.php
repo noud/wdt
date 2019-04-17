@@ -31,4 +31,18 @@ class ZohoCrmApiService
             return false;
         }
     }
+
+    public function getContactIdByEmail(string $email): ?string
+    {
+        $this->apiService->init();
+        $rest = \ZCRMModule::getInstance('Contacts');
+        $criteria = 'Email:equals:'.$email;
+        //try {
+        $contacts = $rest->searchRecordsByCriteria($criteria)->getData();
+
+        return (string) $contacts[0]->getEntityId();
+        //} catch (\Exception $e) {
+        //    return null;
+        //}
+    }
 }

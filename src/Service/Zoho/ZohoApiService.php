@@ -52,12 +52,12 @@ class ZohoApiService
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         if ($data) {
             curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         }
         /** @var string $result */
         $result = curl_exec($ch);
         $result = json_decode($result);
-dump($result);
+        dump($result);
         if (!$orgId && 57 === $result->code) {
             // @TODO check refresh the token..
             //$this->apiService->zohoAccessTokenService->generateAccessTokenFromRefreshToken();

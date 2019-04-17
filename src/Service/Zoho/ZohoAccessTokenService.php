@@ -94,9 +94,7 @@ class ZohoAccessTokenService
                 throw new IOException('An error occurred while creating your file at '.$exception->getPath());
             }
         }
-        // sometimes i need
-        // /var/www/klantportaal/vendor/zohocrm/php-sdk/src/com/zoho/oauth/common/../logger/OAuth.log
-
+        
         $this->init();
 
         if ($tokenPersistenceFileCreated) {
@@ -122,7 +120,6 @@ class ZohoAccessTokenService
 
     public function generateAccessToken(string $grantToken = null)
     {
-        // SCOPE = aaaserver.profile.ALL,ZohoCRM.modules.ALL,ZohoBooks.fullaccess.all,Desk.basic.READ,Desk.settings.READ,Desk.tickets.READ,Desk.tickets.CREATE,Desk.contacts.READ
         $this->init();
         $this->grantToken = $grantToken ?: $this->grantToken;
         $oAuthClient = \ZohoOAuth::getClientInstance();
