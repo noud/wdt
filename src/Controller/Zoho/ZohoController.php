@@ -144,11 +144,11 @@ class ZohoController extends AbstractController
     }
 
     /**
-     * @Route("/desk/tickets/index", name="zoho_desk_tickets")
+     * @Route("/desk/tickets/all", name="zoho_desk_tickets_all")
      */
-    public function getDeskTickets()
+    public function getDeskTicketsAll()
     {
-        $result = $this->deskWebservice->getTickets();
+        $result = $this->deskWebservice->getTicketsAll();
         dump($result);
         $ticketsInfo = '';
         foreach ($result->data as $ticket) {
@@ -158,6 +158,21 @@ class ZohoController extends AbstractController
         return new Response(
             '<html><body>Tickets: <br />'.$ticketsInfo.'</body></html>'
             );
+    }
+
+    /**
+     * @Route("/desk/tickets/index", name="zoho_desk_tickets")
+     */
+    public function getDeskTickets()
+    {
+        $user = $this->getUser();
+        /** @var string $email */
+        $email = $user->getEmail();
+        $tickets = $this->deskWebservice->getTickets($email);
+
+        return $this->render('ticket/index.html.twig', [
+            'tickets' => $tickets,
+        ]);
     }
 
     /**

@@ -37,12 +37,31 @@ class ZohoDeskApiService
         return $organizations->data[0]->id;
     }
 
-    public function getTickets()
+    public function getTicketsAll()
     {
         $this->orgId = $this->getOrganizationId();
         $url = $this->apiService->apiBaseUrl.'tickets?include=contacts,assignee,departments,team,isRead';
 
         return $this->apiService->getRequest($url, $this->orgId);
+    }
+
+    public function getTickets(string $email)
+    {
+        $this->orgId = $this->getOrganizationId();
+        $accountId = $this->getAccountIdByEmail($email);
+        $url = $this->apiService->apiBaseUrl.'accounts/'.$accountId.'/tickets?include=assignee,departments,team,isRead';
+
+        $result = $this->apiService->getRequest($url, $this->orgId);
+        $tickets = [];
+        foreach ($result->data as $ticketData) {
+            $ticket = new Ticket();
+            $ticket->setTicketNumber($ticketData->ticketNumber);
+            $ticket->setSubject($ticketData->subject);
+            $ticket->setStatus($ticketData->status);
+            $tickets[] = $ticket;
+        }
+
+        return $tickets;
     }
 
     public function getDepartments()
@@ -92,6 +111,21 @@ class ZohoDeskApiService
             foreach ($accountContacts->data as $contact) {
                 if ($contact->email === $email) {
                     return $contact->id;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public function getAccountIdByEmail(string $email): ?string
+    {
+        $accounts = $this->getAccounts();
+        foreach ($accounts->data as $account) {
+            $accountContacts = $this->getAccountContacts($account->id);
+            foreach ($accountContacts->data as $contact) {
+                if ($contact->email === $email) {
+                    return $account->id;
                 }
             }
         }

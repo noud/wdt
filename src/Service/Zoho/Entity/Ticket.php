@@ -11,9 +11,15 @@ class Ticket
 {
     /**
      * @var string
+     */
+    private $ticketNumber;
+
+    /**
+     * @var string
      * @Assert\NotBlank()
      */
     private $departmentId;
+
     /**
      * @var string
      * @Assert\NotBlank()
@@ -36,6 +42,16 @@ class Ticket
      * @var string
      */
     private $priority;
+
+    /**
+     * @var string
+     */
+    private $status;
+
+    public function setTicketNumber(string $ticketNumber): void
+    {
+        $this->ticketNumber = $ticketNumber;
+    }
 
     public function setDepartmentId(string $departmentId): void
     {
@@ -62,6 +78,16 @@ class Ticket
         $this->priority = $priority;
     }
 
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
+    }
+
+    public function getTicketNumber(): string
+    {
+        return $this->ticketNumber;
+    }
+
     public function getDepartmentId(): string
     {
         return $this->departmentId;
@@ -85,5 +111,10 @@ class Ticket
     public function getPriority(): string
     {
         return $this->priority;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
     }
 }
