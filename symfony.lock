@@ -643,5 +643,8 @@
     },
     "zendframework/zend-eventmanager": {
         "version": "3.2.1"
+    },
+    "zohocrm/php-sdk": {
+        "version": "1.1.7"
     }
 }

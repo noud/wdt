@@ -1,7 +1,8 @@
 {% extends 'base.html.twig' %}
+{% trans_default_domain 'login' %}
 
 {% block navbar %}navbar-dark bg-dark border-bottom{% endblock %}
-{% block title %}{{ 'account.login'|trans }}{% endblock %}
+{% block title %}{{ page.title }}{% endblock %}
 {% block body %}
     <div class="main-content">
         <section class="slice slice-lg min-vh-100 d-flex align-items-center bg-gradient-dark">
@@ -12,37 +13,63 @@
                             <div class="card shadow zindex-100 mb-0">
                                 <div class="card-body px-md-5 py-5">
                                     <div class="mb-5">
-                                        <h6 class="h3">{{ 'account.login'|trans }}</h6>
-                                        <p class="text-muted mb-0">{{ 'account.login_text'|trans }}</p>
+                                        <h1 class="h1">{{ page.title }}</h1>
+                                        <p class="text-muted mb-0">{{ page.content }}</p>
+                                        
                                         {% if error %}
                                             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                                         {% endif %}
+                                        
+                                        {% if form is defined %}
+                                    {% for error in form.vars.errors %}
+                                        <div class="alert alert-error">
+                                            {{ error.message }}
+                                        </div>
+                                    {% endfor %}
+                                        {% endif %}
+
+                                    {% for message in app.flashes('error') %}
+                                        <div class="alert alert-error">
+                                            {{ message }}
+                                        </div>
+                                    {% endfor %}
+                                    {% for message in app.flashes('notice') %}
+                                        <div class="alert alert-error">
+                                            {{ message }}
+                                        </div>
+                                    {% endfor %}
+                                    {% for message in app.flashes('success') %}
+                                        <div class="alert alert-success">
+                                            {{ message }}
+                                        </div>
+                                    {% endfor %}
+                                    
                                     </div>
                                     <span class="clearfix"></span>
                                     <form role="form" method="post">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-email">{{ 'account.field.email'|trans }}:</label>
+                                            <label class="form-control-label" for="input-email">{{ 'login.label.email'|trans }}:</label>
                                             <div class="input-group input-group-merge">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-user"></i></span>
                                                 </div>
-                                                <input type="email" class="form-control" id="input-email" name="email" placeholder="{{ 'account.field.email'|trans }}">
+                                                <input type="email" class="form-control" id="input-email" name="email" placeholder="{{ 'login.label.email'|trans }}">
                                             </div>
                                         </div>
                                         <div class="form-group mb-4">
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <div>
-                                                    <label class="form-control-label" for="input-password">{{ 'account.field.password'|trans }}:</label>
+                                                    <label class="form-control-label" for="input-password">{{ 'login.label.password'|trans }}:</label>
                                                 </div>
                                                 <div class="mb-2">
-                                                    <a href="{{ path('app_reset_password_request') }}" class="small text-muted text-underline--dashed border-primary">{{ 'account.password_forgotten'|trans }}</a>
+                                                    <a href="{{ path('app_reset_password_request') }}" class="small text-muted text-underline--dashed border-primary">{{ 'reset_password.link.text'|trans({},'reset_password') }}</a>
                                                 </div>
                                             </div>
                                             <div class="input-group input-group-merge">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-key"></i></span>
                                                 </div>
-                                                <input type="password" name="password" class="form-control" id="input-password" placeholder="{{ 'account.field.password'|trans }}">
+                                                <input type="password" name="password" class="form-control" id="input-password" placeholder="{{ 'login.label.password'|trans }}">
                                                 <div class="input-group-append">
                                                   <span class="input-group-text">
                                                     <i class="fas fa-eye"></i>
@@ -53,7 +80,7 @@
                                         <div class="mt-4">
                                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                                             <button type="submit" class="btn btn-sm btn-primary btn-icon rounded-pill">
-                                                <span class="btn-inner--text">{{ 'account.button.sign_in'|trans }}</span>
+                                                <span class="btn-inner--text">{{ 'login.button.submit'|trans }}</span>
                                                 <span class="btn-inner--icon"><i class="fas fa-long-arrow-alt-right"></i></span>
                                             </button>
                                         </div>
@@ -61,13 +88,6 @@
                                 </div>
                                 <div class="card-footer px-md-5"><small>{{ 'reset_password.link.label'|trans({},'reset_password') }}</small>
                                     <a href="{{ path('app_reset_password_request') }}" class="small font-weight-bold">{{ 'reset_password.link.text'|trans({},'reset_password') }}</a></div>
-                            </div>
-                        </div>
-                        <div class="col-lg-5 order-lg-1 d-none d-lg-block">
-                            <div class="text-center text-lg-left">
-                                <!-- TODO: overleggen met de klant? -->
-                                <h1 class="text-white mt-4 mb-3">Klantportaal</h1>
-                                <p class="lead lh-180 text-white">{{ welcomeText }}</p>
                             </div>
                         </div>
                     </div>
