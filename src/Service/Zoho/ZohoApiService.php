@@ -58,7 +58,7 @@ class ZohoApiService
             $result = json_decode($result);
         } catch (\Exception $e) {
             curl_close($ch);
-            throw new \Exception('json decode error..in getRequest..');
+            throw new \Exception('json decode catch error..in getRequest.. '.json_last_error_msg());
         }
 
         if (57 === $result->code) {
@@ -72,7 +72,7 @@ class ZohoApiService
             throw new \Exception('refresh the token..in getRequest..');
         } elseif (0 !== $result->code) {
             curl_close($ch);
-            throw new \Exception('Error occured..in getRequest..');
+            throw new \Exception('Error occurred..in getRequest..');
         }
 
         return $result;
