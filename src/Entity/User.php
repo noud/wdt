@@ -47,6 +47,12 @@ class User implements UserInterface
     private $lastName;
 
     /**
+     * @var string
+     * @ORM\Column(type="string", unique=true)
+     */
+    private $token;
+
+    /**
      * @var array
      * @ORM\Column(type="json")
      */
@@ -186,18 +192,33 @@ class User implements UserInterface
         return $this->lastName;
     }
 
-    public function setCompanyName(string $companyName)
+    public function setCompanyName(string $companyName): void
     {
         $this->companyName = $companyName;
     }
 
-    public function setFirstName(string $firstName)
+    public function setFirstName(string $firstName): void
     {
         $this->firstName = $firstName;
     }
 
-    public function setLastName(string $lastName)
+    public function setLastName(string $lastName): void
     {
         $this->lastName = $lastName;
+    }
+
+    public function getToken(): string
+    {
+        return $this->token;
+    }
+
+    public function setToken(string $token): void
+    {
+        $this->token = $token;
+    }
+
+    public function getFullName(): string
+    {
+        return $this->firstName.' '.$this->lastName;
     }
 }

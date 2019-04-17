@@ -1,0 +1,12 @@
+login:
+  form:
+    title: 'Inloggen'
+  label:
+    email: 'E-mailadres'
+    password: 'Wachtwoord'
+  button:
+    submit: 'Inloggen'
+    logout: 'Uitloggen'
+  messages:
+    data_invalid: 'Gegevens zijn ongeldig.'
+    invalid_user_class: 'Ongeldige gebruiker class %user_class%.'

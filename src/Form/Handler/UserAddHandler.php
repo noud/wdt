@@ -14,7 +14,7 @@ class UserAddHandler
     private $userService;
 
     /**
-     * JoinHandler constructor.
+     * UserAddHandler constructor.
      */
     public function __construct(
         UserService $userService

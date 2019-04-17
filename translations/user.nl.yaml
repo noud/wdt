@@ -8,3 +8,6 @@ user:
       password: 'Wachtwoord'
       password_repeat: 'Wachtwoord nogmaals'
       submit_join: 'Account registreren'
+    error:
+      already_exist: 'E-mailadres bestaat al.'
+      password_not_matching: 'Wachtwoorden komen niet overeen.'

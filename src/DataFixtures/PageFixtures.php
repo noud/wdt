@@ -24,6 +24,48 @@ class PageFixtures extends Fixture
         $page->setContent('Hier komt tekst te staan.');
         $manager->persist($page);
 
+        $page = new Page();
+        $page->setSlug('/register-activate');
+        $page->setTitle('Activeer Account');
+        $page->setMetaTitle('Activating an Account');
+        $page->setContent('Hier komt tekst te staan.');
+        $manager->persist($page);
+
+        $page = new Page();
+        $page->setSlug('/register-activate-thanks');
+        $page->setTitle('Bedankt voor het activeren');
+        $page->setMetaTitle('Thanks activating an Account');
+        $page->setContent('Hier komt tekst te staan.');
+        $manager->persist($page);
+
+        $page = new Page();
+        $page->setSlug('/wachtwoord-vergeten');
+        $page->setTitle('Wachtwoord vergeten');
+        $page->setMetaTitle('Vul je e-mail adres in om je wachtwoord te herstellen');
+        $page->setContent('Vul je e-mail adres in om je wachtwoord te herstellen.');
+        $manager->persist($page);
+
+        $page = new Page();
+        $page->setSlug('/wachtwoord-vergeten-bedankt');
+        $page->setTitle('Wachtwoord vergeten link gestuurd');
+        $page->setMetaTitle('Password reset link sent.');
+        $page->setContent('Hier komt tekst te staan.');
+        $manager->persist($page);
+
+        $page = new Page();
+        $page->setSlug('/wachtwoord-herstellen');
+        $page->setTitle('Wachtwoord herstellen');
+        $page->setMetaTitle('Vul je nieuwe wachtwoord in');
+        $page->setContent('Vul je nieuwe wachtwoord in.');
+        $manager->persist($page);
+
+        $page = new Page();
+        $page->setSlug('/inloggen');
+        $page->setTitle('Inloggen');
+        $page->setMetaTitle('Vul je e-mail adres en wachtwoord in om in te loggen');
+        $page->setContent('Vul je e-mail adres en wachtwoord in om in te loggen.');
+        $manager->persist($page);
+
         $manager->flush();
     }
 }
