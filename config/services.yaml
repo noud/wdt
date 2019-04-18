@@ -62,7 +62,7 @@ services:
         resource: '../src/DataFixtures'
         tags: ['doctrine.fixture.orm']
            
-    App\Service\Zoho\ZohoAccessTokenService:
+    App\Zoho\Api\ZohoAccessTokenService:
          arguments:
             - '%zoho_crm_client_id%'
             - '%zoho_crm_client_secret%'
@@ -76,13 +76,13 @@ services:
             - '%zoho_crm_refreshToken%'
             
     zoho.books.api.service:
-        class: App\Service\Zoho\ZohoApiService
+        class: App\Zoho\Api\ZohoApiService
         arguments:
             - ''
             - '%zoho.books.api.base_url%'
             
     zoho.crm.api.service:
-        class: App\Service\Zoho\ZohoApiService
+        class: App\Zoho\Api\ZohoApiService
         arguments:
             - ''
             - '%zoho.crm.api.base_url%'

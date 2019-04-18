@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Zoho;
+namespace App\Zoho\Api;
 
 class ZohoApiService
 {
