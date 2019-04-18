@@ -11,39 +11,18 @@ class ZohoBooksApiService
      */
     private $apiService;
 
-    /**
-     * @var string
-     */
-    private $organizationId;
-
     public function __construct(ZohoApiService $zohoBooksApiService)
     {
         $this->apiService = $zohoBooksApiService;
     }
 
-    public function getOrganizations()
+    public function getRequest($orgId = null, $data = null)
     {
-        return $this->apiService->getRequest('organizations');
+        return $this->apiService->getRequest($orgId, $data);
     }
 
-    public function getOrganizationId(): string
+    public function setService(string $slug, array $filters = [])
     {
-        $organizations = $this->getOrganizations();
-
-        return $organizations->organizations[0]->organization_id;
-    }
-
-    public function getContacts()
-    {
-        $this->organizationId = $this->getOrganizationId();
-
-        return $this->apiService->getRequest('contacts?organization_id='.$this->organizationId);
-    }
-
-    public function getInvoices()
-    {
-        $this->organizationId = $this->getOrganizationId();
-
-        return $this->apiService->getRequest('invoices?organization_id='.$this->organizationId);
+        $this->apiService->setService($slug, $filters);
     }
 }
