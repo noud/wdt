@@ -10,6 +10,11 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class Ticket
 {
     /**
+     * @var int
+     */
+    private $id;
+
+    /**
      * @var string
      */
     private $ticketNumber;
@@ -48,6 +53,11 @@ class Ticket
      */
     private $status;
 
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
     public function setTicketNumber(string $ticketNumber): void
     {
         $this->ticketNumber = $ticketNumber;
@@ -81,6 +91,11 @@ class Ticket
     public function setStatus(string $status): void
     {
         $this->status = $status;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function getTicketNumber(): string

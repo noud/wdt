@@ -97,4 +97,24 @@ class TicketController extends AbstractController
             'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
         ]);
     }
+
+    /**
+     * @Route("/desk/tickets/view/{id}", name="zoho_desk_ticket_view")
+     *
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function view(Request $request, string $id): Response
+    {
+        $ticket = $this->ticketService->getTicket($id);
+
+        $path = $request->getPathInfo();
+        $slug = explode('/', $path);
+        array_pop($slug);
+        $path = implode('/', $slug);
+
+        return $this->render('desk/ticket/view.html.twig', [
+            'ticket' => $ticket,
+            'page' => $this->pageService->getPageBySlug($path),
+        ]);
+    }
 }

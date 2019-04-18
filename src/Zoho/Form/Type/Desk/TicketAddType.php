@@ -40,6 +40,7 @@ class TicketAddType extends AbstractType
                 'label' => 'ticket.field.priority',
                 'required' => true,
                 'choices' => [
+                    '-Geen-' => '',
                     'Hoog' => 'High',
                     'Gemiddeld' => 'Medium',
                     'Laag' => 'Low',

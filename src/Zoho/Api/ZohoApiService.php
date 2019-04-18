@@ -88,24 +88,30 @@ class ZohoApiService
             }
         }
 
-        try {
-            $result = json_decode($result, true);
-            dump($result);
-        } catch (\Exception $e) {
-            curl_close($ch);
-            throw new \Exception('json decode catch error..in getRequest.. '.json_last_error_msg());
-        }
+        if ('Internal Server Error' !== $result) {
+            try {
+                dump($result);
+                $result = json_decode($result, true);
+                dump($result);
+            } catch (\Exception $e) {
+                curl_close($ch);
+                throw new \Exception('json decode catch error..in getRequest.. '.json_last_error_msg());
+            }
 
-        if (!$orgId && 57 === $result['code']) {
-            // this should not happen
+            if (!$orgId && 57 === $result['code']) {
+                // this should not happen
+                curl_close($ch);
+                $this->zohoAccessTokenService->generateAccessTokenFromRefreshToken();
+                throw new \Exception('refresh the token..in getRequest..');
+            } elseif (!$orgId && 0 !== $result['code']) {
+                curl_close($ch);
+                throw new \Exception('Error occurred..in getRequest..');
+            }
+            dump($result);
+        } else {
             curl_close($ch);
-            $this->zohoAccessTokenService->generateAccessTokenFromRefreshToken();
-            throw new \Exception('refresh the token..in getRequest..');
-        } elseif (!$orgId && 0 !== $result['code']) {
-            curl_close($ch);
-            throw new \Exception('Error occurred..in getRequest..');
+            throw new \Exception('Internal Server Error in getRequest.');
         }
-        dump($result);
 
         return $result;
     }

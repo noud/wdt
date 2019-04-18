@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+{% trans_default_domain 'ticket' %}
+
+{% block navbar %}navbar-dark bg-dark border-bottom{% endblock %}
+{% block title %}{{ page.title }}{% endblock %}
+{% block body %}
+    {{ dump(ticket) }}
+    <div class="main-content">
+        <section class="slice">
+            <div class="container py-5 px-md-0 d-flex align-items-center">
+                <div class="w-100">
+                    <div class="row row-grid justify-content-center justify-content-lg-between">
+                        <div class="col-12 order-lg-2">
+                            <div class="card shadow zindex-100 mb-0">
+                                <div class="card-body px-md-5 py-5">
+                                    <div class="mb-5">
+                                        <h1 class="h1">{{ page.title }}</h1>
+                                        <p class="text-muted mb-0">{{ page.content }}</p>
+                                    </div>
+                                    <span class="clearfix"></span>
+                                        <div class="row">
+                                         	<div class="col-sm-4">
+                                         		<div class="row">
+                                        	    	<b>{{ 'ticket.field.status'|trans }}</b>
+                                        	    </div>
+                                         		<div class="row">
+                                        	    	{{ ticket.status }}
+                                        	    </div>
+                                        	    <div class="row">
+                                            	    <b>{{ 'ticket.field.custom_fields.aantal_minuten_ingeschat'|trans }}</b>
+                                        	    </div>
+                                         		<div class="row">
+                                            	    {{ attribute(ticket.customFields, 'Aantal minuten ingeschat') }}
+                                        	    </div>
+                                        	    <div class="row">
+                                            	    <b>{{ 'ticket.field.custom_fields.aantal_uur_ingeschat'|trans }}</b>
+                                        	    </div>
+                                         		<div class="row">
+                                            	    {{ attribute(ticket.customFields, 'Aantal uur ingeschat') }}
+                                        	    </div>
+                                         		<div class="row">
+                                        	    	<b>{{ 'ticket.field.priority'|trans }}</b>
+                                        	    </div>
+                                         		<div class="row">
+                                        	    	{{ ticket.priority }}
+                                        	    </div>
+                                        	</div>
+                                        	<div class="col-sm-8">
+                                        	    <div class="row">
+                                            	    <b>{{ 'ticket.field.nr'|trans }}</b> {{ ticket.ticketNumber }}
+                                        	    </div>
+                                        	    <div class="row">
+                                            	    <b>{{ 'ticket.field.subject'|trans }}</b> {{ ticket.subject }}
+                                        	    </div>
+                                        	</div>
+                                        </div>
+                                    <br/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

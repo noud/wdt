@@ -64,6 +64,7 @@ class TicketService
         $tickets = [];
         foreach ($result['data'] as $ticketData) {
             $ticket = new Ticket();
+            $ticket->setId($ticketData['id']);
             $ticket->setTicketNumber($ticketData['ticketNumber']);
             $ticket->setSubject($ticketData['subject']);
             $ticket->setStatus($ticketData['status']);
@@ -71,6 +72,18 @@ class TicketService
         }
 
         return $tickets;
+    }
+
+    public function getTicket(string $ticketId)
+    {
+        $this->zohoDeskApiService->setOrgId();
+        $this->zohoDeskApiService->setService('tickets/'.$ticketId, [
+            'include' => 'contacts,products,assignee,departments,team',
+        ]);
+        $result = $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrgId());
+        dump($result);
+
+        return $result;
     }
 
     public function addTicket(TicketAddData $ticketData)
