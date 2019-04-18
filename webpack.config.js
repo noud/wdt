@@ -15,6 +15,7 @@ Encore
      * and one CSS file (e.g. app.css) if you JavaScript imports CSS.
      */
     .addEntry('app', './assets/js/app.js')
+    .addEntry('password', './assets/js/password.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
@@ -38,9 +39,8 @@ Encore
     .enableBuildNotifications()
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning()
-    .enableLessLoader()
-    .addPlugin(new CopyWebpackPlugin([
-    ]))
+    .autoProvidejQuery()
+    .addPlugin(new CopyWebpackPlugin())
     .autoProvideVariables({
         $: 'jquery',
         jQuery: 'jquery',

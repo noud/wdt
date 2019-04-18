@@ -43,10 +43,7 @@ class UserService
         $this->mailSender = $mailSender;
     }
 
-    /**
-     * @return User
-     */
-    public function add(UserAddData $data)
+    public function add(UserAddData $data): User
     {
         $user = new User();
         $user->setEmail($data->email);
@@ -61,10 +58,7 @@ class UserService
         return $user;
     }
 
-    /**
-     * @return User
-     */
-    public function addAndEmail(UserAddData $data)
+    public function addAndEmail(UserAddData $data): User
     {
         $user = $this->add($data);
         $this->entityManager->flush();
@@ -85,7 +79,7 @@ class UserService
     {
         $user = $this->activate($user);
         $this->entityManager->flush();
-        $this->mailSender->sendUserActivatedMessage('Gebruiker geactiveerd', $user);
+        $this->mailSender->sendUserActivatedMessage('Je account is geactiveerd', $user);
 
         return $user;
     }

@@ -31,11 +31,7 @@ class MailerService
      */
     private $defaultFromName;
 
-    /**
-     * @param string $defaultFromEmail
-     * @param string $defaultFromName
-     */
-    public function __construct(Swift_Mailer $mailer, Twig_Environment $twig, $defaultFromEmail, $defaultFromName)
+    public function __construct(Swift_Mailer $mailer, Twig_Environment $twig, string $defaultFromEmail, string $defaultFromName)
     {
         $this->mailer = $mailer;
         $this->twig = $twig;
@@ -44,33 +40,21 @@ class MailerService
     }
 
     /**
-     * @param string $name    The template name
-     * @param array  $context An array of parameters to pass to the template
-     *
      * @throws Twig_Error_Loader  When the template cannot be found
      * @throws Twig_Error_Syntax  When an error occurred during compilation
      * @throws Twig_Error_Runtime When an error occurred during rendering
-     *
-     * @return string The rendered template
      */
-    public function render(string $name, array $context = [])
+    public function render(string $name, array $context = []): string
     {
         return $this->twig->render($name, $context);
     }
 
     /**
-     * @param array  $data
-     * @param string $template
-     *
      * @throws Twig_Error_Loader
      * @throws Twig_Error_Runtime
      * @throws Twig_Error_Syntax
-     *
-     * @return int
-     *
-     * @internal param Swift_Message $message
      */
-    public function send($to, $data, $template = 'emails/message.html.twig')
+    public function send($to, array $data, string $template = 'emails/message.html.twig'): int
     {
         // Create message
         $body = $this->render($template, $data);
@@ -80,23 +64,12 @@ class MailerService
         return $this->mailer->send($mailMessage);
     }
 
-    /**
-     * @return int
-     */
-    public function sendMessage(Swift_Message $message)
+    public function sendMessage(Swift_Message $message): ?int
     {
         return $this->mailer->send($message);
     }
 
-    /**
-     * @param string $subject
-     * @param string $body
-     * @param string $contentType
-     * @param string $charset
-     *
-     * @return Swift_Message The message
-     */
-    public function createMessage($subject = null, $body = null, $contentType = null, $charset = null)
+    public function createMessage(string $subject = null, string $body = null, string $contentType = null, string $charset = null): Swift_Message
     {
         $message = new Swift_Message($subject, $body, $contentType, $charset);
         $message->setFrom($this->defaultFromEmail, $this->defaultFromName);

@@ -2,10 +2,7 @@
 
 namespace App\Tests;
 
-use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\Tools\SchemaTool;
-use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class ServiceKernelTestCase extends KernelTestCase
@@ -29,7 +26,6 @@ class ServiceKernelTestCase extends KernelTestCase
         $this->entityManager = $om;
 
         $this->dropAndCreateDatabaseSchema();
-        $this->loadFixtures();
     }
 
     /**
@@ -52,22 +48,5 @@ class ServiceKernelTestCase extends KernelTestCase
 
         $this->entityManager->close();
         unset($this->entityManager); // avoid memory leaks
-    }
-
-    private function loadFixtures(): void
-    {
-        // clear
-        /** @var \Symfony\Component\DependencyInjection\ContainerInterface $container */
-        $container = self::$kernel->getContainer();
-        /** @var \Doctrine\ORM\EntityManagerInterface|null $em */
-        $em = $container->get('doctrine')->getManager();
-        $purger = new ORMPurger($em);
-        $purger->purge();
-
-        // load
-        $loader = new ContainerAwareLoader($container);
-        $loader->loadFromDirectory(__DIR__.'/../src/DataFixtures');
-        $executor = new ORMExecutor($container->get('doctrine.orm.entity_manager'));
-        $executor->execute($loader->getFixtures(), true);
     }
 }
