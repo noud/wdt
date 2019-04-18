@@ -1,3 +1,4 @@
+password_length: "Wachtwoord moet minstens {{ limit }} characters lang zijn."
 user:
   add:
     error:

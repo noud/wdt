@@ -20,11 +20,13 @@
                                             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                                         {% endif %}
                                         
+                                        {% if form is defined %}
                                     {% for error in form.vars.errors %}
                                         <div class="alert alert-error">
                                             {{ error.message }}
                                         </div>
                                     {% endfor %}
+                                        {% endif %}
 
                                     {% for message in app.flashes('error') %}
                                         <div class="alert alert-error">

@@ -70,126 +70,81 @@ class Page
      */
     protected $content;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getSlug()
+    public function getSlug(): string
     {
         return $this->slug;
     }
 
-    /**
-     * @param string $slug
-     */
-    public function setSlug($slug)
+    public function setSlug(string $slug)
     {
         $this->slug = $slug;
     }
 
-    /**
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * @param string $title
-     */
-    public function setTitle($title)
+    public function setTitle(string $title)
     {
         $this->title = $title;
     }
 
-    /**
-     * @return string
-     */
-    public function getMetaTitle()
+    public function getMetaTitle(): string
     {
         return $this->metaTitle;
     }
 
-    /**
-     * @param string $metaTitle
-     */
-    public function setMetaTitle($metaTitle)
+    public function setMetaTitle(string $metaTitle)
     {
         $this->metaTitle = $metaTitle;
     }
 
-    /**
-     * @return string
-     */
-    public function getMetaDescription()
+    public function getMetaDescription(): string
     {
         return $this->metaDescription;
     }
 
-    /**
-     * @param string $metaDescription
-     */
-    public function setMetaDescription($metaDescription)
+    public function setMetaDescription(string $metaDescription)
     {
         $this->metaDescription = $metaDescription;
     }
 
-    /**
-     * @return string
-     */
-    public function getIntroduction()
+    public function getIntroduction(): string
     {
         return $this->introduction;
     }
 
-    /**
-     * @param string $introduction
-     */
-    public function setIntroduction($introduction)
+    public function setIntroduction(string $introduction)
     {
         $this->introduction = $introduction;
     }
 
-    /**
-     * @return string
-     */
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }
 
-    /**
-     * @param string $content
-     */
-    public function setContent($content)
+    public function setContent(string $content)
     {
         $this->content = $content;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasIntroduction()
+    public function hasIntroduction(): bool
     {
         /** @var string|null $introduction */
         $introduction = $this->getIntroduction();
 
-        return !(null === $introduction || 0 === mb_strlen(trim($introduction)));
+        return $introduction && '' !== trim($introduction);
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
-        return (string) $this->getTitle();
+        return $this->getTitle();
     }
 }
