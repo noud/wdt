@@ -124,9 +124,6 @@ class TicketController extends AbstractController
         $resolutionHistory = $this->resolutionHistoryService->getAllResolutionHistory($id);
         $ticketComments = $this->ticketCommentService->getAllPublicTicketComments($id);
 
-        dump($request->getPathInfo());
-        dump($this->pathStripLastPart($request->getPathInfo()));
-
         return $this->render('desk/ticket/view.html.twig', [
             'ticket' => $ticket,
             'resolutionHistory' => $resolutionHistory,
