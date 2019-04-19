@@ -1,6 +1,6 @@
 ticket:
   field:
-    nr: 'Nr.'
+    nr: '#'
     contact_name: 'Contactpersoon naam'
     email: 'E-mailadres'
     subject: 'Onderwerp'
@@ -12,3 +12,9 @@ ticket:
       aantal_minuten_ingeschat: 'Aantal minuten ingeschat'
       aantal_uur_ingeschat: 'Aantal uur ingeschat'
     submit: 'Ticket registreren'
+ticket_comment:
+  field:
+    content: 'Commentaar'
+    submit: 'Commentaar registreren'
+    add_comment: 'Commentaar bijvoegen'
+    

@@ -2,6 +2,8 @@
 
 namespace App\Zoho\Service\Desk;
 
+use App\Zoho\Entity\Desk\TicketComment;
+use App\Zoho\Form\Data\Desk\TicketCommentAddData;
 use App\Zoho\Service\ZohoDeskApiService;
 
 class TicketCommentService
@@ -37,5 +39,27 @@ class TicketCommentService
         });
 
         return $publicTicketComments;
+    }
+
+    public function addTicketComment(TicketCommentAddData $ticketCommentData, string $ticketId)
+    {
+        $ticketComment = new TicketComment();
+        $ticketComment->setContent($ticketCommentData->content);
+
+        $this->createTicketComment($ticketComment, $ticketId);
+    }
+
+    public function createTicketComment(TicketComment $ticketComment, string $ticketId)
+    {
+        $this->zohoDeskApiService->setOrgId();
+        $data = [
+            'isPublic' => 'true',
+            'content' => $ticketComment->getContent(),
+            'contentType' => 'html',
+        ];
+
+        $this->zohoDeskApiService->setService('tickets/'.$ticketId.'/comments');
+
+        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrgId(), $data);
     }
 }

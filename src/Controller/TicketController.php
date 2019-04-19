@@ -108,7 +108,7 @@ class TicketController extends AbstractController
      */
     public function addThanks(Request $request): Response
     {
-        return $this->render('desk/ticket/thanks.html.twig', [
+        return $this->render('desk/thanks.html.twig', [
             'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
         ]);
     }
@@ -124,16 +124,23 @@ class TicketController extends AbstractController
         $resolutionHistory = $this->resolutionHistoryService->getAllResolutionHistory($id);
         $ticketComments = $this->ticketCommentService->getAllPublicTicketComments($id);
 
-        $path = $request->getPathInfo();
-        $slug = explode('/', $path);
-        array_pop($slug);
-        $path = implode('/', $slug);
+        dump($request->getPathInfo());
+        dump($this->pathStripLastPart($request->getPathInfo()));
 
         return $this->render('desk/ticket/view.html.twig', [
             'ticket' => $ticket,
             'resolutionHistory' => $resolutionHistory,
             'ticketComments' => $ticketComments,
-            'page' => $this->pageService->getPageBySlug($path),
+            'page' => $this->pageService->getPageBySlug($this->pathStripLastPart($request->getPathInfo())),
         ]);
+    }
+
+    private function pathStripLastPart(string $path): string
+    {
+        $slug = explode('/', $path);
+        array_pop($slug);
+        $path = implode('/', $slug);
+
+        return $path;
     }
 }

@@ -87,7 +87,7 @@ class ZohoApiService
             }
         }
 
-        if ('Internal Server Error' !== $result) {
+        if ('Internal Server Error' !== $result && '\n' !== $result) {
             try {
                 $result = json_decode($result, true);
             } catch (\Exception $e) {

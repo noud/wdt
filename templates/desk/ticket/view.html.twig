@@ -21,42 +21,39 @@
                                         <div class="row">
                                          	<div class="col-sm-4">
                                          		<div class="row">
-                                        	    	<b>{{ 'ticket.field.status'|trans }}</b>
+                                        	    	{{ 'ticket.field.status'|trans }}
                                         	    </div>
                                          		<div class="row">
-                                        	    	{{ ticket.status }}
+                                        	    	<b>{{ ticket.status }}</b>
                                         	    </div>
                                          		<div class="row">
-                                        	    	<b>{{ 'ticket.field.due_date'|trans }}</b>
+                                        	    	{{ 'ticket.field.due_date'|trans }}
                                         	    </div>
                                          		<div class="row">
-                                             	    {{ ticket.dueDate|date('d-m-Y') }}
+                                             	    <b>{{ ticket.dueDate|date('d-m-Y') }}</b>
                                         	    </div>
                                         	    <div class="row">
-                                            	    <b>{{ 'ticket.field.custom_fields.aantal_minuten_ingeschat'|trans }}</b>
+                                            	    {{ 'ticket.field.custom_fields.aantal_minuten_ingeschat'|trans }}
                                         	    </div>
                                          		<div class="row">
-                                            	    {{ attribute(ticket.customFields, 'Aantal minuten ingeschat') }}
+                                            	    <b>{{ attribute(ticket.customFields, 'Aantal minuten ingeschat') }}</b>
                                         	    </div>
                                         	    <div class="row">
-                                            	    <b>{{ 'ticket.field.custom_fields.aantal_uur_ingeschat'|trans }}</b>
+                                            	    {{ 'ticket.field.custom_fields.aantal_uur_ingeschat'|trans }}
                                         	    </div>
                                          		<div class="row">
-                                            	    {{ attribute(ticket.customFields, 'Aantal uur ingeschat') }}
+                                            	    <b>{{ attribute(ticket.customFields, 'Aantal uur ingeschat') }}</b>
                                         	    </div>
                                          		<div class="row">
-                                        	    	<b>{{ 'ticket.field.priority'|trans }}</b>
+                                        	    	{{ 'ticket.field.priority'|trans }}
                                         	    </div>
                                          		<div class="row">
-                                        	    	{{ ticket.priority }}
+                                        	    	<b>{{ ticket.priority }}</b>
                                         	    </div>
                                         	</div>
                                         	<div class="col-sm-8">
                                         	    <div class="row">
-                                            	    <b>{{ 'ticket.field.nr'|trans }}</b> {{ ticket.ticketNumber }}
-                                        	    </div>
-                                        	    <div class="row">
-                                            	    <b>{{ 'ticket.field.subject'|trans }}</b> {{ ticket.subject }}
+                                            	    <b>{{ 'ticket.field.nr'|trans }} {{ ticket.ticketNumber }} {{ ticket.subject }}</b>
                                         	    </div>
                                         	    <div class="row">
                                         	    	<ul>
@@ -71,6 +68,12 @@
                                                 	    </li>
                                             	    {% endfor %}
                                             	    </ul>
+                                        	    </div>
+                                        	    <div class="row">
+                                                    <a href="{{ path('zoho_desk_tickets_comment_create', {ticketId: ticket.id }) }}" type="submit" class="btn btn-sm btn-primary btn-icon rounded-pill">
+                                                        <span class="btn-inner--text">{{ 'ticket_comment.field.add_comment'|trans }}</span>
+                                                        <span class="btn-inner--icon"><i class="fas fa-long-arrow-alt-right"></i></span>
+                                                    </a>
                                         	    </div>
                                         	</div>
                                         </div>
