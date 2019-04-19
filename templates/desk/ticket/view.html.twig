@@ -4,6 +4,7 @@
 {% block navbar %}navbar-dark bg-dark border-bottom{% endblock %}
 {% block title %}{{ page.title }}{% endblock %}
 {% block body %}
+{# {{ dump(ticket) }}#}
     <div class="main-content">
         <section class="slice">
             <div class="container py-5 px-md-0 d-flex align-items-center">
@@ -24,6 +25,12 @@
                                         	    </div>
                                          		<div class="row">
                                         	    	{{ ticket.status }}
+                                        	    </div>
+                                         		<div class="row">
+                                        	    	<b>{{ 'ticket.field.due_date'|trans }}</b>
+                                        	    </div>
+                                         		<div class="row">
+                                             	    {{ ticket.dueDate|date('d-m-Y') }}
                                         	    </div>
                                         	    <div class="row">
                                             	    <b>{{ 'ticket.field.custom_fields.aantal_minuten_ingeschat'|trans }}</b>
@@ -50,6 +57,20 @@
                                         	    </div>
                                         	    <div class="row">
                                             	    <b>{{ 'ticket.field.subject'|trans }}</b> {{ ticket.subject }}
+                                        	    </div>
+                                        	    <div class="row">
+                                        	    	<ul>
+                                            	    {% for ticketComment in ticketComments %}
+                                                	    <li>
+                                                	    <div class="row">
+                                                    	    <b>{{ ticketComment.commenter.name }}</b>
+                                                	    </div>
+                                                	    <div class="row">
+                                                    	    {{ ticketComment.content }}
+                                                	    </div>
+                                                	    </li>
+                                            	    {% endfor %}
+                                            	    </ul>
                                         	    </div>
                                         	</div>
                                         </div>

@@ -34,7 +34,8 @@ class ZohoApiService
 
     public function setService(string $slug, array $filters = [])
     {
-        $this->apiUrl = $this->apiBaseUrl.$slug.'?'.http_build_query($filters);
+        $httpQuery = \count($filters) ? '?'.http_build_query($filters) : '';
+        $this->apiUrl = $this->apiBaseUrl.$slug.$httpQuery;
     }
 
     /**

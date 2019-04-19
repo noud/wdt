@@ -6,6 +6,8 @@ use App\Service\PageService;
 use App\Zoho\Form\Data\Desk\TicketAddData;
 use App\Zoho\Form\Handler\Desk\TicketAddHandler;
 use App\Zoho\Form\Type\Desk\TicketAddType;
+use App\Zoho\Service\Desk\ResolutionHistoryService;
+use App\Zoho\Service\Desk\TicketCommentService;
 use App\Zoho\Service\Desk\TicketService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,15 +22,29 @@ class TicketController extends AbstractController
     private $ticketService;
 
     /**
+     * @var ResolutionHistoryService
+     */
+    private $resolutionHistoryService;
+
+    /**
+     * @var TicketCommentService
+     */
+    private $ticketCommentService;
+
+    /**
      * @var PageService
      */
     private $pageService;
 
     public function __construct(
         TicketService $ticketService,
+        ResolutionHistoryService $resolutionHistoryService,
+        TicketCommentService $ticketCommentService,
         PageService $pageService
     ) {
         $this->ticketService = $ticketService;
+        $this->resolutionHistoryService = $resolutionHistoryService;
+        $this->ticketCommentService = $ticketCommentService;
         $this->pageService = $pageService;
     }
 
@@ -105,6 +121,8 @@ class TicketController extends AbstractController
     public function view(Request $request, string $id): Response
     {
         $ticket = $this->ticketService->getTicket($id);
+        $resolutionHistory = $this->resolutionHistoryService->getAllResolutionHistory($id);
+        $ticketComments = $this->ticketCommentService->getAllPublicTicketComments($id);
 
         $path = $request->getPathInfo();
         $slug = explode('/', $path);
@@ -113,6 +131,8 @@ class TicketController extends AbstractController
 
         return $this->render('desk/ticket/view.html.twig', [
             'ticket' => $ticket,
+            'resolutionHistory' => $resolutionHistory,
+            'ticketComments' => $ticketComments,
             'page' => $this->pageService->getPageBySlug($path),
         ]);
     }
