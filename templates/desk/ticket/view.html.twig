@@ -4,7 +4,6 @@
 {% block navbar %}navbar-dark bg-dark border-bottom{% endblock %}
 {% block title %}{{ page.title }}{% endblock %}
 {% block body %}
-{# {{ dump(ticket) }}#}
     <div class="main-content">
         <section class="slice">
             <div class="container py-5 px-md-0 d-flex align-items-center">
@@ -31,6 +30,12 @@
                                         	    </div>
                                          		<div class="row">
                                              	    <b>{{ ticket.dueDate|date('d-m-Y') }}</b>
+                                        	    </div>
+                                         		<div class="row">
+                                        	    	{{ 'ticket.field.classification'|trans }}
+                                        	    </div>
+                                         		<div class="row">
+                                             	    <b>{{ ticket.classification }}</b>
                                         	    </div>
                                         	    <div class="row">
                                             	    {{ 'ticket.field.custom_fields.aantal_minuten_ingeschat'|trans }}
@@ -60,7 +65,12 @@
                                             	    {% for ticketComment in ticketComments %}
                                                 	    <li>
                                                 	    <div class="row">
+                                                	    <div class="col-sm-6">
                                                     	    <b>{{ ticketComment.commenter.name }}</b>
+                                         	    	    </div>
+                                                        <div class="col-sm-6">
+                                            	    	    {{ ticketComment.commentedTime|date('d-m-Y H:i') }}
+                                         	    	    </div>
                                                 	    </div>
                                                 	    <div class="row">
                                                     	    {{ ticketComment.content }}

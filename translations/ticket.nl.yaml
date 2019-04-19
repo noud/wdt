@@ -8,6 +8,7 @@ ticket:
     priority: 'Prioriteit'
     status: 'Status'
     due_date: 'Opleveringsdatum'
+    classification: 'Classificatie'
     custom_fields:
       aantal_minuten_ingeschat: 'Aantal minuten ingeschat'
       aantal_uur_ingeschat: 'Aantal uur ingeschat'

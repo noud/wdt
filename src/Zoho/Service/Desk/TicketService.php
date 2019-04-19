@@ -61,6 +61,11 @@ class TicketService
             'include' => 'assignee,departments,team,isRead',
         ]);
         $result = $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrgId());
+
+        usort($result['data'], function ($a, $b) {
+            return ($a['ticketNumber'] > $b['ticketNumber']) ? -1 : 1;
+        });
+
         $tickets = [];
         foreach ($result['data'] as $ticketData) {
             $ticket = new Ticket();

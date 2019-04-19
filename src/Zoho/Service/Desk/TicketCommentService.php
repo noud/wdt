@@ -38,6 +38,10 @@ class TicketCommentService
             return $var['isPublic'] === $filterBy;
         });
 
+        usort($publicTicketComments, function ($a, $b) {
+            return ($a['commentedTime'] > $b['commentedTime']) ? -1 : 1;
+        });
+
         return $publicTicketComments;
     }
 
