@@ -2,6 +2,8 @@
 
 namespace App\Zoho\Api;
 
+use Symfony\Contracts\Translation\TranslatorInterface;
+
 class ZohoApiService
 {
     /**
@@ -14,12 +16,19 @@ class ZohoApiService
      */
     private $apiBaseUrl;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     public function __construct(
         ZohoAccessTokenService $zohoAccessTokenService,
-        $apiBaseUrl
+        $apiBaseUrl,
+        TranslatorInterface $translator
     ) {
         $this->zohoAccessTokenService = $zohoAccessTokenService;
         $this->apiBaseUrl = $apiBaseUrl;
+        $this->translator = $translator;
     }
 
     public function init(): void
@@ -55,7 +64,7 @@ class ZohoApiService
         if ($errorNumber = curl_errno($ch)) {
             if (\in_array($errorNumber, [CURLE_OPERATION_TIMEDOUT, CURLE_OPERATION_TIMEOUTED], true)) {
                 curl_close($ch);
-                throw new \Exception('timeout..in getRequest..');
+                throw new \Exception($this->translator->trans('get_request.timeout', [], 'exceptions'));
             }
         }
 
@@ -63,15 +72,21 @@ class ZohoApiService
             $result = json_decode($result);
         } catch (\Exception $e) {
             curl_close($ch);
-            throw new \Exception('json decode catch error..in getRequest.. '.json_last_error_msg());
+            throw new \Exception(
+                $this->translator->trans(
+                    'get_request.json_decode %msg%',
+                    ['%msg%' => json_last_error_msg()],
+                    'exceptions'
+                )
+            );
         }
 
         if (57 === $result->code) {
             curl_close($ch);
-            throw new \Exception('refresh the token..in getRequest..');
+            throw new \Exception($this->translator->trans('get_request.refresh', [], 'exceptions'));
         } elseif (0 !== $result->code) {
             curl_close($ch);
-            throw new \Exception('Error occurred..in getRequest..');
+            throw new \Exception($this->translator->trans('get_request.error_in_code', [], 'exceptions'));
         }
 
         return $result;
