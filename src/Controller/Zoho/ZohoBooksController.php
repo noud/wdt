@@ -25,6 +25,7 @@ class ZohoBooksController extends AbstractController
      */
     public function getOrganizations(): Response
     {
+        /** @var \stdClass $result */
         $result = $this->booksWebservice->getOrganizations();
 
         return new Response(
@@ -39,6 +40,7 @@ class ZohoBooksController extends AbstractController
      */
     public function getContacts(): Response
     {
+        /** @var \stdClass $result */
         $result = $this->booksWebservice->getContacts();
         dump($result);
         $contactNames = '';
@@ -56,6 +58,7 @@ class ZohoBooksController extends AbstractController
      */
     public function getInvoices(): Response
     {
+        /** @var \stdClass $result */
         $result = $this->booksWebservice->getInvoices();
         dump($result);
         $invoicesInfo = '';

@@ -27,7 +27,7 @@ class ZohoApiService
         $this->zohoAccessTokenService->init();
     }
 
-    public function getRequest(string $urlPart)
+    public function getRequest(string $urlPart): \stdClass
     {
         $url = $this->apiBaseUrl.$urlPart;
 
