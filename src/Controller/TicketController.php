@@ -38,7 +38,6 @@ class TicketController extends AbstractController
     public function getDeskTicketsAll()
     {
         $result = $this->ticketService->getAllTickets();
-        dump($result);
         $ticketsInfo = '';
         foreach ($result['data'] as $ticket) {
             $ticketsInfo .= $ticket['ticketNumber'].' '.$ticket['subject'].'<br />';

@@ -50,7 +50,6 @@ class ZohoBooksController extends AbstractController
     public function getOrganizations()
     {
         $result = $this->organizationService->getAllOrganizations();
-        dump($result);
 
         return new Response(
             '<html><body>Organizations: '.$result['code'].' '.$result['message'].'<br />'
@@ -65,7 +64,6 @@ class ZohoBooksController extends AbstractController
     public function getContacts()
     {
         $result = $this->contactService->getAllContacts();
-        dump($result);
         $contactNames = '';
         foreach ($result['contacts'] as $contact) {
             $contactNames .= $contact['contact_name'].'<br />';

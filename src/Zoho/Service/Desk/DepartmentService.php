@@ -41,7 +41,6 @@ class DepartmentService
     public function getDepartmentId()
     {
         $departments = $this->getAllDepartments();
-        dump($departments);
 
         return $departments['data'][0]['id'];
     }

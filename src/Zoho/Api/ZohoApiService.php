@@ -62,8 +62,6 @@ class ZohoApiService
                 'Authorization: Zoho-oauthtoken '.$this->zohoAccessTokenService->getAccessToken(),
             ];
         }
-        dump($this->apiUrl);
-        dump($header);
 
         /** @var resource $ch */
         $ch = curl_init($this->apiUrl);
@@ -90,9 +88,7 @@ class ZohoApiService
 
         if ('Internal Server Error' !== $result) {
             try {
-                dump($result);
                 $result = json_decode($result, true);
-                dump($result);
             } catch (\Exception $e) {
                 curl_close($ch);
                 throw new \Exception('json decode catch error..in getRequest.. '.json_last_error_msg());
@@ -107,7 +103,6 @@ class ZohoApiService
                 curl_close($ch);
                 throw new \Exception('Error occurred..in getRequest..');
             }
-            dump($result);
         } else {
             curl_close($ch);
             throw new \Exception('Internal Server Error in getRequest.');

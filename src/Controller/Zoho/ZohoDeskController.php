@@ -66,7 +66,6 @@ class ZohoDeskController extends AbstractController
     public function getDeskOrganizations()
     {
         $result = $this->organizationService->getAllOrganizations();
-        dump($result);
         $organizationsInfo = '';
         foreach ($result['data'] as $organization) {
             $organizationsInfo .= $organization['id'].' '.$organization['companyName'].'<br />';
@@ -83,7 +82,6 @@ class ZohoDeskController extends AbstractController
     public function getDeskDepartments()
     {
         $result = $this->departmentService->getAllDepartments();
-        dump($result);
         $ticketsInfo = '';
         foreach ($result['data'] as $department) {
             $ticketsInfo .= $department['id'].' '.$department['name'].'<br />';
@@ -100,7 +98,6 @@ class ZohoDeskController extends AbstractController
     public function getDeskContacts()
     {
         $result = $this->contactService->getAllContacts();
-        dump($result);
         $contactsInfo = '';
         foreach ($result['data'] as $contact) {
             $contactsInfo .= $contact['id'].' '.$contact['email'].'<br />';
@@ -117,7 +114,6 @@ class ZohoDeskController extends AbstractController
     public function getDeskAccounts()
     {
         $result = $this->accountService->getAllAccounts();
-        dump($result);
         $accountsInfo = '';
         foreach ($result['data'] as $account) {
             $accountsInfo .= $account['id'].' '.$account['accountName'].' '.$account['email'].'<br />';
@@ -135,7 +131,6 @@ class ZohoDeskController extends AbstractController
     public function getDeskAccountContacts(string $accountId)
     {
         $result = $this->accountService->getAllAccountContacts($accountId);
-        dump($result);
         $accountContactsInfo = '';
         foreach ($result['data'] as $accountContact) {
             $accountContactsInfo .= $accountContact['id'].' '.$accountContact['lastName'].' '.$accountContact['email'].'<br />';

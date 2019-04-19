@@ -81,7 +81,6 @@ class TicketService
             'include' => 'contacts,products,assignee,departments,team',
         ]);
         $result = $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrgId());
-        dump($result);
 
         return $result;
     }

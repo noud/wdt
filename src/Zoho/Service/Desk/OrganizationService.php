@@ -29,7 +29,6 @@ class OrganizationService
     public function getOrganizationId(): string
     {
         $organizations = $this->getAllOrganizations();
-        dump($organizations);
 
         return $organizations['data'][0]['id'];
     }
