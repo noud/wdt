@@ -48,7 +48,7 @@ class ZohoApiService
             'Authorization: Zoho-oauthtoken '.$this->zohoAccessTokenService->getAccessToken(),
         ]);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 400); //timeout in seconds
+        curl_setopt($ch, CURLOPT_TIMEOUT, 400);
 
         /** @var string $result */
         $result = curl_exec($ch);
@@ -67,7 +67,6 @@ class ZohoApiService
         }
 
         if (57 === $result->code) {
-            // this should not happen
             curl_close($ch);
             throw new \Exception('refresh the token..in getRequest..');
         } elseif (0 !== $result->code) {
