@@ -4,13 +4,23 @@ namespace App\Service\Zoho;
 
 use App\Entity\User;
 
-class ContactsWebservice extends AbstractWebservice
+class ZohoCrmApiService
 {
-    public function hasAccessToPortal(User $user)
+    /**
+     * @var ZohoApiService
+     */
+    private $apiService;
+
+    public function __construct(ZohoApiService $zohoCrmApiService)
+    {
+        $this->apiService = $zohoCrmApiService;
+    }
+
+    public function hasAccessToPortal(User $user): bool
     {
         $email = $user->getEmail();
 
-        $this->init();
+        $this->apiService->init();
         $rest = \ZCRMModule::getInstance('Contacts');
         $criteria = 'Email:equals:'.$email;
         try {

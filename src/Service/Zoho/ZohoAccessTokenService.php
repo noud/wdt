@@ -6,7 +6,7 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-abstract class AbstractWebservice
+class ZohoAccessTokenService
 {
     /**
      * @var string
@@ -31,7 +31,12 @@ abstract class AbstractWebservice
     /**
      * @var string
      */
-    private $logPath;
+    public $authPath;
+
+    /**
+     * @var string
+     */
+    public $logPath;
 
     /**
      * @var string
@@ -46,21 +51,34 @@ abstract class AbstractWebservice
     /**
      * @var string
      */
-    private $grantToken;
+    protected $grantToken;
 
     /**
      * @var string
      */
-    private $refreshToken;
+    protected $refreshToken;
+
+    /**
+     * @var string
+     */
+    private $accessToken;
+
+    /**
+     * @var float
+     */
+    private $accessTokenExpiryTime;
 
     /**
      * Webservice constructor.
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         string $clientId,
         string $clientSecret,
         string $redirectUri,
         string $currentUserEmail,
+        string $authPath,
         string $logPath,
         string $apiBaseUrl,
         string $accountsUrl,
@@ -75,21 +93,30 @@ abstract class AbstractWebservice
         $this->clientSecret = $clientSecret;
         $this->redirectUri = $redirectUri;
         $this->currentUserEmail = $currentUserEmail;
+        $this->authPath = $authPath;
         $this->logPath = $logPath;
         $this->apiBaseUrl = $apiBaseUrl;
         $this->accountsUrl = $accountsUrl;
 
         $filesystem = new Filesystem();
         $tokenPersistenceFileCreated = false;
-        $tokenPersistenceFile = $this->logPath.'/zcrm_oauthtokens.txt';
+        $tokenPersistenceFile = $this->authPath.'/zcrm_oauthtokens.txt';
         if (!$filesystem->exists($tokenPersistenceFile)) {
             try {
-                $filesystem->mkdir($this->logPath);
+                $filesystem->mkdir($this->authPath);
                 $filesystem->touch($tokenPersistenceFile);
-                $filesystem->touch($this->logPath.'/ZCRMClientLibrary.log');
                 $tokenPersistenceFileCreated = true;
             } catch (IOExceptionInterface $exception) {
-                throw new IOException('An error occurred while creating your file at '.$exception->getPath());
+                throw new IOException('An error occurred while creating your auth file at '.$exception->getPath());
+            }
+        }
+        $logFile = $this->logPath.'/ZCRMClientLibrary.log';
+        if (!$filesystem->exists($logFile)) {
+            try {
+                $filesystem->mkdir($this->logPath);
+                $filesystem->touch($logFile);
+            } catch (IOExceptionInterface $exception) {
+                throw new IOException('An error occurred while creating your log file at '.$exception->getPath());
             }
         }
 
@@ -107,7 +134,7 @@ abstract class AbstractWebservice
             'client_secret' => $this->clientSecret,
             'redirect_uri' => $this->redirectUri,
             'currentUserEmail' => $this->currentUserEmail,
-            'token_persistence_path' => $this->logPath,    // zcrm_oauthtokens.txt
+            'token_persistence_path' => $this->authPath,    // zcrm_oauthtokens.txt
             'apiBaseUrl' => $this->apiBaseUrl,
             'accounts_url' => $this->accountsUrl,
             'applicationLogFilePath' => $this->logPath,
@@ -118,11 +145,57 @@ abstract class AbstractWebservice
 
     public function generateAccessToken(string $grantToken = null)
     {
-        // SCOPE = aaaserver.profile.ALL,ZohoCRM.modules.ALL
         $this->init();
         $this->grantToken = $grantToken ?: $this->grantToken;
         $oAuthClient = \ZohoOAuth::getClientInstance();
-        $oAuthClient->generateAccessToken($this->grantToken);
+        $accessTokens = $oAuthClient->generateAccessToken($this->grantToken);
+        $this->accessToken = $accessTokens->getAccessToken();
+    }
+
+    public function setAccessToken(): void
+    {
+        $file = $this->authPath.'/zcrm_oauthtokens.txt';
+        if (file_exists($file)) {
+            /** @var string $fileContent */
+            $fileContent = file_get_contents($file);
+            $fileArray = unserialize($fileContent);
+            if ($fileArray) {
+                try {
+                    $this->accessToken = $fileArray[0]->getAccessToken();
+                    $this->accessTokenExpiryTime = $fileArray[0]->getExpiryTime();
+                } catch (\Exception $e) {
+                    $this->generateAccessTokenFromRefreshToken();
+                    $this->setRefreshToken();
+                }
+            }
+        }
+    }
+
+    public function getAccessToken(): string
+    {
+        return $this->accessToken;
+    }
+
+    public function getAccessTokenExpiryTime(): ?float
+    {
+        return $this->accessTokenExpiryTime;
+    }
+
+    private function setRefreshToken(): void
+    {
+        $file = $this->authPath.'/zcrm_oauthtokens.txt';
+        if (file_exists($file)) {
+            /** @var string $fileContent */
+            $fileContent = file_get_contents($file);
+            $fileArray = unserialize($fileContent);
+            if ($fileArray) {
+                try {
+                    $this->refreshToken = $fileArray[0]->getRefreshToken();
+                } catch (\Exception $e) {
+                    throw new \Exception('setRefreshToken does not work.');
+                }
+            }
+        }
     }
 
     public function generateAccessTokenFromRefreshToken()

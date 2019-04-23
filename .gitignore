@@ -1,4 +1,5 @@
-config/zoho/
+
+/config/zoho/
 
 ###> symfony/framework-bundle ###
 /.env.local

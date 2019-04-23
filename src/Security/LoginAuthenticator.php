@@ -4,7 +4,7 @@ namespace App\Security;
 
 use App\Entity\User;
 use App\Service\LockingService;
-use App\Service\Zoho\ContactsWebservice;
+use App\Service\Zoho\ZohoCrmApiService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -52,7 +52,7 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
     private $userPasswordEncoder;
 
     /**
-     * @var ContactsWebservice
+     * @var ZohoCrmApiService
      */
     private $contactsWebservice;
 
@@ -64,7 +64,7 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Authe
         CsrfTokenManagerInterface $csrfTokenManager,
         LockingService $lockingService,
         UserPasswordEncoderInterface $userPasswordEncoder,
-        ContactsWebservice $contactsWebservice
+        ZohoCrmApiService $contactsWebservice
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
