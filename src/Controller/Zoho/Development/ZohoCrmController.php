@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Zoho;
+namespace App\Controller\Zoho\Development;
 
 use App\Entity\User;
 use App\Zoho\Service\ZohoCrmApiService;

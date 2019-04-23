@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Zoho;
+namespace App\Controller\Zoho\Development;
 
 use App\Zoho\Service\ZohoBooksApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -42,7 +42,6 @@ class ZohoBooksController extends AbstractController
     {
         /** @var \stdClass $result */
         $result = $this->booksWebservice->getContacts();
-        dump($result);
         $contactNames = '';
         foreach ($result->contacts as $contact) {
             $contactNames .= $contact->contact_name.'<br />';
@@ -60,7 +59,6 @@ class ZohoBooksController extends AbstractController
     {
         /** @var \stdClass $result */
         $result = $this->booksWebservice->getInvoices();
-        dump($result);
         $invoicesInfo = '';
         foreach ($result->invoices as $invoice) {
             $invoicesInfo .= $invoice->invoice_id.' '.$invoice->total.'<br />';

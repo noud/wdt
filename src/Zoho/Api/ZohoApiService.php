@@ -23,7 +23,7 @@ class ZohoApiService
 
     public function __construct(
         ZohoAccessTokenService $zohoAccessTokenService,
-        $apiBaseUrl,
+        string $apiBaseUrl,
         TranslatorInterface $translator
     ) {
         $this->zohoAccessTokenService = $zohoAccessTokenService;
@@ -68,9 +68,8 @@ class ZohoApiService
             }
         }
 
-        try {
-            $result = json_decode($result);
-        } catch (\Exception $e) {
+        $result = json_decode($result);
+        if (JSON_ERROR_NONE !== json_last_error()) {
             curl_close($ch);
             throw new \Exception(
                 $this->translator->trans(
