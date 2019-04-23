@@ -20,7 +20,7 @@ class ZohoDeskApiService
     /**
      * @var string
      */
-    private $orgId;
+    private $organizationId;
 
     public function __construct(
         ZohoApiService $zohoDeskApiService,

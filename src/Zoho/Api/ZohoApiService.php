@@ -2,6 +2,8 @@
 
 namespace App\Zoho\Api;
 
+use Symfony\Contracts\Translation\TranslatorInterface;
+
 class ZohoApiService
 {
     /**
@@ -18,13 +20,20 @@ class ZohoApiService
      * @var string
      */
     private $apiUrl;
+    
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     public function __construct(
         ZohoAccessTokenService $zohoAccessTokenService,
-        $apiBaseUrl
+        string $apiBaseUrl,
+        TranslatorInterface $translator
     ) {
         $this->zohoAccessTokenService = $zohoAccessTokenService;
         $this->apiBaseUrl = $apiBaseUrl;
+        $this->translator = $translator;
     }
 
     public function init(): void
@@ -38,12 +47,9 @@ class ZohoApiService
     }
 
     /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     *
      * @throws \Exception
      */
-    public function getRequest($orgId = null, $data = null)
+    public function getRequest(string $urlPart, $orgId = null, $data = null): \stdClass
     {
         $this->zohoAccessTokenService->setAccessToken();
         $accessTokenExpiryTime = $this->zohoAccessTokenService->getAccessTokenExpiryTime();
@@ -62,8 +68,6 @@ class ZohoApiService
                 'Authorization: Zoho-oauthtoken '.$this->zohoAccessTokenService->getAccessToken(),
             ];
         }
-        dump($this->apiUrl);
-        dump($header);
 
         /** @var resource $ch */
         $ch = curl_init($this->apiUrl);
@@ -77,35 +81,43 @@ class ZohoApiService
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         }
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 400); //timeout in seconds
+        curl_setopt($ch, CURLOPT_TIMEOUT, 400);
 
         /** @var string $result */
         $result = curl_exec($ch);
         if ($errorNumber = curl_errno($ch)) {
             if (\in_array($errorNumber, [CURLE_OPERATION_TIMEDOUT, CURLE_OPERATION_TIMEOUTED], true)) {
                 curl_close($ch);
-                throw new \Exception('timeout..in getRequest..');
+                throw new \Exception($this->translator->trans('get_request.timeout', [], 'exceptions'));
             }
         }
 
-        try {
-            $result = json_decode($result, true);
-            dump($result);
-        } catch (\Exception $e) {
+        return $this->processResult($result, $orgId, $ch);
+    }
+
+    private function processResult(string $result, string $orgId, $ch)
+    {
+        $result = json_decode($result);
+        if (JSON_ERROR_NONE !== json_last_error()) {
             curl_close($ch);
-            throw new \Exception('json decode catch error..in getRequest.. '.json_last_error_msg());
+            throw new \Exception(
+                $this->translator->trans(
+                    'get_request.json_decode %msg%',
+                    ['%msg%' => json_last_error_msg()],
+                    'exceptions'
+                )
+            );
         }
 
         if (!$orgId && 57 === $result['code']) {
             // this should not happen
             curl_close($ch);
             $this->zohoAccessTokenService->generateAccessTokenFromRefreshToken();
-            throw new \Exception('refresh the token..in getRequest..');
+            throw new \Exception($this->translator->trans('get_request.refresh', [], 'exceptions'));
         } elseif (!$orgId && 0 !== $result['code']) {
             curl_close($ch);
-            throw new \Exception('Error occurred..in getRequest..');
+            throw new \Exception($this->translator->trans('get_request.error_in_code', [], 'exceptions'));
         }
-        dump($result);
 
         return $result;
     }

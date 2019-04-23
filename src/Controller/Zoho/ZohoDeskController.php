@@ -63,10 +63,9 @@ class ZohoDeskController extends AbstractController
     /**
      * @Route("/desk/organizations", name="zoho_desk_organizations")
      */
-    public function getDeskOrganizations()
+    public function getDeskOrganizations(): Response
     {
         $result = $this->organizationService->getAllOrganizations();
-        dump($result);
         $organizationsInfo = '';
         foreach ($result['data'] as $organization) {
             $organizationsInfo .= $organization['id'].' '.$organization['companyName'].'<br />';
@@ -74,16 +73,15 @@ class ZohoDeskController extends AbstractController
 
         return new Response(
             '<html><body>Organizations: <br />'.$organizationsInfo.'</body></html>'
-            );
+        );
     }
 
     /**
      * @Route("/desk/departments", name="zoho_desk_departments")
      */
-    public function getDeskDepartments()
+    public function getDeskDepartments(): Response
     {
         $result = $this->departmentService->getAllDepartments();
-        dump($result);
         $ticketsInfo = '';
         foreach ($result['data'] as $department) {
             $ticketsInfo .= $department['id'].' '.$department['name'].'<br />';
@@ -91,16 +89,15 @@ class ZohoDeskController extends AbstractController
 
         return new Response(
             '<html><body>Departments: <br />'.$ticketsInfo.'</body></html>'
-            );
+        );
     }
 
     /**
      * @Route("/desk/contacts/index", name="zoho_desk_contacts")
      */
-    public function getDeskContacts()
+    public function getDeskContacts(): Response
     {
         $result = $this->contactService->getAllContacts();
-        dump($result);
         $contactsInfo = '';
         foreach ($result['data'] as $contact) {
             $contactsInfo .= $contact['id'].' '.$contact['email'].'<br />';
@@ -108,20 +105,18 @@ class ZohoDeskController extends AbstractController
 
         return new Response(
             '<html><body>Contacts: <br />'.$contactsInfo.'</body></html>'
-            );
+        );
     }
 
     /**
      * @Route("/desk/accounts/index", name="zoho_desk_accounts")
      */
-    public function getDeskAccounts()
+    public function getDeskAccounts(): Response
     {
         $result = $this->accountService->getAllAccounts();
-        dump($result);
         $accountsInfo = '';
         foreach ($result['data'] as $account) {
             $accountsInfo .= $account['id'].' '.$account['accountName'].' '.$account['email'].'<br />';
-            //$accountsInfo .= $account->zohoCRMAccount->id.' '.$account->id.' '.$account->email.'<br />';
         }
 
         return new Response(
@@ -132,10 +127,9 @@ class ZohoDeskController extends AbstractController
     /**
      * @Route("/desk/accounts/contacts/index/{accountId}", name="zoho_desk_accounts_contacts")
      */
-    public function getDeskAccountContacts(string $accountId)
+    public function getDeskAccountContacts(string $accountId): Response
     {
         $result = $this->accountService->getAllAccountContacts($accountId);
-        dump($result);
         $accountContactsInfo = '';
         foreach ($result['data'] as $accountContact) {
             $accountContactsInfo .= $accountContact['id'].' '.$accountContact['lastName'].' '.$accountContact['email'].'<br />';

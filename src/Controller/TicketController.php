@@ -50,23 +50,23 @@ class TicketController extends AbstractController
     }
 
     /**
-     * @Route("/desk/tickets/index", name="zoho_desk_tickets")
+     * @Route("/ticket/overview", name="zoho_desk_tickets")
      */
-    public function getDeskTickets(Request $request)
+    public function overview(Request $request)
     {
         $user = $this->getUser();
         /** @var string $email */
         $email = $user->getEmail();
         $tickets = $this->ticketService->getTickets($email);
 
-        return $this->render('desk/ticket/index.html.twig', [
+        return $this->render('desk/ticket/overview.html.twig', [
             'tickets' => $tickets,
             'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
         ]);
     }
 
     /**
-     * @Route("/desk/tickets/create", name="zoho_desk_tickets_create")
+     * @Route("/ticket/create", name="zoho_desk_tickets_create")
      */
     public function createDeskTicket(TicketAddHandler $ticketAddHandler, Request $request): Response
     {
@@ -80,7 +80,7 @@ class TicketController extends AbstractController
             return $this->redirectToRoute('zoho_desk_tickets_create_thanks');
         }
 
-        return $this->render('desk/ticket/add.html.twig', [
+        return $this->render('desk/ticket/create.html.twig', [
             'form' => $form->createView(),
             'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
         ]);
