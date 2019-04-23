@@ -89,9 +89,8 @@ class ZohoApiService
 
     private function processResult(string $result, string $orgId, $ch)
     {
-        try {
-            $result = json_decode($result);
-        } catch (\Exception $e) {
+        $result = json_decode($result);
+        if (JSON_ERROR_NONE !== json_last_error()) {
             curl_close($ch);
             throw new \Exception(
                 $this->translator->trans(
