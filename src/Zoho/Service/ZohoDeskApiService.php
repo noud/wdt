@@ -14,7 +14,7 @@ class ZohoDeskApiService
     private $apiService;
 
     /**
-     * @var string
+     * @var int
      */
     private $organizationId;
 
@@ -26,7 +26,7 @@ class ZohoDeskApiService
 
     public function getOrganizations(): \stdClass
     {
-        return $this->apiService->getRequest('organizations', true);
+        return $this->apiService->getRequest('organizations', 0);
     }
 
     public function getOrganizationId(): int

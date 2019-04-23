@@ -39,7 +39,7 @@ class ZohoApiService
     /**
      * @throws \Exception
      */
-    public function getRequest(string $urlPart, $orgId = null, $data = null): \stdClass
+    public function getRequest(string $urlPart, int $orgId = null, $data = null): \stdClass
     {
         $url = $this->apiBaseUrl.$urlPart;
 
@@ -87,7 +87,7 @@ class ZohoApiService
         return $this->processResult($result, $orgId, $ch);
     }
 
-    private function processResult(string $result, string $orgId, $ch)
+    private function processResult(string $result, ?int $orgId, $ch)
     {
         $result = json_decode($result);
         if (JSON_ERROR_NONE !== json_last_error()) {
@@ -101,11 +101,11 @@ class ZohoApiService
             );
         }
 
-        if (!$orgId && 57 === $result->code) {
+        if (!$orgId && isset($result->code) && 57 === $result->code) {
             // this should not happen
             curl_close($ch);
             throw new \Exception($this->translator->trans('get_request.refresh', [], 'exceptions'));
-        } elseif (!$orgId && 0 !== $result->code) {
+        } elseif (!$orgId && isset($result->code) && 0 !== $result->code) {
             curl_close($ch);
             throw new \Exception($this->translator->trans('get_request.error_in_code', [], 'exceptions'));
         }
