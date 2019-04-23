@@ -44,7 +44,7 @@ class ZohoApiService
      *
      * @throws \Exception
      */
-    public function getRequest($orgId = null, $data = null, $files = null)
+    public function getRequest($orgId = null, $data = null, $putFile = false)
     {
         $this->zohoAccessTokenService->setAccessToken();
         $accessTokenExpiryTime = $this->zohoAccessTokenService->getAccessTokenExpiryTime();
@@ -73,10 +73,14 @@ class ZohoApiService
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         if ($data) {
             curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data), $files);
+            if ($putFile) {
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            } else {
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            }
         }
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 400); //timeout in seconds
+        curl_setopt($ch, CURLOPT_TIMEOUT, 400);
 
         /** @var string $result */
         $result = curl_exec($ch);

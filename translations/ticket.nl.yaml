@@ -18,6 +18,6 @@ ticket_comment:
     content: 'Commentaar'
     submit: 'Commentaar registreren'
     add_comment: 'Commentaar bijvoegen'
-ticket_Attachment:
+ticket_attachment:
   field:
     add_attachment: 'Attachment toevoegen'

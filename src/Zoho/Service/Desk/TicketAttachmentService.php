@@ -58,12 +58,10 @@ class TicketAttachmentService
         $this->zohoDeskApiService->setOrgId();
         $data = [
             'isPublic' => 'true',
+            'file' => new \CURLFile(realpath('/var/www/klantportaal/public/example33.txt'), 'text/plain', 'x5.txt'),
         ];
-        $files = [
-            'file' => '@' . realpath('/var/www/klantportaal/config/zoho/example.txt')
-        ];
-        $this->zohoDeskApiService->setService('tickets/'.$ticketId.'/attachment');
+        $this->zohoDeskApiService->setService('tickets/'.$ticketId.'/attachments');
 
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrgId(), $data, $files);
+        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrgId(), $data, true);
     }
 }

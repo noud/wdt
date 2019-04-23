@@ -6,12 +6,11 @@ use App\Service\PageService;
 use App\Zoho\Form\Data\Desk\TicketAttachmentAddData;
 use App\Zoho\Form\Handler\Desk\TicketAttachmentAddHandler;
 use App\Zoho\Form\Type\Desk\TicketAttachmentAddType;
+use App\Zoho\Service\Desk\TicketAttachmentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
-use Zoho\Service\Desk\TicketAttachmentService;
 
 class TicketAttachmentController extends AbstractController
 {
@@ -33,6 +32,11 @@ class TicketAttachmentController extends AbstractController
      */
     public function createDeskTicketAttachment(string $ticketId, TicketAttachmentAddHandler $ticketAttachmentAddHandler, Request $request): Response
     {
+        $this->ticketAttachmentService->createTicketAttachment(null, $ticketId);
+        return new Response(
+            '<html><body>Attachment added.</body></html>'
+            );
+        
         $data = new TicketAttachmentAddData();
         $form = $this->createForm(TicketAttachmentAddType::class, $data);
 
@@ -43,7 +47,7 @@ class TicketAttachmentController extends AbstractController
             return $this->redirectToRoute('zoho_desk_tickets_comment_create_thanks');
         }
 
-        return $this->render('desk/ticket_comment/add.html.twig', [
+        return $this->render('desk/ticket_attachment/add.html.twig', [
             'form' => $form->createView(),
             'page' => $this->pageService->getPageBySlug($this->pathStripLastPart($request->getPathInfo())),
         ]);
