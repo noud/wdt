@@ -23,7 +23,7 @@ class ZohoApiService
 
     public function __construct(
         ZohoAccessTokenService $zohoAccessTokenService,
-        $apiBaseUrl,
+        string $apiBaseUrl,
         TranslatorInterface $translator
     ) {
         $this->zohoAccessTokenService = $zohoAccessTokenService;
@@ -37,9 +37,6 @@ class ZohoApiService
     }
 
     /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     *
      * @throws \Exception
      */
     public function getRequest(string $urlPart, $orgId = null, $data = null): \stdClass
@@ -87,6 +84,11 @@ class ZohoApiService
             }
         }
 
+        return $this->processResult($result, $orgId, $ch);
+    }
+
+    private function processResult(string $result, string $orgId, $ch)
+    {
         try {
             $result = json_decode($result);
         } catch (\Exception $e) {

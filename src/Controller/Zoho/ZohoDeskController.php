@@ -35,10 +35,9 @@ class ZohoDeskController extends AbstractController
     /**
      * @Route("/desk/tickets/all", name="zoho_desk_tickets_all")
      */
-    public function getDeskTicketsAll()
+    public function getDeskTicketsAll(): Response
     {
         $result = $this->deskWebservice->getTicketsAll();
-        dump($result);
         $ticketsInfo = '';
         foreach ($result->data as $ticket) {
             $ticketsInfo .= $ticket->ticketNumber.' '.$ticket->subject.'<br />';
@@ -46,16 +45,15 @@ class ZohoDeskController extends AbstractController
 
         return new Response(
             '<html><body>Tickets: <br />'.$ticketsInfo.'</body></html>'
-            );
+        );
     }
 
     /**
      * @Route("/desk/organizations", name="zoho_desk_organizations")
      */
-    public function getDeskOrganizations()
+    public function getDeskOrganizations(): Response
     {
         $result = $this->deskWebservice->getOrganizations();
-        dump($result);
         $organizationsInfo = '';
         foreach ($result->data as $organization) {
             $organizationsInfo .= $organization->id.' '.$organization->companyName.'<br />';
@@ -63,16 +61,15 @@ class ZohoDeskController extends AbstractController
 
         return new Response(
             '<html><body>Organizations: <br />'.$organizationsInfo.'</body></html>'
-            );
+        );
     }
 
     /**
      * @Route("/desk/departments", name="zoho_desk_departments")
      */
-    public function getDeskDepartments()
+    public function getDeskDepartments(): Response
     {
         $result = $this->deskWebservice->getDepartments();
-        dump($result);
         $ticketsInfo = '';
         foreach ($result->data as $department) {
             $ticketsInfo .= $department->id.' '.$department->name.'<br />';
@@ -80,16 +77,15 @@ class ZohoDeskController extends AbstractController
 
         return new Response(
             '<html><body>Departments: <br />'.$ticketsInfo.'</body></html>'
-            );
+        );
     }
 
     /**
      * @Route("/desk/contacts/index", name="zoho_desk_contacts")
      */
-    public function getDeskContacts()
+    public function getDeskContacts(): Response
     {
         $result = $this->deskWebservice->getContacts();
-        dump($result);
         $contactsInfo = '';
         foreach ($result->data as $contact) {
             $contactsInfo .= $contact->id.' '.$contact->email.'<br />';
@@ -97,20 +93,18 @@ class ZohoDeskController extends AbstractController
 
         return new Response(
             '<html><body>Contacts: <br />'.$contactsInfo.'</body></html>'
-            );
+        );
     }
 
     /**
      * @Route("/desk/accounts/index", name="zoho_desk_accounts")
      */
-    public function getDeskAccounts()
+    public function getDeskAccounts(): Response
     {
         $result = $this->deskWebservice->getAccounts();
-        dump($result);
         $accountsInfo = '';
         foreach ($result->data as $account) {
             $accountsInfo .= $account->id.' '.$account->accountName.' '.$account->email.'<br />';
-            //$accountsInfo .= $account->zohoCRMAccount->id.' '.$account->id.' '.$account->email.'<br />';
         }
 
         return new Response(
@@ -121,10 +115,9 @@ class ZohoDeskController extends AbstractController
     /**
      * @Route("/desk/accounts/contacts/index/{accountId}", name="zoho_desk_accounts_contacts")
      */
-    public function getDeskAccountContacts(string $accountId)
+    public function getDeskAccountContacts(string $accountId): Response
     {
         $result = $this->deskWebservice->getAccountContacts($accountId);
-        dump($result);
         $accountContactsInfo = '';
         foreach ($result->data as $accountContact) {
             $accountContactsInfo .= $accountContact->id.' '.$accountContact->lastName.' '.$accountContact->email.'<br />';
@@ -136,23 +129,23 @@ class ZohoDeskController extends AbstractController
     }
 
     /**
-     * @Route("/desk/tickets/index", name="zoho_desk_tickets")
+     * @Route("/ticket/overview", name="zoho_desk_tickets")
      */
-    public function getDeskTickets(Request $request)
+    public function overview(Request $request): Response
     {
         $user = $this->getUser();
         /** @var string $email */
         $email = $user->getEmail();
         $tickets = $this->deskWebservice->getTickets($email);
 
-        return $this->render('ticket/index.html.twig', [
+        return $this->render('ticket/overview.html.twig', [
             'tickets' => $tickets,
             'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
         ]);
     }
 
     /**
-     * @Route("/desk/tickets/create", name="zoho_desk_tickets_create")
+     * @Route("/ticket/create", name="zoho_desk_tickets_create")
      */
     public function createDeskTicket(TicketAddHandler $ticketAddHandler, Request $request): Response
     {
@@ -166,7 +159,7 @@ class ZohoDeskController extends AbstractController
             return $this->redirectToRoute('zoho_desk_tickets_create_thanks');
         }
 
-        return $this->render('ticket/add.html.twig', [
+        return $this->render('ticket/create.html.twig', [
             'form' => $form->createView(),
             'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
         ]);

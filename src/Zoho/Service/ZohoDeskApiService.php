@@ -16,7 +16,7 @@ class ZohoDeskApiService
     /**
      * @var string
      */
-    private $orgId;
+    private $organizationId;
 
     public function __construct(
         ZohoApiService $zohoDeskApiService
@@ -24,7 +24,7 @@ class ZohoDeskApiService
         $this->apiService = $zohoDeskApiService;
     }
 
-    public function getOrganizations()
+    public function getOrganizations(): \stdClass
     {
         return $this->apiService->getRequest('organizations', true);
     }
@@ -36,19 +36,19 @@ class ZohoDeskApiService
         return $organizations->data[0]->id;
     }
 
-    public function getTicketsAll()
+    public function getTicketsAll(): \stdClass
     {
-        $this->orgId = $this->getOrganizationId();
+        $this->organizationId = $this->getOrganizationId();
 
-        return $this->apiService->getRequest('tickets?include=contacts,assignee,departments,team,isRead', $this->orgId);
+        return $this->apiService->getRequest('tickets?include=contacts,assignee,departments,team,isRead', $this->organizationId);
     }
 
-    public function getTickets(string $email)
+    public function getTickets(string $email): array
     {
-        $this->orgId = $this->getOrganizationId();
+        $this->organizationId = $this->getOrganizationId();
         $accountId = $this->getAccountIdByEmail($email);
 
-        $result = $this->apiService->getRequest('accounts/'.$accountId.'/tickets?include=assignee,departments,team,isRead', $this->orgId);
+        $result = $this->apiService->getRequest('accounts/'.$accountId.'/tickets?include=assignee,departments,team,isRead', $this->organizationId);
         $tickets = [];
         foreach ($result->data as $ticketData) {
             $ticket = new Ticket();
@@ -61,39 +61,39 @@ class ZohoDeskApiService
         return $tickets;
     }
 
-    public function getDepartments()
+    public function getDepartments(): \stdClass
     {
-        $this->orgId = $this->getOrganizationId();
+        $this->organizationId = $this->getOrganizationId();
 
-        return $this->apiService->getRequest('departments?isEnabled=true&chatStatus=AVAILABLE', $this->orgId);
+        return $this->apiService->getRequest('departments?isEnabled=true&chatStatus=AVAILABLE', $this->organizationId);
     }
 
-    public function getDepartmentId()
+    public function getDepartmentId(): string
     {
         $departments = $this->getDepartments();
 
-        return $departments->data[0]->id;
+        return (null !== $departments->data) ? $departments->data[0]->id : '';
     }
 
-    public function getContacts()
+    public function getContacts(): \stdClass
     {
-        $this->orgId = $this->getOrganizationId();
+        $this->organizationId = $this->getOrganizationId();
 
-        return $this->apiService->getRequest('contacts?include=accounts', $this->orgId);
+        return $this->apiService->getRequest('contacts?include=accounts', $this->organizationId);
     }
 
-    public function getAccounts()
+    public function getAccounts(): \stdClass
     {
-        $this->orgId = $this->getOrganizationId();
+        $this->organizationId = $this->getOrganizationId();
 
-        return $this->apiService->getRequest('accounts', $this->orgId);
+        return $this->apiService->getRequest('accounts', $this->organizationId);
     }
 
-    public function getAccountContacts(string $accountId)
+    public function getAccountContacts(string $accountId): \stdClass
     {
-        $this->orgId = $this->getOrganizationId();
+        $this->organizationId = $this->getOrganizationId();
 
-        return $this->apiService->getRequest('accounts/'.$accountId.'/contacts', $this->orgId);
+        return $this->apiService->getRequest('accounts/'.$accountId.'/contacts', $this->organizationId);
     }
 
     public function getAccountContactIdByEmail(string $email): ?string
@@ -107,8 +107,6 @@ class ZohoDeskApiService
                 }
             }
         }
-
-        return null;
     }
 
     public function getAccountIdByEmail(string $email): ?string
@@ -122,11 +120,9 @@ class ZohoDeskApiService
                 }
             }
         }
-
-        return null;
     }
 
-    public function addTicket(TicketAddData $ticketData)
+    public function addTicket(TicketAddData $ticketData): \stdClass
     {
         $ticket = new Ticket();
         $ticket->setDepartmentId($this->getDepartmentId());
@@ -137,12 +133,7 @@ class ZohoDeskApiService
         $ticket->setDescription($ticketData->description);
         $ticket->setPriority($ticketData->priority);
 
-        $this->createTicket($ticket);
-    }
-
-    public function createTicket(Ticket $ticket)
-    {
-        $this->orgId = $this->getOrganizationId();
+        $this->organizationId = $this->getOrganizationId();
         $data = [
             // required
             'subject' => $ticket->getSubject(),
@@ -153,6 +144,6 @@ class ZohoDeskApiService
             'priority' => $ticket->getPriority(),
         ];
 
-        return $this->apiService->getRequest('tickets', $this->orgId, $data);
+        return $this->apiService->getRequest('tickets', $this->organizationId, $data);
     }
 }
