@@ -16,7 +16,7 @@ class ZohoApiService
 
     public function __construct(
         ZohoAccessTokenService $zohoAccessTokenService,
-        $apiBaseUrl
+        string $apiBaseUrl
     ) {
         $this->zohoAccessTokenService = $zohoAccessTokenService;
         $this->apiBaseUrl = $apiBaseUrl;
@@ -55,7 +55,7 @@ class ZohoApiService
         if ($errorNumber = curl_errno($ch)) {
             if (\in_array($errorNumber, [CURLE_OPERATION_TIMEDOUT, CURLE_OPERATION_TIMEOUTED], true)) {
                 curl_close($ch);
-                throw new \Exception('timeout..in getRequest..');
+                throw new \Exception('Curl timeout in getRequest.');
             }
         }
 
@@ -63,16 +63,16 @@ class ZohoApiService
             $result = json_decode($result);
         } catch (\Exception $e) {
             curl_close($ch);
-            throw new \Exception('json decode catch error..in getRequest.. '.json_last_error_msg());
+            throw new \Exception('Json decode error in getRequest. '.json_last_error_msg());
         }
 
         if (57 === $result->code) {
             // this should not happen
             curl_close($ch);
-            throw new \Exception('refresh the token..in getRequest..');
+            throw new \Exception('Token is not valid anymore and needs to be refreshed in getRequest.');
         } elseif (0 !== $result->code) {
             curl_close($ch);
-            throw new \Exception('Error occurred..in getRequest..');
+            throw new \Exception('General error occurre in getRequest.');
         }
 
         return $result;
