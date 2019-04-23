@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Zoho;
+namespace App\Controller\Zoho\Development;
 
 use App\Service\PageService;
 use App\Zoho\Form\Data\Desk\TicketAddData;
