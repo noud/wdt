@@ -23,8 +23,9 @@ class ZohoBooksController extends AbstractController
     /**
      * @Route("/books/organizations", name="zoho_books_organizations")
      */
-    public function getOrganizations()
+    public function getOrganizations(): Response
     {
+        /** @var \stdClass $result */
         $result = $this->booksWebservice->getOrganizations();
 
         return new Response(
@@ -37,8 +38,9 @@ class ZohoBooksController extends AbstractController
     /**
      * @Route("/books/contacts", name="zoho_books_contacts")
      */
-    public function getContacts()
+    public function getContacts(): Response
     {
+        /** @var \stdClass $result */
         $result = $this->booksWebservice->getContacts();
         dump($result);
         $contactNames = '';
@@ -54,8 +56,9 @@ class ZohoBooksController extends AbstractController
     /**
      * @Route("/books/invoices", name="zoho_books_invoices")
      */
-    public function getInvoices()
+    public function getInvoices(): Response
     {
+        /** @var \stdClass $result */
         $result = $this->booksWebservice->getInvoices();
         dump($result);
         $invoicesInfo = '';
