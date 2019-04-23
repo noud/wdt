@@ -3,36 +3,41 @@
 namespace App\Controller;
 
 use App\Service\PageService;
-use App\Zoho\Form\Data\Desk\TicketCommentAddData;
-use App\Zoho\Form\Handler\Desk\TicketCommentAddHandler;
-use App\Zoho\Form\Type\Desk\TicketCommentAddType;
+use App\Zoho\Form\Data\Desk\TicketAttachmentAddData;
+use App\Zoho\Form\Handler\Desk\TicketAttachmentAddHandler;
+use App\Zoho\Form\Type\Desk\TicketAttachmentAddType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class TicketCommentController extends AbstractController
+use Zoho\Service\Desk\TicketAttachmentService;
+
+class TicketAttachmentController extends AbstractController
 {
     /**
      * @var PageService
      */
     private $pageService;
-
+    private $ticketAttachmentService;
     public function __construct(
-        PageService $pageService
+        PageService $pageService,
+        TicketAttachmentService $ticketAttachmentService
     ) {
         $this->pageService = $pageService;
+        $this->ticketAttachmentService = $ticketAttachmentService;
     }
 
     /**
-     * @Route("/desk/tickets/comment/create/{ticketId}", name="zoho_desk_tickets_comment_create")
+     * @Route("/desk/tickets/attachment/create/{ticketId}", name="zoho_desk_tickets_attachment_create")
      */
-    public function createDeskTicketComment(string $ticketId, TicketCommentAddHandler $ticketCommentAddHandler, Request $request): Response
+    public function createDeskTicketAttachment(string $ticketId, TicketAttachmentAddHandler $ticketAttachmentAddHandler, Request $request): Response
     {
-        $data = new TicketCommentAddData();
-        $form = $this->createForm(TicketCommentAddType::class, $data);
+        $data = new TicketAttachmentAddData();
+        $form = $this->createForm(TicketAttachmentAddType::class, $data);
 
-        if ($ticketCommentAddHandler->handleRequest($form, $request, $ticketId)) {
+        if ($ticketAttachmentAddHandler->handleRequest($form, $request, $ticketId)) {
+            //die('adddd');
             $this->addFlash('success', 'Ticket comment is toegevoegd.');
 
             return $this->redirectToRoute('zoho_desk_tickets_comment_create_thanks');
@@ -45,7 +50,7 @@ class TicketCommentController extends AbstractController
     }
 
     /**
-     * @Route("/desk/tickets/comment/create-thanks", name="zoho_desk_tickets_comment_create_thanks")
+     * @Route("/desk/tickets/attachment/create-thanks", name="zoho_desk_tickets_attachment_create_thanks")
      *
      * @throws \Doctrine\ORM\ORMException
      */

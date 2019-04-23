@@ -55,6 +55,12 @@
                                          		<div class="row">
                                         	    	<b>{{ ticket.priority }}</b>
                                         	    </div>
+                                         	    <div class="row">
+                                                    <a href="{{ path('zoho_desk_tickets_attachment_create', {ticketId: ticket.id }) }}" type="submit" class="btn btn-sm btn-primary btn-icon rounded-pill">
+                                                        <span class="btn-inner--text">{{ 'ticket_attachment.field.add_attachment'|trans }}</span>
+                                                        <span class="btn-inner--icon"><i class="fas fa-long-arrow-alt-right"></i></span>
+                                                    </a>
+                                        	    </div>
                                         	</div>
                                         	<div class="col-sm-8">
                                         	    <div class="row">
