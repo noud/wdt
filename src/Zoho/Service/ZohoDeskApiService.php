@@ -29,11 +29,11 @@ class ZohoDeskApiService
         return $this->apiService->getRequest('organizations', true);
     }
 
-    public function getOrganizationId(): string
+    public function getOrganizationId(): int
     {
         $organizations = $this->getOrganizations();
 
-        return $organizations->data[0]->id;
+        return (int) $organizations->data[0]->id;
     }
 
     public function getTicketsAll(): \stdClass
@@ -68,11 +68,11 @@ class ZohoDeskApiService
         return $this->apiService->getRequest('departments?isEnabled=true&chatStatus=AVAILABLE', $this->organizationId);
     }
 
-    public function getDepartmentId(): string
+    public function getDepartmentId(): int
     {
         $departments = $this->getDepartments();
 
-        return (null !== $departments->data) ? $departments->data[0]->id : '';
+        return (int) (null !== $departments->data) ? $departments->data[0]->id : '';
     }
 
     public function getContacts(): \stdClass
