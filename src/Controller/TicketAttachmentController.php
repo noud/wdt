@@ -33,7 +33,7 @@ class TicketAttachmentController extends AbstractController
      */
     public function createDeskTicketAttachment(string $ticketId, TicketAttachmentAddHandler $ticketAttachmentAddHandler, Request $request): Response
     {
-        $this->ticketAttachmentService->createTicketAttachment($ticketId);
+        $this->ticketAttachmentService->createTicketAttachment(null, $ticketId);
 
         return new Response(
             '<html><body>Attachment added.</body></html>'
