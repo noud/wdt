@@ -22,10 +22,10 @@ class AccountService
 
     public function getAllAccounts()
     {
-        $this->zohoDeskApiService->setOrgId();
+        $this->zohoDeskApiService->setOrganizationId();
         $this->zohoDeskApiService->setService('accounts');
 
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrgId());
+        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
     }
 
     public function getAccountIdByEmail(string $email): ?string
@@ -45,10 +45,10 @@ class AccountService
 
     public function getAllAccountContacts(string $accountId)
     {
-        $this->zohoDeskApiService->setOrgId();
+        $this->zohoDeskApiService->setOrganizationId();
         $this->zohoDeskApiService->setService('accounts/'.$accountId.'/contacts');
 
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrgId());
+        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
     }
 
     public function getAccountContactIdByEmail(string $email): ?string

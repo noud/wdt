@@ -23,10 +23,10 @@ class OrganizationService
     {
         $this->zohoDeskApiService->setService('organizations');
 
-        return $this->zohoDeskApiService->getRequest(true);
+        return $this->zohoDeskApiService->getRequest();
     }
 
-    public function getOrganizationId(): string
+    public function getOrganizationId(): int
     {
         $organizations = $this->getAllOrganizations();
 

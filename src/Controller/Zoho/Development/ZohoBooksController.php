@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Zoho;
+namespace App\Controller\Zoho\Development;
 
 use App\Zoho\Service\Books\ContactService;
 use App\Zoho\Service\Books\InvoiceService;
@@ -47,7 +47,7 @@ class ZohoBooksController extends AbstractController
     /**
      * @Route("/books/organizations", name="zoho_books_organizations")
      */
-    public function getOrganizations()
+    public function getOrganizations(): Response
     {
         $result = $this->organizationService->getAllOrganizations();
 
@@ -61,7 +61,7 @@ class ZohoBooksController extends AbstractController
     /**
      * @Route("/books/contacts", name="zoho_books_contacts")
      */
-    public function getContacts()
+    public function getContacts(): Response
     {
         $result = $this->contactService->getAllContacts();
         $contactNames = '';
@@ -71,6 +71,22 @@ class ZohoBooksController extends AbstractController
 
         return new Response(
             '<html><body>Contacts: '.$result['code'].' '.$result['message'].'<br />'.$contactNames.'</body></html>'
+        );
+    }
+
+    /**
+     * @Route("/books/invoices", name="zoho_books_invoices")
+     */
+    public function getInvoices(): Response
+    {
+        $result = $this->invoiceService->getAllInvoices();
+        $invoicesInfo = '';
+        foreach ($result->invoices as $invoice) {
+            $invoicesInfo .= $invoice['invoice_id'].' '.$invoice['total'].'<br />';
+        }
+
+        return new Response(
+            '<html><body>Invoices: '.$result['code'].' '.$result['message'].'<br />'.$invoicesInfo.'</body></html>'
         );
     }
 }
