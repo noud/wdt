@@ -99,17 +99,7 @@ class ZohoApiService
     private function processResult(string $result, ?int $orgId, $ch): array
     {
         if ('Internal Server Error' !== $result && '\n' !== $result) {
-            $result = json_decode($result, true);
-            if (JSON_ERROR_NONE !== json_last_error()) {
-                curl_close($ch);
-                throw new \Exception(
-                    $this->translator->trans(
-                        'get_request.json_decode %msg%',
-                        ['%msg%' => json_last_error_msg()],
-                        'exceptions'
-                    )
-                );
-            }
+            $result = $this->decodeResult($result);
 
             if (!$orgId && isset($result['code']) && 57 === $result['code']) {
                 // this should not happen
@@ -125,5 +115,21 @@ class ZohoApiService
         }
         curl_close($ch);
         throw new \Exception('Internal Server Error in getRequest.');
+    }
+    
+    private function decodeResult(string $result, $ch): array
+    {
+        $result = json_decode($result, true);
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            curl_close($ch);
+            throw new \Exception(
+                $this->translator->trans(
+                    'get_request.json_decode %msg%',
+                    ['%msg%' => json_last_error_msg()],
+                    'exceptions'
+                    )
+                );
+        }
+        return $result;
     }
 }
