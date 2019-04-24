@@ -46,7 +46,8 @@ class TicketController extends AbstractController
         TicketService $ticketService,
         ResolutionHistoryService $resolutionHistoryService,
         TicketCommentService $ticketCommentService,
-        PageService $pageService
+        PageService $pageService,
+        TranslatorInterface $translator
     ) {
         $this->ticketService = $ticketService;
         $this->resolutionHistoryService = $resolutionHistoryService;

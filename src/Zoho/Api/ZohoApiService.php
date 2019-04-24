@@ -92,6 +92,7 @@ class ZohoApiService
                 throw new \Exception($this->translator->trans('get_request.timeout', [], 'exceptions'));
             }
         }
+
         return $this->processResult($result, $orgId, $ch);
     }
 
@@ -109,6 +110,7 @@ class ZohoApiService
                 curl_close($ch);
                 throw new \Exception($this->translator->trans('get_request.error_in_code', [], 'exceptions'));
             }
+
             return $result;
         }
         curl_close($ch);
@@ -128,6 +130,7 @@ class ZohoApiService
                 )
             );
         }
+
         return $result;
     }
 }
