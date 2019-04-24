@@ -27,7 +27,7 @@ class DepartmentService
         $this->organizationService = $organizationService;
     }
 
-    public function getAllDepartments()
+    public function getAllDepartments(): array
     {
         $this->zohoDeskApiService->setOrganizationId();
         $this->zohoDeskApiService->setService('departments', [
@@ -38,11 +38,10 @@ class DepartmentService
         return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
     }
 
-    public function getDepartmentId()
+    public function getDepartmentId(): int
     {
         $departments = $this->getAllDepartments();
-        dump($departments);
 
-        return $departments['data'][0]['id'];
+        return (isset($departments['data'][0])) ? $departments['data'][0]['id'] : null;
     }
 }

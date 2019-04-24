@@ -74,20 +74,4 @@ class ZohoBooksController extends AbstractController
             '<html><body>Contacts: '.$result['code'].' '.$result['message'].'<br />'.$contactNames.'</body></html>'
         );
     }
-
-    /**
-     * @Route("/books/invoices", name="zoho_books_invoices")
-     */
-    public function getInvoices(): Response
-    {
-        $result = $this->invoiceService->getAllInvoices();
-        $invoicesInfo = '';
-        foreach ($result->invoices as $invoice) {
-            $invoicesInfo .= $invoice['invoice_id'].' '.$invoice['total'].'<br />';
-        }
-
-        return new Response(
-            '<html><body>Invoices: '.$result['code'].' '.$result['message'].'<br />'.$invoicesInfo.'</body></html>'
-        );
-    }
 }

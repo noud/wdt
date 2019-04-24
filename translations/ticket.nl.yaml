@@ -8,3 +8,5 @@ ticket:
     priority: 'Prioriteit'
     status: 'Status'
     submit: 'Ticket registreren'
+  message:
+    added: 'Ticket is toegevoegdXX.'

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Zoho\Form\Type\Desk;
+namespace App\Form\Type\Desk;
 
-use App\Zoho\Form\Data\Desk\TicketAddData;
+use App\Form\Data\Desk\TicketAddData;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;

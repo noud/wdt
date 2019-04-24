@@ -47,15 +47,13 @@ class ZohoDeskApiService
         return $this->apiService->getRequest();
     }
 
-    public function getOrganizationId(): int
+    public function getOrganizationId(): ?int
     {
-        $organizations = $this->getOrganizations();
-
-        return (int) $organizations['data'][0]->id;
+        return $this->organizationId;
     }
 
-    public function setOrganizationId(?int $organizationId = null): void
+    public function setOrganizationId(): void
     {
-        $this->organizationId = $organizationId;
+        $this->organizationId = $this->organizationService->getOrganizationId();
     }
 }

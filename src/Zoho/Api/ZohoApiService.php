@@ -96,7 +96,7 @@ class ZohoApiService
         return $this->processResult($result, $orgId, $ch);
     }
 
-    private function processResult(string $result, ?int $orgId, $ch)
+    private function processResult(string $result, ?int $orgId, $ch): array
     {
         dump($result);
         $result = json_decode($result, true);

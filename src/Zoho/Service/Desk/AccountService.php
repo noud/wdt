@@ -20,7 +20,7 @@ class AccountService
         $this->zohoDeskApiService = $deskApiService;
     }
 
-    public function getAllAccounts()
+    public function getAllAccounts(): array
     {
         $this->zohoDeskApiService->setOrganizationId();
         $this->zohoDeskApiService->setService('accounts');
@@ -35,7 +35,7 @@ class AccountService
         foreach ($accounts['data'] as $account) {
             $accountContacts = $this->getAllAccountContacts($account['id']);
             foreach ($accountContacts['data'] as $contact) {
-                if ($contact['email'] === $email) {
+                if (isset($contact['email']) && $contact['email'] === $email) {
                     return $account['id'];
                 }
             }
@@ -44,7 +44,7 @@ class AccountService
         return null;
     }
 
-    public function getAllAccountContacts(string $accountId)
+    public function getAllAccountContacts(string $accountId): array
     {
         $this->zohoDeskApiService->setOrganizationId();
         $this->zohoDeskApiService->setService('accounts/'.$accountId.'/contacts');
@@ -58,7 +58,7 @@ class AccountService
         foreach ($accounts['data'] as $account) {
             $accountContacts = $this->getAllAccountContacts($account['id']);
             foreach ($accountContacts['data'] as $contact) {
-                if ($contact['email'] === $email) {
+                if (isset($contact['email']) && $contact['email'] === $email) {
                     return $contact['id'];
                 }
             }

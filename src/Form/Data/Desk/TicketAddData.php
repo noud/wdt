@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Zoho\Form\Data\Desk;
+namespace App\Form\Data\Desk;
 
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
