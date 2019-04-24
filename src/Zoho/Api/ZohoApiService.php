@@ -99,7 +99,7 @@ class ZohoApiService
     private function processResult(string $result, ?int $orgId, $ch): array
     {
         if ('Internal Server Error' !== $result && '\n' !== $result) {
-            $result = $this->decodeResult($result);
+            $result = $this->decodeResult($result, $ch);
 
             if (!$orgId && isset($result['code']) && 57 === $result['code']) {
                 // this should not happen
