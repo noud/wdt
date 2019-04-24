@@ -50,7 +50,7 @@ class ZohoApiService
     /**
      * @throws \Exception
      */
-    public function getRequest(?int $orgId = null, $data = null, $putFile = false): array
+    public function getRequest(?int $orgId = null, $data = null, $putFile = false, $delete = false): array
     {
         $this->zohoAccessTokenService->setAccessToken();
         $accessTokenExpiryTime = $this->zohoAccessTokenService->getAccessTokenExpiryTime();
@@ -69,9 +69,7 @@ class ZohoApiService
                 'Authorization: Zoho-oauthtoken '.$this->zohoAccessTokenService->getAccessToken(),
             ];
         }
-        dump($header);
-        dump($this->apiUrl);
-        dump($data);
+
         /** @var resource $ch */
         $ch = curl_init($this->apiUrl);
         curl_setopt($ch, CURLOPT_VERBOSE, true);
@@ -82,11 +80,13 @@ class ZohoApiService
         if ($data) {
             curl_setopt($ch, CURLOPT_POST, 1);
             if ($putFile) {
-                dump('PUTFILE');
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
             } else {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
             }
+        }
+        if ($delete) {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
         }
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
         curl_setopt($ch, CURLOPT_TIMEOUT, 400);
@@ -98,6 +98,10 @@ class ZohoApiService
                 curl_close($ch);
                 throw new \Exception($this->translator->trans('get_request.timeout', [], 'exceptions'));
             }
+        }
+
+        if ($delete) {
+            return [];
         }
 
         return $this->processResult($result, $orgId, $ch);
@@ -126,7 +130,6 @@ class ZohoApiService
 
     private function decodeResult(string $result, $ch): array
     {
-        dump($result);
         $result = json_decode($result, true);
         if (JSON_ERROR_NONE !== json_last_error()) {
             curl_close($ch);

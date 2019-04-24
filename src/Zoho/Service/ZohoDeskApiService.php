@@ -30,9 +30,9 @@ class ZohoDeskApiService
         $this->organizationService = $organizationService;
     }
 
-    public function getRequest($orgId = null, $data = null, $putFile = false)
+    public function getRequest($orgId = null, $data = null, $putFile = false, $delete = false)
     {
-        return $this->apiService->getRequest($orgId, $data, $putFile);
+        return $this->apiService->getRequest($orgId, $data, $putFile, $delete);
     }
 
     public function setService(string $slug, array $filters = [])

@@ -58,4 +58,20 @@ class TicketAttachmentService
 
         return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId(), $data, true);
     }
+
+    public function removeTicketAttachment(int $ticketId, int $attachmentId): array
+    {
+        $this->zohoDeskApiService->setOrganizationId();
+        $this->zohoDeskApiService->setService('tickets/'.$ticketId.'/attachments/'.$attachmentId);
+
+        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId(), null, false, true);
+    }
+
+    public function removeTicketNewAttachment(int $attachmentId): array
+    {
+        // for pipeline
+        $attachmentId = $attachmentId;
+
+        return [];
+    }
 }

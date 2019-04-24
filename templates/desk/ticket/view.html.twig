@@ -64,7 +64,7 @@
                                                 	    <li>
                                                 	    <div class="row">
                                                 	    <div class="col-sm-6">
-                                                    	    <b><a href="{{ ticketAttachment.href }}?portalname=webdesigntilburg&inline=true" target="_blank">{{ ticketAttachment.name }}</a></b>
+                                                    	    <b><a href="{{ ticketAttachment.href }}?portalname=webdesigntilburg&inline=true" target="_blank">{{ ticketAttachment.name }}</a></b> <a href="{{ path('attachment_remove', {ticketId: ticket.id, attachmentId: ticketAttachment.id }) }}">verwijder</a>
                                          	    	    </div>
                                          	    	    </div>
                                                 	    </li>
@@ -122,7 +122,7 @@
             </div>
         </section>
     </div>
-    <div id="urls" data-attachment-post="{{path('attachment_post', {'id':ticket.id}) }}" data-attachment-remove="{{path('attachment_remove', {'id':ticket.id}) }}" />
+    <div id="urls" data-attachment-post="{{path('attachment_post', {'id':ticket.id}) }}" data-attachment-remove="{{path('attachment_new_remove', {'ticketId':ticket.id}) }}" />
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}

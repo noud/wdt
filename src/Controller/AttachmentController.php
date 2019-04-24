@@ -6,7 +6,7 @@ use App\Entity\Attachment;
 use App\Form\Data\PostAttachmentData;
 use App\Form\Handler\PostAttachmentHandler;
 use App\Form\Type\PostAttachmentType;
-use App\Service\AttachmentService;
+use App\Zoho\Service\Desk\TicketAttachmentService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,16 +24,16 @@ class AttachmentController extends AbstractController
     private $entityManager;
 
     /**
-     * @var AttachmentService
+     * @var TicketAttachmentService
      */
-    //private $attachmentService;
+    private $ticketAttachmentService;
 
     public function __construct(
-        EntityManagerInterface $entityManager
-        //AttachmentService $attachmentService
+        EntityManagerInterface $entityManager,
+        TicketAttachmentService $ticketAttachmentService
     ) {
         $this->entityManager = $entityManager;
-        //$this->attachmentService = $attachmentService;
+        $this->ticketAttachmentService = $ticketAttachmentService;
     }
 
     /**
@@ -60,35 +60,22 @@ class AttachmentController extends AbstractController
     }
 
     /**
-     * @Route("/attachment/remove/{id}", methods={"POST"}, name="attachment_remove")
+     * @ Route("/attachment/remove/{ticketId}/{attachmentId}", methods={"DELETE"}, name="attachment_remove")
+     * @Route("/attachment/remove/{ticketId}/{attachmentId}", name="attachment_remove")
      */
-    public function remove(Request $request, int $id): Response
+    public function remove(int $ticketId, int $attachmentId): Response
     {
-        // pipeline
-        $id = $id;
+        $this->ticketAttachmentService->removeTicketAttachment($ticketId, $attachmentId);
 
-        $form = $this->createFormBuilder()->getForm();
+        return $this->redirectToRoute('zoho_desk_ticket_view', ['id' => $ticketId]);
+    }
 
-        $form->handleRequest($request);
-
-        $params = $request->request->all();
-        foreach ($params as $key => $param) {
-            if ('filename' === $key) {
-                // pipeline
-                $param = $param;
-
-//                $fileName = $param;
-                break;
-            }
-        }
-
-//         $attachment = $this->attachmentService->getAttachmentByOfferRequestSupplierAndFileName(
-//             $offerRequestSupplier,
-//             $fileName
-//         );
-        //$this->denyAccessUnlessGranted('DOWNLOAD_SUPPLIER_ATTACHMENT', $attachment);
-        //$this->attachmentService->remove($attachment);
-        //$this->entityManager->flush();
+    /**
+     * @Route("/attachment/remove/{attachmentId}", methods={"DELETE"}, name="attachment_new_remove")
+     */
+    public function removeNew(int $attachmentId): Response
+    {
+        $this->ticketAttachmentService->removeTicketNewAttachment($attachmentId);
 
         return new Response('', 201);
     }
