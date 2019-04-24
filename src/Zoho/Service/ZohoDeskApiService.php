@@ -40,13 +40,13 @@ class ZohoDeskApiService
         $this->apiService->setService($slug, $filters);
     }
 
-    public function setOrganizationId()
-    {
-        $this->organizationId = $this->organizationService->getOrganizationId();
-    }
-
     public function getOrganizationId(): ?int
     {
         return $this->organizationId;
+    }
+
+    public function setOrganizationId(): void
+    {
+        $this->organizationId = $this->organizationService->getOrganizationId();
     }
 }

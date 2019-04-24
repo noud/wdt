@@ -116,7 +116,7 @@ class ZohoApiService
         curl_close($ch);
         throw new \Exception('Internal Server Error in getRequest.');
     }
-    
+
     private function decodeResult(string $result, $ch): array
     {
         $result = json_decode($result, true);
@@ -127,9 +127,10 @@ class ZohoApiService
                     'get_request.json_decode %msg%',
                     ['%msg%' => json_last_error_msg()],
                     'exceptions'
-                    )
-                );
+                )
+            );
         }
+
         return $result;
     }
 }
