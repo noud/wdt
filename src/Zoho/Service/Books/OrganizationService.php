@@ -19,7 +19,7 @@ class OrganizationService
         $this->zohoBooksApiService = $zohoBooksApiService;
     }
 
-    public function getAllOrganizations()
+    public function getAllOrganizations(): array
     {
         $this->zohoBooksApiService->setService('organizations');
 
@@ -33,7 +33,7 @@ class OrganizationService
         return $organizations['organizations'][0]['organization_id'];
     }
 
-    public function getOrganization()
+    public function getOrganization(): ?array
     {
         $organizations = $this->getAllOrganizations();
         if (isset($organizations['organizations'])) {

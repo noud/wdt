@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Zoho\Form\Handler\Desk;
+namespace App\Form\Handler\Desk;
 
-use App\Zoho\Form\Data\Desk\TicketAddData;
+use App\Form\Data\Desk\TicketAddData;
 use App\Zoho\Service\Desk\TicketService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;

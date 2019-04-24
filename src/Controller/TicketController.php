@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
+use App\Form\Data\Desk\TicketAddData;
+use App\Form\Handler\Desk\TicketAddHandler;
+use App\Form\Type\Desk\TicketAddType;
 use App\Service\PageService;
-use App\Zoho\Form\Data\Desk\TicketAddData;
-use App\Zoho\Form\Handler\Desk\TicketAddHandler;
-use App\Zoho\Form\Type\Desk\TicketAddType;
 use App\Zoho\Service\Desk\ResolutionHistoryService;
 use App\Zoho\Service\Desk\TicketCommentService;
 use App\Zoho\Service\Desk\TicketService;
@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TicketController extends AbstractController
 {
@@ -36,6 +37,11 @@ class TicketController extends AbstractController
      */
     private $pageService;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     public function __construct(
         TicketService $ticketService,
         ResolutionHistoryService $resolutionHistoryService,
@@ -46,12 +52,13 @@ class TicketController extends AbstractController
         $this->resolutionHistoryService = $resolutionHistoryService;
         $this->ticketCommentService = $ticketCommentService;
         $this->pageService = $pageService;
+        $this->translator = $translator;
     }
 
     /**
      * @Route("/desk/tickets/all", name="zoho_desk_tickets_all")
      */
-    public function getDeskTicketsAll()
+    public function getDeskTicketsAll(): Response
     {
         $result = $this->ticketService->getAllTickets();
         $ticketsInfo = '';
@@ -61,13 +68,13 @@ class TicketController extends AbstractController
 
         return new Response(
             '<html><body>Tickets: <br />'.$ticketsInfo.'</body></html>'
-            );
+        );
     }
 
     /**
      * @Route("/ticket/overview", name="zoho_desk_tickets")
      */
-    public function overview(Request $request)
+    public function overview(Request $request): Response
     {
         $user = $this->getUser();
         /** @var string $email */
@@ -90,7 +97,7 @@ class TicketController extends AbstractController
         $form = $this->createForm(TicketAddType::class, $data);
 
         if ($ticketAddHandler->handleRequest($form, $request)) {
-            $this->addFlash('success', 'Ticket is toegevoegd.');
+            $this->addFlash('success', $this->translator->trans('ticket.message.added', [], 'ticket'));
 
             return $this->redirectToRoute('zoho_desk_tickets_create_thanks');
         }
@@ -103,8 +110,6 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/desk/tickets/create-thanks", name="zoho_desk_tickets_create_thanks")
-     *
-     * @throws \Doctrine\ORM\ORMException
      */
     public function addThanks(Request $request): Response
     {

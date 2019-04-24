@@ -27,7 +27,7 @@ class ContactService
         $this->organizationService = $organizationService;
     }
 
-    public function getAllContacts()
+    public function getAllContacts(): array
     {
         $this->zohoDeskApiService->setOrganizationId();
         $this->zohoDeskApiService->setService('contacts', [
