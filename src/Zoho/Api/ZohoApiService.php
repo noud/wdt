@@ -20,7 +20,7 @@ class ZohoApiService
      * @var string
      */
     private $apiUrl;
-    
+
     /**
      * @var TranslatorInterface
      */
@@ -49,7 +49,7 @@ class ZohoApiService
     /**
      * @throws \Exception
      */
-    public function getRequest(string $urlPart, $orgId = null, $data = null): \stdClass
+    public function getRequest(?int $orgId = null, $data = null): array
     {
         $this->zohoAccessTokenService->setAccessToken();
         $accessTokenExpiryTime = $this->zohoAccessTokenService->getAccessTokenExpiryTime();
@@ -68,7 +68,8 @@ class ZohoApiService
                 'Authorization: Zoho-oauthtoken '.$this->zohoAccessTokenService->getAccessToken(),
             ];
         }
-
+        dump($this->apiUrl);
+        dump($orgId);
         /** @var resource $ch */
         $ch = curl_init($this->apiUrl);
         curl_setopt($ch, CURLOPT_VERBOSE, true);
@@ -95,9 +96,10 @@ class ZohoApiService
         return $this->processResult($result, $orgId, $ch);
     }
 
-    private function processResult(string $result, string $orgId, $ch)
+    private function processResult(string $result, ?int $orgId, $ch)
     {
-        $result = json_decode($result);
+        dump($result);
+        $result = json_decode($result, true);
         if (JSON_ERROR_NONE !== json_last_error()) {
             curl_close($ch);
             throw new \Exception(
@@ -109,12 +111,12 @@ class ZohoApiService
             );
         }
 
-        if (!$orgId && 57 === $result['code']) {
+        if (!$orgId && isset($result->code) && 57 === $result->code) {
             // this should not happen
             curl_close($ch);
             $this->zohoAccessTokenService->generateAccessTokenFromRefreshToken();
             throw new \Exception($this->translator->trans('get_request.refresh', [], 'exceptions'));
-        } elseif (!$orgId && 0 !== $result['code']) {
+        } elseif (!$orgId && isset($result->code) && 0 !== $result->code) {
             curl_close($ch);
             throw new \Exception($this->translator->trans('get_request.error_in_code', [], 'exceptions'));
         }

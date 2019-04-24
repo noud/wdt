@@ -45,12 +45,12 @@ class TicketService
 
     public function getAllTickets()
     {
-        $this->zohoDeskApiService->setOrgId();
+        $this->zohoDeskApiService->setOrganizationId();
         $this->zohoDeskApiService->setService('tickets', [
             'include' => 'contacts,assignee,departments,team,isRead',
         ]);
 
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrgId());
+        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
     }
 
     public function getTickets(string $email)
@@ -60,7 +60,7 @@ class TicketService
         $this->zohoDeskApiService->setService('accounts/'.$accountId.'/tickets', [
             'include' => 'assignee,departments,team,isRead',
         ]);
-        $result = $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrgId());
+        $result = $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
         $tickets = [];
         foreach ($result['data'] as $ticketData) {
             $ticket = new Ticket();
@@ -89,7 +89,7 @@ class TicketService
 
     public function createTicket(Ticket $ticket)
     {
-        $this->zohoDeskApiService->setOrgId();
+        $this->zohoDeskApiService->setOrganizationId();
         $data = [
             // required
             'subject' => $ticket->getSubject(),
@@ -102,6 +102,6 @@ class TicketService
 
         $this->zohoDeskApiService->setService('tickets');
 
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrgId(), $data);
+        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId(), $data);
     }
 }

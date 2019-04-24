@@ -15,7 +15,7 @@ class Ticket
     private $ticketNumber;
 
     /**
-     * @var string
+     * @var int
      * @Assert\NotBlank()
      */
     private $departmentId;
@@ -53,7 +53,7 @@ class Ticket
         $this->ticketNumber = $ticketNumber;
     }
 
-    public function setDepartmentId(string $departmentId): void
+    public function setDepartmentId(int $departmentId): void
     {
         $this->departmentId = $departmentId;
     }
@@ -88,7 +88,7 @@ class Ticket
         return $this->ticketNumber;
     }
 
-    public function getDepartmentId(): string
+    public function getDepartmentId(): int
     {
         return $this->departmentId;
     }
