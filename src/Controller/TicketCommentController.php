@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
+use App\Form\Data\Desk\TicketCommentAddData;
+use App\Form\Handler\Desk\TicketCommentAddHandler;
+use App\Form\Type\Desk\TicketCommentAddType;
 use App\Service\PageService;
-use App\Zoho\Form\Data\Desk\TicketCommentAddData;
-use App\Zoho\Form\Handler\Desk\TicketCommentAddHandler;
-use App\Zoho\Form\Type\Desk\TicketCommentAddType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

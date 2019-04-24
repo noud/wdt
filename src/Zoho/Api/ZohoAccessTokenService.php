@@ -127,7 +127,7 @@ class ZohoAccessTokenService
         }
     }
 
-    public function init()
+    public function init(): void
     {
         $configuration = [
             'client_id' => $this->clientId,
@@ -143,7 +143,7 @@ class ZohoAccessTokenService
         \ZCRMRestClient::initialize($configuration);
     }
 
-    public function generateAccessToken(string $grantToken = null)
+    public function generateAccessToken(string $grantToken = null): void
     {
         $this->init();
         $this->grantToken = $grantToken ?: $this->grantToken;
@@ -198,7 +198,7 @@ class ZohoAccessTokenService
         }
     }
 
-    public function generateAccessTokenFromRefreshToken()
+    public function generateAccessTokenFromRefreshToken(): void
     {
         $this->init();
         $oAuthClient = \ZohoOAuth::getClientInstance();

@@ -76,7 +76,7 @@ class PageFixtures extends Fixture
     private function loadTicket(ObjectManager $manager): void
     {
         $page = new Page();
-        $page->setSlug('/desk/tickets/create');
+        $page->setSlug('/ticket/create');
         $page->setTitle('Ticket aanmaken');
         $page->setMetaTitle('Je kunt hier een ticket aanmaken');
         $page->setContent('Je kunt hier een ticket aanmaken.');
@@ -90,7 +90,7 @@ class PageFixtures extends Fixture
         $manager->persist($page);
 
         $page = new Page();
-        $page->setSlug('/desk/tickets/index');
+        $page->setSlug('/ticket/overview');
         $page->setTitle('Tickets overzicht');
         $page->setMetaTitle('Dit zijn de uitstaande tickets van je organisatie');
         $page->setContent('Dit zijn de uitstaande tickets van je organisatie.');
@@ -116,14 +116,14 @@ class PageFixtures extends Fixture
         $page->setMetaTitle('Je ticket commentaar is aangemaakt en wordt in behandeling genomen');
         $page->setContent('Je ticket commentaar is aangemaakt en wordt in behandeling genomen.');
         $manager->persist($page);
-        
+
         $page = new Page();
         $page->setSlug('/desk/tickets/attachment/create');
         $page->setTitle('Ticket attachment aanmaken');
         $page->setMetaTitle('Je kunt hier ticket attachment aanmaken');
         $page->setContent('Je kunt hier ticket attachment aanmaken.');
         $manager->persist($page);
-        
+
         $page = new Page();
         $page->setSlug('/desk/tickets/attachment/create-thanks');
         $page->setTitle('Ticket attachment aangemaakt');

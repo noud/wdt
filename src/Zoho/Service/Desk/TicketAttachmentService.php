@@ -2,8 +2,8 @@
 
 namespace App\Zoho\Service\Desk;
 
+use App\Form\Data\Desk\TicketAttachmentAddData;
 use App\Zoho\Entity\Desk\TicketAttachment;
-use App\Zoho\Form\Data\Desk\TicketAttachmentAddData;
 use App\Zoho\Service\ZohoDeskApiService;
 
 class TicketAttachmentService
@@ -24,10 +24,10 @@ class TicketAttachmentService
 
     public function getAllTicketAttachments(string $ticketId): array
     {
-        $this->zohoDeskApiService->setOrgId();
+        $this->zohoDeskApiService->setOrganizationId();
         $this->zohoDeskApiService->setService('tickets/'.$ticketId.'/comments');
 
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrgId());
+        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
     }
 
     public function getAllPublicTicketAttachments(string $ticketId): array
@@ -48,20 +48,23 @@ class TicketAttachmentService
     public function addTicketAttachment(TicketAttachmentAddData $ticketAttachmentData, string $ticketId)
     {
         $ticketAttachment = new TicketAttachment();
-        $ticketAttachment->setContent($ticketAttachmentData->content);
+        $ticketAttachment->setContent((string) $ticketAttachmentData->isPublic);
 
         $this->createTicketAttachment($ticketAttachment, $ticketId);
     }
 
     public function createTicketAttachment(?TicketAttachment $ticketAttachment, string $ticketId)
     {
-        $this->zohoDeskApiService->setOrgId();
+        // avoid unused param
+        $ticketAttachment = $ticketAttachment;
+
+        $this->zohoDeskApiService->setOrganizationId();
         $data = [
             'isPublic' => 'true',
-            'file' => new \CURLFile(realpath('/var/www/klantportaal/public/example33.txt'), 'text/plain', 'x5.txt'),
+            'file' => new \CURLFile('/var/www/klantportaal/public/build/example33.txt', 'text/plain', 'x66.txt'),
         ];
         $this->zohoDeskApiService->setService('tickets/'.$ticketId.'/attachments');
 
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrgId(), $data, true);
+        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId(), $data, true);
     }
 }

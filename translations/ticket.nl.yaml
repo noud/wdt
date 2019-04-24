@@ -13,6 +13,8 @@ ticket:
       aantal_minuten_ingeschat: 'Aantal minuten ingeschat'
       aantal_uur_ingeschat: 'Aantal uur ingeschat'
     submit: 'Ticket registreren'
+  message:
+    added: 'Ticket is toegevoegd.'
 ticket_comment:
   field:
     content: 'Commentaar'

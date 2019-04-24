@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Zoho\Form\Type\Desk;
+namespace App\Form\Type\Desk;
 
-use App\Zoho\Form\Data\Desk\TicketAttachmentAddData;
+use App\Form\Data\Desk\TicketAttachmentAddData;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Zoho\Form\Handler\Desk;
+namespace App\Form\Handler\Desk;
 
-use App\Zoho\Form\Data\Desk\TicketCommentAddData;
-use App\Zoho\Service\Desk\TicketCommentService;
+use App\Form\Data\Desk\TicketAttachmentAddData;
+use App\Zoho\Service\Desk\TicketAttachmentService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class TicketCommentAddHandler
+class TicketAttachmentAddHandler
 {
     /**
      * @var EntityManagerInterface
@@ -16,19 +16,19 @@ class TicketCommentAddHandler
     private $entityManager;
 
     /**
-     * @var TicketCommentService
+     * @var TicketAttachmentService
      */
-    private $ticketCommentService;
+    private $ticketAttachmentService;
 
     /**
      * JoinHandler constructor.
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        TicketCommentService $ticketCommentService
+        TicketAttachmentService $ticketAttachmentService
     ) {
         $this->entityManager = $entityManager;
-        $this->ticketCommentService = $ticketCommentService;
+        $this->ticketAttachmentService = $ticketAttachmentService;
     }
 
     /**
@@ -39,9 +39,9 @@ class TicketCommentAddHandler
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var TicketCommentAddData $ticketCommentData */
-            $ticketCommentData = $form->getData();
-            $this->ticketCommentService->addTicketComment($ticketCommentData, $ticketId);
+            /** @var TicketAttachmentAddData $ticketAttachmentData */
+            $ticketAttachmentData = $form->getData();
+            $this->ticketAttachmentService->addTicketAttachment($ticketAttachmentData, $ticketId);
 
             return true;
         }

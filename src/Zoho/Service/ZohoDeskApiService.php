@@ -18,9 +18,9 @@ class ZohoDeskApiService
     private $organizationService;
 
     /**
-     * @var string
+     * @var int
      */
-    private $orgId;
+    private $organizationId;
 
     public function __construct(
         ZohoApiService $zohoDeskApiService,
@@ -40,13 +40,13 @@ class ZohoDeskApiService
         $this->apiService->setService($slug, $filters);
     }
 
-    public function setOrgId()
+    public function getOrganizationId(): ?int
     {
-        $this->orgId = $this->organizationService->getOrganizationId();
+        return $this->organizationId;
     }
 
-    public function getOrgId(): ?string
+    public function setOrganizationId(): void
     {
-        return $this->orgId;
+        $this->organizationId = $this->organizationService->getOrganizationId();
     }
 }

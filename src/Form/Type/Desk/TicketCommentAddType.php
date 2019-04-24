@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Zoho\Form\Type\Desk;
+namespace App\Form\Type\Desk;
 
-use App\Zoho\Form\Data\Desk\TicketCommentAddData;
+use App\Form\Data\Desk\TicketCommentAddData;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;

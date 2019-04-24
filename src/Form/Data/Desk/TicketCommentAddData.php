@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Zoho\Form\Data\Desk;
+namespace App\Form\Data\Desk;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class TicketAttachmentAddData
+class TicketCommentAddData
 {
     /**
-     * @var bool
+     * @var string
      * @Assert\NotBlank()
      */
-    public $isPublic;
+    public $content;
 }
