@@ -19,14 +19,14 @@ class ContactService
         $this->zohoBooksApiService = $zohoBooksApiService;
     }
 
-    public function getAllContacts()
+    public function getAllContacts(): array
     {
         $this->zohoBooksApiService->setService('contacts');
 
         return $this->zohoBooksApiService->getRequest();
     }
 
-    public function getContactById(int $contactId)
+    public function getContactById(int $contactId): array
     {
         $this->zohoBooksApiService->setService('contacts/'.$contactId);
 

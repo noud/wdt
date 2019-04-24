@@ -2,8 +2,8 @@
 
 namespace App\Zoho\Service\Desk;
 
+use App\Form\Data\Desk\TicketAddData;
 use App\Zoho\Entity\Desk\Ticket;
-use App\Zoho\Form\Data\Desk\TicketAddData;
 use App\Zoho\Service\ZohoDeskApiService;
 
 class TicketService
@@ -43,24 +43,24 @@ class TicketService
         $this->departmentService = $departmentService;
     }
 
-    public function getAllTickets()
+    public function getAllTickets(): array
     {
-        $this->zohoDeskApiService->setOrgId();
+        $this->zohoDeskApiService->setOrganizationId();
         $this->zohoDeskApiService->setService('tickets', [
             'include' => 'contacts,assignee,departments,team,isRead',
         ]);
 
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrgId());
+        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
     }
 
-    public function getTickets(string $email)
+    public function getTickets(string $email): array
     {
         $accountId = $this->accountService->getAccountIdByEmail($email);
 
         $this->zohoDeskApiService->setService('accounts/'.$accountId.'/tickets', [
             'include' => 'assignee,departments,team,isRead',
         ]);
-        $result = $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrgId());
+        $result = $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
 
         usort($result['data'], function ($a, $b) {
             return ($a['ticketNumber'] > $b['ticketNumber']) ? -1 : 1;
@@ -79,18 +79,18 @@ class TicketService
         return $tickets;
     }
 
-    public function getTicket(string $ticketId)
+    public function getTicket(string $ticketId): array
     {
-        $this->zohoDeskApiService->setOrgId();
+        $this->zohoDeskApiService->setOrganizationId();
         $this->zohoDeskApiService->setService('tickets/'.$ticketId, [
             'include' => 'contacts,products,assignee,departments,team',
         ]);
-        $result = $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrgId());
+        $result = $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
 
         return $result;
     }
 
-    public function addTicket(TicketAddData $ticketData)
+    public function addTicket(TicketAddData $ticketData): ?array
     {
         $ticket = new Ticket();
         $ticket->setDepartmentId($this->departmentService->getDepartmentId());
@@ -101,12 +101,7 @@ class TicketService
         $ticket->setDescription($ticketData->description);
         $ticket->setPriority($ticketData->priority);
 
-        $this->createTicket($ticket);
-    }
-
-    public function createTicket(Ticket $ticket)
-    {
-        $this->zohoDeskApiService->setOrgId();
+        $this->zohoDeskApiService->setOrganizationId();
         $data = [
             // required
             'subject' => $ticket->getSubject(),
@@ -119,6 +114,6 @@ class TicketService
 
         $this->zohoDeskApiService->setService('tickets');
 
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrgId(), $data);
+        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId(), $data);
     }
 }

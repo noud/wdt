@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Zoho\Form\Type\Desk;
+namespace App\Form\Type\Desk;
 
-use App\Zoho\Form\Data\Desk\TicketAddData;
+use App\Form\Data\Desk\TicketAddData;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -20,7 +21,7 @@ class TicketAddType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('contactName', null, [
+            ->add('contactName', TextType::class, [
                 'label' => 'ticket.field.contact_name',
                 'disabled' => true,
             ])
@@ -28,7 +29,7 @@ class TicketAddType extends AbstractType
                 'label' => 'ticket.field.email',
                 'disabled' => true,
             ])
-            ->add('subject', null, [
+            ->add('subject', TextType::class, [
                 'label' => 'ticket.field.subject',
                 'required' => true,
             ])

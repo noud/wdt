@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Zoho\Service\Books\InvoiceService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 
 class InvoiceController extends AbstractController
 {
@@ -24,11 +25,11 @@ class InvoiceController extends AbstractController
     /**
      * @Route("/invoices", name="all_invoices")
      */
-    public function allInvoices()
+    public function allInvoices(): Response
     {
         $invoices = $this->invoiceService->getAllInvoices();
 
-        return $this->render('books/invoice/overview.html.twig', [
+        return $this->render('invoice/overview.html.twig', [
             'invoices' => $invoices,
         ]);
     }

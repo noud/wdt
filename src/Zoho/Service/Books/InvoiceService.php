@@ -28,7 +28,7 @@ class InvoiceService
         $this->organizationService = $organizationService;
     }
 
-    public function getAllInvoices()
+    public function getAllInvoices(): array
     {
         $this->zohoBooksApiService->setService('invoices', [
             'organization_id' => $this->organizationService->getOrganizationId(),

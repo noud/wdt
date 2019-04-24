@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Zoho;
+namespace App\Controller\Zoho\Development;
 
 use App\Zoho\Service\Books\ContactService;
 use App\Zoho\Service\Books\InvoiceService;
@@ -47,7 +47,7 @@ class ZohoBooksController extends AbstractController
     /**
      * @Route("/books/organizations", name="zoho_books_organizations")
      */
-    public function getOrganizations()
+    public function getOrganizations(): Response
     {
         $result = $this->organizationService->getAllOrganizations();
 
@@ -61,7 +61,7 @@ class ZohoBooksController extends AbstractController
     /**
      * @Route("/books/contacts", name="zoho_books_contacts")
      */
-    public function getContacts()
+    public function getContacts(): Response
     {
         $result = $this->contactService->getAllContacts();
         $contactNames = '';

@@ -16,7 +16,7 @@ class ZohoBooksApiService
         $this->apiService = $zohoBooksApiService;
     }
 
-    public function getRequest($orgId = null, $data = null)
+    public function getRequest(?int $orgId = null, $data = null): array
     {
         return $this->apiService->getRequest($orgId, $data);
     }
