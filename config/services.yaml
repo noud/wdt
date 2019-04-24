@@ -21,6 +21,7 @@ parameters:
     zoho.books.api.base_url: 'https://books.zoho.eu/api/v3/'
     zoho.crm.api.base_url: ''
     zoho.desk.api.base_url: 'https://desk.zoho.eu/api/v1/'
+    ticket_attachments_dir: '%kernel.project_dir%%env(TICKET_ATTACHMENTS_DIR)%'
 
 services:
     # default configuration for services in *this* file
@@ -94,3 +95,8 @@ services:
         arguments:
             - ''
             - '%zoho.desk.api.base_url%'
+            
+    App\Form\Handler\PostAttachmentHandler:
+        arguments:
+            - "%ticket_attachments_dir%"
+        

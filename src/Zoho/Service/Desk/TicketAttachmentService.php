@@ -2,8 +2,6 @@
 
 namespace App\Zoho\Service\Desk;
 
-use App\Form\Data\Desk\TicketAttachmentAddData;
-use App\Zoho\Entity\Desk\TicketAttachment;
 use App\Zoho\Service\ZohoDeskApiService;
 
 class TicketAttachmentService
@@ -25,7 +23,7 @@ class TicketAttachmentService
     public function getAllTicketAttachments(string $ticketId): array
     {
         $this->zohoDeskApiService->setOrganizationId();
-        $this->zohoDeskApiService->setService('tickets/'.$ticketId.'/comments');
+        $this->zohoDeskApiService->setService('tickets/'.$ticketId.'/attachments');
 
         return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
     }
@@ -39,29 +37,22 @@ class TicketAttachmentService
         });
 
         usort($publicTicketAttachments, function ($a, $b) {
-            return ($a['commentedTime'] > $b['commentedTime']) ? -1 : 1;
+            return ($a['createdTime'] > $b['createdTime']) ? -1 : 1;
         });
 
         return $publicTicketAttachments;
     }
 
-    public function addTicketAttachment(TicketAttachmentAddData $ticketAttachmentData, string $ticketId)
+    public function createTicketAttachment(string $file, int $ticketId): array
     {
-        $ticketAttachment = new TicketAttachment();
-        $ticketAttachment->setContent((string) $ticketAttachmentData->isPublic);
-
-        $this->createTicketAttachment($ticketAttachment, $ticketId);
-    }
-
-    public function createTicketAttachment(?TicketAttachment $ticketAttachment, string $ticketId)
-    {
-        // avoid unused param
-        $ticketAttachment = $ticketAttachment;
+        /** @var string $fileMime */
+        $fileMime = mime_content_type($file);
+        $fileName = basename($file);
 
         $this->zohoDeskApiService->setOrganizationId();
         $data = [
             'isPublic' => 'true',
-            'file' => new \CURLFile('/var/www/klantportaal/public/build/example33.txt', 'text/plain', 'x66.txt'),
+            'file' => new \CURLFile($file, $fileMime, $fileName),
         ];
         $this->zohoDeskApiService->setService('tickets/'.$ticketId.'/attachments');
 

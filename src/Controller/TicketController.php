@@ -7,6 +7,7 @@ use App\Form\Handler\Desk\TicketAddHandler;
 use App\Form\Type\Desk\TicketAddType;
 use App\Service\PageService;
 use App\Zoho\Service\Desk\ResolutionHistoryService;
+use App\Zoho\Service\Desk\TicketAttachmentService;
 use App\Zoho\Service\Desk\TicketCommentService;
 use App\Zoho\Service\Desk\TicketService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,6 +34,11 @@ class TicketController extends AbstractController
     private $ticketCommentService;
 
     /**
+     * @var TicketAttachmentService
+     */
+    private $ticketAttachmentService;
+
+    /**
      * @var PageService
      */
     private $pageService;
@@ -46,12 +52,14 @@ class TicketController extends AbstractController
         TicketService $ticketService,
         ResolutionHistoryService $resolutionHistoryService,
         TicketCommentService $ticketCommentService,
+        TicketAttachmentService $ticketAttachmentService,
         PageService $pageService,
         TranslatorInterface $translator
     ) {
         $this->ticketService = $ticketService;
         $this->resolutionHistoryService = $resolutionHistoryService;
         $this->ticketCommentService = $ticketCommentService;
+        $this->ticketAttachmentService = $ticketAttachmentService;
         $this->pageService = $pageService;
         $this->translator = $translator;
     }
@@ -129,11 +137,13 @@ class TicketController extends AbstractController
         $ticket = $this->ticketService->getTicket($id);
         $resolutionHistory = $this->resolutionHistoryService->getAllResolutionHistory($id);
         $ticketComments = $this->ticketCommentService->getAllPublicTicketComments($id);
+        $ticketAttachments = $this->ticketAttachmentService->getAllPublicTicketAttachments($id);
 
         return $this->render('desk/ticket/view.html.twig', [
             'ticket' => $ticket,
             'resolutionHistory' => $resolutionHistory,
             'ticketComments' => $ticketComments,
+            'ticketAttachments' => $ticketAttachments,
             'page' => $this->pageService->getPageBySlug($this->pathStripLastPart($request->getPathInfo())),
         ]);
     }

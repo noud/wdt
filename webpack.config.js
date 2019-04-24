@@ -16,6 +16,7 @@ Encore
      */
     .addEntry('app', './assets/js/app.js')
     .addEntry('password', './assets/js/password.js')
+    .addEntry('dropzone', './assets/js/dropzone.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
