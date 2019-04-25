@@ -71,11 +71,11 @@ class AttachmentController extends AbstractController
     }
 
     /**
-     * @Route("/attachment/remove/{attachmentId}", methods={"DELETE"}, name="attachment_new_remove")
+     * @Route("/attachment/remove/{$ticketId}", methods={"DELETE"}, name="attachment_new_remove")
      */
-    public function removeNew(int $attachmentId): Response
+    public function removeNew(int $ticketId): Response
     {
-        $this->ticketAttachmentService->removeTicketNewAttachment($attachmentId);
+        $this->ticketAttachmentService->removeTicketNewAttachment($ticketId);
 
         return new Response('', 201);
     }
