@@ -79,7 +79,7 @@ class TicketService
         return $tickets;
     }
 
-    public function getTicket(string $ticketId): array
+    public function getTicket(int $ticketId): array
     {
         $this->zohoDeskApiService->setOrganizationId();
         $this->zohoDeskApiService->setService('tickets/'.$ticketId, [

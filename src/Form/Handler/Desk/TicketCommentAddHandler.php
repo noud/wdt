@@ -34,7 +34,7 @@ class TicketCommentAddHandler
     /**
      * @throws \Doctrine\ORM\ORMException
      */
-    public function handleRequest(FormInterface $form, Request $request, string $ticketId): bool
+    public function handleRequest(FormInterface $form, Request $request, int $ticketId): bool
     {
         $form->handleRequest($request);
 

@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Attachment;
+use App\Form\Data\AttachmentRemoveNewData;
 use App\Form\Data\PostAttachmentData;
+use App\Form\Handler\AttachmentRemoveNewHandler;
 use App\Form\Handler\PostAttachmentHandler;
+use App\Form\Type\AttachmentRemoveNewType;
 use App\Form\Type\PostAttachmentType;
 use App\Zoho\Service\Desk\TicketAttachmentService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -52,11 +55,11 @@ class AttachmentController extends AbstractController
         }
 
         return new JsonResponse(
-                [
-                    'error' => 'Upload is waarschijnlijk het verkeerde bestandstype.',
-                ],
-                Response::HTTP_BAD_REQUEST
-            );
+            [
+                'error' => 'Upload is waarschijnlijk het verkeerde bestandstype.',
+            ],
+            Response::HTTP_BAD_REQUEST
+        );
     }
 
     /**
@@ -71,11 +74,20 @@ class AttachmentController extends AbstractController
     }
 
     /**
-     * @Route("/attachment/remove/{$ticketId}", methods={"DELETE"}, name="attachment_new_remove")
+     * @ Route("/attachment/remove/{ticketId}", methods={"DELETE"}, name="attachment_new_remove")
+     * @Route("/attachment/remove/{ticketId}", name="attachment_new_remove")
      */
-    public function removeNew(int $ticketId): Response
-    {
-        $this->ticketAttachmentService->removeTicketNewAttachment($ticketId);
+    public function removeNew(
+        Request $request,
+        AttachmentRemoveNewHandler $formHandler,
+        int $ticketId
+    ): Response {
+        $data = new AttachmentRemoveNewData();
+
+        $form = $this->createForm(AttachmentRemoveNewType::class, $data);
+        if ($formHandler->handleRequest($form, $request, $ticketId)) {
+            return new Response('', 201);
+        }
 
         return new Response('', 201);
     }

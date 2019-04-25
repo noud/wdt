@@ -22,7 +22,7 @@ class TicketCommentService
         $this->zohoDeskApiService = $deskApiService;
     }
 
-    public function getAllTicketComments(string $ticketId): array
+    public function getAllTicketComments(int $ticketId): array
     {
         $this->zohoDeskApiService->setOrganizationId();
         $this->zohoDeskApiService->setService('tickets/'.$ticketId.'/comments');
@@ -30,7 +30,7 @@ class TicketCommentService
         return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
     }
 
-    public function getAllPublicTicketComments(string $ticketId): array
+    public function getAllPublicTicketComments(int $ticketId): array
     {
         $ticketComments = $this->getAllTicketComments($ticketId);
         $filterBy = true;
@@ -45,7 +45,7 @@ class TicketCommentService
         return $publicTicketComments;
     }
 
-    public function addTicketComment(TicketCommentAddData $ticketCommentData, string $ticketId)
+    public function addTicketComment(TicketCommentAddData $ticketCommentData, int $ticketId)
     {
         $ticketComment = new TicketComment();
         $ticketComment->setContent($ticketCommentData->content);
@@ -53,7 +53,7 @@ class TicketCommentService
         $this->createTicketComment($ticketComment, $ticketId);
     }
 
-    public function createTicketComment(TicketComment $ticketComment, string $ticketId)
+    public function createTicketComment(TicketComment $ticketComment, int $ticketId)
     {
         $this->zohoDeskApiService->setOrganizationId();
         $data = [

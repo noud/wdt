@@ -20,7 +20,7 @@ class ResolutionHistoryService
         $this->zohoDeskApiService = $deskApiService;
     }
 
-    public function getAllResolutionHistory(string $ticketId)
+    public function getAllResolutionHistory(int $ticketId)
     {
         $this->zohoDeskApiService->setOrganizationId();
         $this->zohoDeskApiService->setService('tickets/'.$ticketId.'/resolutionHistory');

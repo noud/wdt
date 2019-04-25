@@ -27,7 +27,7 @@ class TicketCommentController extends AbstractController
     /**
      * @Route("/desk/tickets/comment/create/{ticketId}", name="zoho_desk_tickets_comment_create")
      */
-    public function createDeskTicketComment(string $ticketId, TicketCommentAddHandler $ticketCommentAddHandler, Request $request): Response
+    public function createDeskTicketComment(int $ticketId, TicketCommentAddHandler $ticketCommentAddHandler, Request $request): Response
     {
         $data = new TicketCommentAddData();
         $form = $this->createForm(TicketCommentAddType::class, $data);

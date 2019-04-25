@@ -3,12 +3,11 @@
 namespace App\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PostAttachmentType extends AbstractType
+class AttachmentRemoveNewType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -19,8 +18,6 @@ class PostAttachmentType extends AbstractType
     {
         $builder
             ->add('filename', TextType::class, [])
-            ->add('filesize', TextType::class, [])
-            ->add('file', FileType::class, [])
         ;
     }
 
