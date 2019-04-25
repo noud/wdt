@@ -176,7 +176,7 @@ class ZohoAccessTokenService
         return $this->accessToken;
     }
 
-    public function getAccessTokenExpiryTime(): ?float
+    public function getAccessTokenExpiryTime(): float
     {
         return $this->accessTokenExpiryTime;
     }
