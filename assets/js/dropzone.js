@@ -16,7 +16,14 @@ $(document).ready(function() {
 	        data: frm.serialize(),
 	    });
 	});
-	var myDropzone = new Dropzone("div#ticket-dropzone", { url: urlPost, addRemoveLinks: true});
+	var myDropzone = new Dropzone(
+			"div#ticket-dropzone",
+			{
+				url: urlPost,
+				addRemoveLinks: true,
+				dictRemoveFile: 'Verwijder bestand'
+			}
+	);
 	myDropzone.on("sending", function(file, xhr, formData) {
 		  formData.append("filename", file.name);
 		  formData.append("filesize", file.size);
