@@ -30,12 +30,7 @@ class ZohoApiService
     public function getRequest(string $urlPart): \stdClass
     {
         $url = $this->apiBaseUrl.$urlPart;
-
-        $this->zohoAccessTokenService->setAccessToken();
-        $accessTokenExpiryTime = $this->zohoAccessTokenService->getAccessTokenExpiryTime();
-        if ($accessTokenExpiryTime < round(microtime(true) * 1000)) {
-            $this->zohoAccessTokenService->generateAccessTokenFromRefreshToken();
-        }
+        $this->zohoAccessTokenService->checkAccessTokenExpiryTime();
 
         /** @var resource $ch */
         $ch = curl_init($url);

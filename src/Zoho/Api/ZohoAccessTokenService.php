@@ -204,4 +204,13 @@ class ZohoAccessTokenService
         $oAuthClient = \ZohoOAuth::getClientInstance();
         $oAuthClient->generateAccessTokenFromRefreshToken($this->refreshToken, $this->currentUserEmail);
     }
+    
+    public function checkAccessTokenExpiryTime(): void
+    {
+        $this->setAccessToken();
+        $accessTokenExpiryTime = $this->getAccessTokenExpiryTime();
+        if ($accessTokenExpiryTime < round(microtime(true) * 1000)) {
+            $this->generateAccessTokenFromRefreshToken();
+        }
+    }
 }
