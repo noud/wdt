@@ -63,12 +63,15 @@ class AttachmentController extends AbstractController
     }
 
     /**
-     * @ Route("/attachment/remove/{ticketId}/{attachmentId}", methods={"DELETE"}, name="attachment_remove")
-     * @Route("/attachment/remove/{ticketId}/{attachmentId}", name="attachment_remove")
+     * @Route("/attachment/remove/{ticketId}/{attachmentId}", methods={"DELETE"}, name="attachment_remove")
      */
-    public function remove(int $ticketId, int $attachmentId): Response
+    public function remove(Request $request, int $ticketId, int $attachmentId): Response
     {
-        $this->ticketAttachmentService->removeTicketAttachment($ticketId, $attachmentId);
+        $submittedToken = $request->request->get('token');
+        
+        if ($this->isCsrfTokenValid('ticket-attachment-delete', $submittedToken)) {
+            $this->ticketAttachmentService->removeTicketAttachment($ticketId, $attachmentId);
+        }
 
         return $this->redirectToRoute('zoho_desk_ticket_view', ['id' => $ticketId]);
     }
@@ -86,9 +89,9 @@ class AttachmentController extends AbstractController
 
         $form = $this->createForm(AttachmentRemoveNewType::class, $data);
         if ($formHandler->handleRequest($form, $request, $ticketId)) {
-            return new Response('', 201);
+            return new Response('TEST', 200);
         }
 
-        return new Response('', 201);
+        return new Response('', 404);
     }
 }

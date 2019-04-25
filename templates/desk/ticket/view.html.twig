@@ -63,9 +63,14 @@
                                         	    	{% for ticketAttachment in ticketAttachments %}
                                                 	    <li>
                                                 	    <div class="row">
-                                                	    <div class="col-sm-6">
-                                                    	    <b><a href="{{ ticketAttachment.href }}?portalname=webdesigntilburg&inline=true" target="_blank">{{ ticketAttachment.name }}</a></b> <a href="{{ path('attachment_remove', {ticketId: ticket.id, attachmentId: ticketAttachment.id }) }}">verwijder</a>
-                                         	    	    </div>
+                                                    	    <div class="col-sm-6">
+                                                        	    <b><a href="{{ ticketAttachment.href }}?portalname=webdesigntilburg&inline=true" target="_blank">{{ ticketAttachment.name }}</a></b> 
+                                                                <form action="{{ path('attachment_remove', {ticketId: ticket.id, attachmentId: ticketAttachment.id }) }}" onsubmit="return window.confirm('Weet u zeker dat u {{ ticketAttachment.name|e('html_attr') }} wilt verwijderen?');" method="post">
+                                                                    <input type="hidden" name="_method" value="DELETE" />
+                                                                    <input type="hidden" name="token" value="{{ csrf_token('ticket-attachment-delete') }}" />
+                                                                    <button type="submit" class="delete-link" class="btn btn-sm btn-primary btn-icon rounded-pill">verwijder</button>
+                                                                </form>
+                                             	    	    </div>
                                          	    	    </div>
                                                 	    </li>
                                         	    	{% endfor %}
