@@ -52,6 +52,9 @@ class TicketService
         ]);
     }
 
+    /**
+     * @return Ticket[]
+     */
     public function getTickets(string $email): array
     {
         $accountId = $this->accountService->getAccountIdByEmail($email);
