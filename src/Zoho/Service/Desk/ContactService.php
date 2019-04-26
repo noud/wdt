@@ -30,10 +30,10 @@ class ContactService
     public function getAllContacts(): array
     {
         $this->zohoDeskApiService->setOrganizationId();
-        $this->zohoDeskApiService->setService('contacts', [
+        $organisationId = $this->zohoDeskApiService->getOrganizationId();
+
+        return $this->zohoDeskApiService->get('contacts', $organisationId, [
             'include' => 'accounts',
         ]);
-
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
     }
 }

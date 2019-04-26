@@ -21,9 +21,7 @@ class OrganizationService
 
     public function getAllOrganizations(): array
     {
-        $this->zohoDeskApiService->setService('organizations');
-
-        return $this->zohoDeskApiService->getRequest();
+        return $this->zohoDeskApiService->get('organizations');
     }
 
     public function getOrganizationId(): ?int

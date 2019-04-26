@@ -30,21 +30,14 @@ class ZohoDeskApiService
         $this->organizationService = $organizationService;
     }
 
-    public function getRequest($orgId = null, $data = null)
+    public function get(string $slug, ?int $organizationId = null, array $filters = [], $data = null): array
     {
-        return $this->apiService->getRequest($orgId, $data);
-    }
-
-    public function setService(string $slug, array $filters = [])
-    {
-        $this->apiService->setService($slug, $filters);
+        return $this->apiService->get($slug, $organizationId, $filters, $data);
     }
 
     public function getOrganizations(): array
     {
-        $this->apiService->setService('organizations');
-
-        return $this->apiService->getRequest();
+        return $this->apiService->get('organizations');
     }
 
     public function getOrganizationId(): ?int

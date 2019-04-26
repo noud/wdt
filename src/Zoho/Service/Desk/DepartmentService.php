@@ -30,12 +30,12 @@ class DepartmentService
     public function getAllDepartments(): array
     {
         $this->zohoDeskApiService->setOrganizationId();
-        $this->zohoDeskApiService->setService('departments', [
+        $organisationId = $this->zohoDeskApiService->getOrganizationId();
+
+        return $this->zohoDeskApiService->get('departments', $organisationId, [
             'isEnabled' => 'true',
             'chatStatus' => 'AVAILABLE',
         ]);
-
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
     }
 
     public function getDepartmentId(): int

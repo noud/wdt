@@ -17,11 +17,6 @@ class ZohoApiService
     private $apiBaseUrl;
 
     /**
-     * @var string
-     */
-    private $apiUrl;
-
-    /**
      * @var TranslatorInterface
      */
     private $translator;
@@ -41,21 +36,18 @@ class ZohoApiService
         $this->zohoAccessTokenService->init();
     }
 
-    public function setService(string $slug, array $filters = [])
-    {
-        $this->apiUrl = $this->apiBaseUrl.$slug.'?'.http_build_query($filters);
-    }
-
     /**
      * @throws \Exception
      */
-    public function getRequest(?int $organizationId = null, $data = null): array
+    public function get(string $slug, ?int $organizationId = null, array $filters = [], $data = null): array
     {
         $this->zohoAccessTokenService->setAccessToken();
         $accessTokenExpiryTime = $this->zohoAccessTokenService->getAccessTokenExpiryTime();
         if ($accessTokenExpiryTime < round(microtime(true) * 1000)) {
             $this->zohoAccessTokenService->generateAccessTokenFromRefreshToken();
         }
+
+        $url = $this->apiBaseUrl.$slug.'?'.http_build_query($filters);
 
         if ($organizationId) {
             $header = [
@@ -70,7 +62,7 @@ class ZohoApiService
         }
 
         /** @var resource $ch */
-        $ch = curl_init($this->apiUrl);
+        $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_VERBOSE, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
