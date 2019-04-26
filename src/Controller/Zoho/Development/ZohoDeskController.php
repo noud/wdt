@@ -8,18 +8,12 @@ use App\Zoho\Service\Desk\ContactService;
 use App\Zoho\Service\Desk\DepartmentService;
 use App\Zoho\Service\Desk\OrganizationService;
 use App\Zoho\Service\Desk\TicketService;
-use App\Zoho\Service\ZohoDeskApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ZohoDeskController extends AbstractController
 {
-    /**
-     * @var ZohoDeskApiService
-     */
-    private $deskWebservice;
-
     /**
      * @var OrganizationService
      */
@@ -51,7 +45,6 @@ class ZohoDeskController extends AbstractController
     private $pageService;
 
     public function __construct(
-        ZohoDeskApiService $zohoDeskService,
         OrganizationService $organizationService,
         DepartmentService $departmentService,
         ContactService $contactService,
@@ -59,7 +52,6 @@ class ZohoDeskController extends AbstractController
         TicketService $ticketService,
         PageService $pageService
     ) {
-        $this->deskWebservice = $zohoDeskService;
         $this->organizationService = $organizationService;
         $this->departmentService = $departmentService;
         $this->contactService = $contactService;

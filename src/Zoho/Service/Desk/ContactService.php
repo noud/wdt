@@ -2,14 +2,14 @@
 
 namespace App\Zoho\Service\Desk;
 
-use App\Zoho\Service\ZohoDeskApiService;
+use App\Zoho\Api\ZohoApiService;
 
 class ContactService
 {
     /**
-     * @var ZohoDeskApiService
+     * @var ZohoApiService
      */
-    private $zohoDeskApiService;
+    private $zohoApiService;
 
     /**
      * @var OrganizationService
@@ -20,19 +20,18 @@ class ContactService
      * DepartmentService constructor.
      */
     public function __construct(
-        ZohoDeskApiService $deskApiService,
+        ZohoApiService $zohoDeskApiService,
         OrganizationService $organizationService
     ) {
-        $this->zohoDeskApiService = $deskApiService;
+        $this->zohoApiService = $zohoDeskApiService;
         $this->organizationService = $organizationService;
     }
 
     public function getAllContacts(): array
     {
-        $this->zohoDeskApiService->setOrganizationId();
-        $organisationId = $this->zohoDeskApiService->getOrganizationId();
+        $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoDeskApiService->get('contacts', $organisationId, [
+        return $this->zohoApiService->get('contacts', $organisationId, [
             'include' => 'accounts',
         ]);
     }

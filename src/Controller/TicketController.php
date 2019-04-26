@@ -84,7 +84,7 @@ class TicketController extends AbstractController
         if ($ticketAddHandler->handleRequest($form, $request)) {
             $this->addFlash('success', 'ticket.message.added');
 
-            return $this->redirectToRoute('zoho_desk_tickets_create_thanks');
+            return $this->redirectToRoute('ticket_create_thanks');
         }
 
         return $this->render('ticket/create.html.twig', [
