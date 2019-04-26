@@ -2,11 +2,6 @@
 
 namespace App\Zoho\Entity\Desk;
 
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
-/**
- * @UniqueEntity("email")
- */
 class Ticket
 {
     /**
