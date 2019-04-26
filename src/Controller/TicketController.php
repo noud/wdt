@@ -104,7 +104,7 @@ class TicketController extends AbstractController
     }
 
     /**
-     * @Route("/desk/tickets/view/{id}", name="zoho_desk_ticket_view")
+     * @Route("/ticket/view/{id}", name="zoho_desk_ticket_view")
      *
      * @throws \Doctrine\ORM\ORMException
      */
@@ -114,7 +114,7 @@ class TicketController extends AbstractController
         $resolutionHistory = $this->resolutionHistoryService->getAllResolutionHistory($id);
         $ticketComments = $this->ticketCommentService->getAllPublicTicketComments($id);
 
-        return $this->render('desk/ticket/view.html.twig', [
+        return $this->render('ticket/view.html.twig', [
             'ticket' => $ticket,
             'resolutionHistory' => $resolutionHistory,
             'ticketComments' => $ticketComments,

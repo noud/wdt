@@ -176,7 +176,7 @@ class ZohoAccessTokenService
         return $this->accessToken;
     }
 
-    public function getAccessTokenExpiryTime(): ?float
+    public function getAccessTokenExpiryTime(): float
     {
         return $this->accessTokenExpiryTime;
     }
@@ -203,5 +203,14 @@ class ZohoAccessTokenService
         $this->init();
         $oAuthClient = \ZohoOAuth::getClientInstance();
         $oAuthClient->generateAccessTokenFromRefreshToken($this->refreshToken, $this->currentUserEmail);
+    }
+
+    public function checkAccessTokenExpiryTime(): void
+    {
+        $this->setAccessToken();
+        $accessTokenExpiryTime = $this->getAccessTokenExpiryTime();
+        if ($accessTokenExpiryTime < round(microtime(true) * 1000)) {
+            $this->generateAccessTokenFromRefreshToken();
+        }
     }
 }
