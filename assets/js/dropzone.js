@@ -31,10 +31,8 @@ $(document).ready(function() {
 	myDropzone.on("removedfile", function(file, xhr, formData) {
 	    $.ajax({
 	        type: 'POST',
-//	        type: 'DELETE',
 	        url: urlRemove,
 	        data: {'filename': file.name},
-//	        data: {'filename': file.name, '_method': 'DELETE'},
 	    });
 	});
 	myDropzone.on("addedfile", function(file) {

@@ -68,7 +68,7 @@ class AttachmentController extends AbstractController
     public function remove(Request $request, int $ticketId, int $attachmentId): Response
     {
         $submittedToken = $request->request->get('token');
-        
+
         if ($this->isCsrfTokenValid('ticket-attachment-delete', $submittedToken)) {
             $this->ticketAttachmentService->removeTicketAttachment($ticketId, $attachmentId);
         }
@@ -77,7 +77,6 @@ class AttachmentController extends AbstractController
     }
 
     /**
-     * @ Route("/attachment/remove/{ticketId}", methods={"DELETE"}, name="attachment_new_remove")
      * @Route("/attachment/remove/{ticketId}", name="attachment_new_remove")
      */
     public function removeNew(
@@ -88,10 +87,9 @@ class AttachmentController extends AbstractController
         $data = new AttachmentRemoveNewData();
 
         $form = $this->createForm(AttachmentRemoveNewType::class, $data);
-        //$form = $this->createDeleteForm(AttachmentRemoveNewType::class, $data);
-       
+
         if ($formHandler->handleRequest($form, $request, $ticketId)) {
-            return new Response('TEST', 200);
+            return new Response('', 200);
         }
 
         return new Response('', 404);
