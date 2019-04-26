@@ -2,8 +2,6 @@
 
 namespace App\Zoho\Api;
 
-use Symfony\Contracts\Translation\TranslatorInterface;
-
 class ZohoApiService
 {
     /**
@@ -16,19 +14,12 @@ class ZohoApiService
      */
     private $apiBaseUrl;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
     public function __construct(
         ZohoAccessTokenService $zohoAccessTokenService,
-        string $apiBaseUrl,
-        TranslatorInterface $translator
+        string $apiBaseUrl
     ) {
         $this->zohoAccessTokenService = $zohoAccessTokenService;
         $this->apiBaseUrl = $apiBaseUrl;
-        $this->translator = $translator;
     }
 
     public function init(): void
@@ -41,11 +32,7 @@ class ZohoApiService
      */
     public function get(string $slug, ?int $organizationId = null, array $filters = [], $data = null): array
     {
-        $this->zohoAccessTokenService->setAccessToken();
-        $accessTokenExpiryTime = $this->zohoAccessTokenService->getAccessTokenExpiryTime();
-        if ($accessTokenExpiryTime < round(microtime(true) * 1000)) {
-            $this->zohoAccessTokenService->generateAccessTokenFromRefreshToken();
-        }
+        $this->zohoAccessTokenService->checkAccessTokenExpiryTime();
 
         $url = $this->apiBaseUrl.$slug.'?'.http_build_query($filters);
 
@@ -80,7 +67,7 @@ class ZohoApiService
         if ($errorNumber = curl_errno($ch)) {
             if (\in_array($errorNumber, [CURLE_OPERATION_TIMEDOUT, CURLE_OPERATION_TIMEOUTED], true)) {
                 curl_close($ch);
-                throw new \Exception($this->translator->trans('get_request.timeout', [], 'exceptions'));
+                throw new \Exception('Curl timeout in getRequest.');
             }
         }
 
@@ -92,23 +79,17 @@ class ZohoApiService
         $result = json_decode($result, true);
         if (JSON_ERROR_NONE !== json_last_error()) {
             curl_close($ch);
-            throw new \Exception(
-                $this->translator->trans(
-                    'get_request.json_decode %msg%',
-                    ['%msg%' => json_last_error_msg()],
-                    'exceptions'
-                )
-            );
+            throw new \Exception(sprintf('Json decode error in getRequest: %s.', json_last_error_msg()));
         }
 
         if (!$organizationId && isset($result->code) && 57 === $result->code) {
             // this should not happen
             curl_close($ch);
             $this->zohoAccessTokenService->generateAccessTokenFromRefreshToken();
-            throw new \Exception($this->translator->trans('get_request.refresh', [], 'exceptions'));
+            throw new \Exception('Token is not valid anymore and needs to be refreshed in getRequest');
         } elseif (!$organizationId && isset($result->code) && 0 !== $result->code) {
             curl_close($ch);
-            throw new \Exception($this->translator->trans('get_request.error_in_code', [], 'exceptions'));
+            throw new \Exception('General error occured in getRequest.');
         }
 
         return $result;

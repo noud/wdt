@@ -1,5 +1,0 @@
-get_request:
-  timeout: 'timeout..in getRequest..'
-  refresh: 'refresh the token..in getRequest..'
-  error_in_code: 'Error occurred..in getRequest..'
-  json_decode %msg%: 'json decode catch error..in getRequest.. '

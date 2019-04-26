@@ -1,5 +1,0 @@
-get_request:
-  timeout: 'Curl time-out in getRequest.'
-  refresh: 'Token is niet geldig meer en moet gerefreshed worden in getRequest'
-  error_in_code: 'Algemene fout opgetreden in getRequest.'
-  json_decode %msg%: 'Json decode fout in getRequest. '
