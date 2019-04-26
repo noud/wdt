@@ -2,30 +2,36 @@
 
 namespace App\Zoho\Service\Desk;
 
-use App\Zoho\Service\ZohoDeskApiService;
+use App\Zoho\Api\ZohoApiService;
 
 class AccountService
 {
     /**
-     * @var ZohoDeskApiService
+     * @var ZohoApiService
      */
-    private $zohoDeskApiService;
+    private $zohoApiService;
+
+    /**
+     * @var OrganizationService
+     */
+    private $organizationService;
 
     /**
      * DepartmentService constructor.
      */
     public function __construct(
-        ZohoDeskApiService $deskApiService
+        ZohoApiService $zohoDeskApiService,
+        OrganizationService $organizationService
     ) {
-        $this->zohoDeskApiService = $deskApiService;
+        $this->zohoApiService = $zohoDeskApiService;
+        $this->organizationService = $organizationService;
     }
 
     public function getAllAccounts(): array
     {
-        $this->zohoDeskApiService->setOrganizationId();
-        $organisationId = $this->zohoDeskApiService->getOrganizationId();
+        $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoDeskApiService->get('accounts', $organisationId);
+        return $this->zohoApiService->get('accounts', $organisationId);
     }
 
     public function getAccountIdByEmail(string $email): ?string
@@ -43,10 +49,9 @@ class AccountService
 
     public function getAllAccountContacts(string $accountId): array
     {
-        $this->zohoDeskApiService->setOrganizationId();
-        $organisationId = $this->zohoDeskApiService->getOrganizationId();
+        $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoDeskApiService->get('accounts/'.$accountId.'/contacts', $organisationId);
+        return $this->zohoApiService->get('accounts/'.$accountId.'/contacts', $organisationId);
     }
 
     public function getAccountContactIdByEmail(string $email): ?string
