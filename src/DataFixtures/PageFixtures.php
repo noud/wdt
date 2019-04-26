@@ -66,6 +66,27 @@ class PageFixtures extends Fixture
         $page->setContent('Vul je e-mail adres en wachtwoord in om in te loggen.');
         $manager->persist($page);
 
+        $page = new Page();
+        $page->setSlug('/ticket/create');
+        $page->setTitle('Ticket aanmaken');
+        $page->setMetaTitle('Je kunt hier een ticket aanmaken');
+        $page->setContent('Je kunt hier een ticket aanmaken.');
+        $manager->persist($page);
+
+        $page = new Page();
+        $page->setSlug('/desk/tickets/create-thanks');
+        $page->setTitle('Ticket aangemaakt');
+        $page->setMetaTitle('Je ticket is aangemaakt en wordt in behandeling genomen');
+        $page->setContent('Je ticket is aangemaakt en wordt in behandeling genomen.');
+        $manager->persist($page);
+
+        $page = new Page();
+        $page->setSlug('/ticket/overview');
+        $page->setTitle('Tickets overzicht');
+        $page->setMetaTitle('Dit zijn de uitstaande tickets van je organisatie');
+        $page->setContent('Dit zijn de uitstaande tickets van je organisatie.');
+        $manager->persist($page);
+
         $manager->flush();
     }
 }

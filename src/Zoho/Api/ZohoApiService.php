@@ -27,10 +27,25 @@ class ZohoApiService
         $this->zohoAccessTokenService->init();
     }
 
-    public function getRequest(string $urlPart): \stdClass
+    /**
+     * @throws \Exception
+     */
+    public function getRequest(string $urlPart, int $organizationId = null, $data = null): \stdClass
     {
         $url = $this->apiBaseUrl.$urlPart;
         $this->zohoAccessTokenService->checkAccessTokenExpiryTime();
+
+        if ($organizationId) {
+            $header = [
+                'orgId: '.$organizationId,
+                'Authorization: Zoho-oauthtoken '.$this->zohoAccessTokenService->getAccessToken(),
+            ];
+        } else {
+            $header = [
+                'Content-Type: application/x-www-form-urlencoded;charset=UTF-8',
+                'Authorization: Zoho-oauthtoken '.$this->zohoAccessTokenService->getAccessToken(),
+            ];
+        }
 
         /** @var resource $ch */
         $ch = curl_init($url);
@@ -38,10 +53,11 @@ class ZohoApiService
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/x-www-form-urlencoded;charset=UTF-8',
-            'Authorization: Zoho-oauthtoken '.$this->zohoAccessTokenService->getAccessToken(),
-        ]);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        if ($data) {
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        }
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
         curl_setopt($ch, CURLOPT_TIMEOUT, 400);
 
@@ -54,16 +70,22 @@ class ZohoApiService
             }
         }
 
+        return $this->processResult($result, $organizationId, $ch);
+    }
+
+    private function processResult(string $result, ?int $organizationId, $ch)
+    {
         $result = json_decode($result);
         if (JSON_ERROR_NONE !== json_last_error()) {
             curl_close($ch);
             throw new \Exception(sprintf('Json decode error in getRequest: %s.', json_last_error_msg()));
         }
 
-        if (57 === $result->code) {
+        if (!$organizationId && isset($result->code) && 57 === $result->code) {
+            // this should not happen
             curl_close($ch);
             throw new \Exception('Token is not valid anymore and needs to be refreshed in getRequest');
-        } elseif (0 !== $result->code) {
+        } elseif (!$organizationId && isset($result->code) && 0 !== $result->code) {
             curl_close($ch);
             throw new \Exception('General error occured in getRequest.');
         }

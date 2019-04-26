@@ -32,4 +32,18 @@ class ZohoCrmController extends AbstractController
             '<html><body>'.$access.'</body></html>'
         );
     }
+
+    /**
+     * @Route("/crm/contact/get-id/{email}", name="zoho_crm_contact_id")
+     */
+    public function getCrmContactId(User $user): Response
+    {
+        /** @var string $email */
+        $email = $user->getEmail();
+        $id = $this->zohoCrmApiService->getContactIdByEmail($email);
+
+        return new Response(
+            '<html><body>Id: '.$id.'</body></html>'
+            );
+    }
 }

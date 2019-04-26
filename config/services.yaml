@@ -20,6 +20,7 @@ parameters:
     zoho_books_organization_id: "%env(ZOHO_BOOKS_ORGANIZATION_ID)%"
     zoho.books.api.base_url: 'https://books.zoho.eu/api/v3/'
     zoho.crm.api.base_url: ''
+    zoho.desk.api.base_url: 'https://desk.zoho.eu/api/v1/'
 
 services:
     # default configuration for services in *this* file
@@ -29,6 +30,7 @@ services:
         bind:
             $zohoCrmApiService: '@zoho.crm.api.service'
             $zohoBooksApiService: '@zoho.books.api.service'
+            $zohoDeskApiService: '@zoho.desk.api.service'
                  
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -86,3 +88,9 @@ services:
         arguments:
             - ''
             - '%zoho.crm.api.base_url%'
+            
+    zoho.desk.api.service:
+        class: App\Zoho\Api\ZohoApiService
+        arguments:
+            - ''
+            - '%zoho.desk.api.base_url%'
