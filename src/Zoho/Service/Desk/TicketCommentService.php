@@ -2,32 +2,38 @@
 
 namespace App\Zoho\Service\Desk;
 
+use App\Zoho\Api\ZohoApiService;
 use App\Zoho\Entity\Desk\TicketComment;
 use App\Zoho\Form\Data\Desk\TicketCommentAddData;
-use App\Zoho\Service\ZohoDeskApiService;
 
 class TicketCommentService
 {
     /**
-     * @var ZohoDeskApiService
+     * @var ZohoApiService
      */
-    private $zohoDeskApiService;
+    private $zohoApiService;
+
+    /**
+     * @var OrganizationService
+     */
+    private $organizationService;
 
     /**
      * DepartmentService constructor.
      */
     public function __construct(
-        ZohoDeskApiService $deskApiService
+        ZohoApiService $zohoDeskApiService,
+        OrganizationService $organizationService
     ) {
-        $this->zohoDeskApiService = $deskApiService;
+        $this->zohoApiService = $zohoDeskApiService;
+        $this->organizationService = $organizationService;
     }
 
     public function getAllTicketComments(string $ticketId): array
     {
-        $this->zohoDeskApiService->setOrganizationId();
-        $organisationId = $this->zohoDeskApiService->getOrganizationId();
+        $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoDeskApiService->get('tickets/'.$ticketId.'/comments', $organisationId);
+        return $this->zohoApiService->get('tickets/'.$ticketId.'/comments', $organisationId);
     }
 
     public function getAllPublicTicketComments(string $ticketId): array
@@ -51,15 +57,14 @@ class TicketCommentService
 
     public function createTicketComment(TicketComment $ticketComment, string $ticketId)
     {
-        $this->zohoDeskApiService->setOrganizationId();
         $data = [
             'isPublic' => 'true',
             'content' => $ticketComment->getContent(),
             'contentType' => 'html',
         ];
 
-        $organisationId = $this->zohoDeskApiService->getOrganizationId();
+        $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoDeskApiService->get('tickets/'.$ticketId.'/comments', $organisationId, [], $data);
+        return $this->zohoApiService->get('tickets/'.$ticketId.'/comments', $organisationId, [], $data);
     }
 }
