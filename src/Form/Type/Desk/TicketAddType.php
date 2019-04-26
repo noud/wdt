@@ -42,6 +42,7 @@ class TicketAddType extends AbstractType
                 'label' => 'ticket.field.priority',
                 'required' => true,
                 'choices' => TicketPriorityEnum::getChoices(),
+                'placeholder' => 'ticket.placeholder.priority',
             ])
         ;
     }
