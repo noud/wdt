@@ -88,6 +88,8 @@ class AttachmentController extends AbstractController
         $data = new AttachmentRemoveNewData();
 
         $form = $this->createForm(AttachmentRemoveNewType::class, $data);
+        //$form = $this->createDeleteForm(AttachmentRemoveNewType::class, $data);
+       
         if ($formHandler->handleRequest($form, $request, $ticketId)) {
             return new Response('TEST', 200);
         }

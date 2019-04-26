@@ -8,4 +8,6 @@ class AttachmentRemoveNewData
      * @var string
      */
     public $filename;
+    
+    //public $_method;
 }
