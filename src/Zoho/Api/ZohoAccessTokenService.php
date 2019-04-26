@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Zoho;
+namespace App\Zoho\Api;
 
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
@@ -127,7 +127,7 @@ class ZohoAccessTokenService
         }
     }
 
-    public function init()
+    public function init(): void
     {
         $configuration = [
             'client_id' => $this->clientId,
@@ -143,7 +143,7 @@ class ZohoAccessTokenService
         \ZCRMRestClient::initialize($configuration);
     }
 
-    public function generateAccessToken(string $grantToken = null)
+    public function generateAccessToken(string $grantToken = null): void
     {
         $this->init();
         $this->grantToken = $grantToken ?: $this->grantToken;
@@ -176,7 +176,7 @@ class ZohoAccessTokenService
         return $this->accessToken;
     }
 
-    public function getAccessTokenExpiryTime(): ?float
+    public function getAccessTokenExpiryTime(): float
     {
         return $this->accessTokenExpiryTime;
     }
@@ -198,10 +198,19 @@ class ZohoAccessTokenService
         }
     }
 
-    public function generateAccessTokenFromRefreshToken()
+    public function generateAccessTokenFromRefreshToken(): void
     {
         $this->init();
         $oAuthClient = \ZohoOAuth::getClientInstance();
         $oAuthClient->generateAccessTokenFromRefreshToken($this->refreshToken, $this->currentUserEmail);
+    }
+
+    public function checkAccessTokenExpiryTime(): void
+    {
+        $this->setAccessToken();
+        $accessTokenExpiryTime = $this->getAccessTokenExpiryTime();
+        if ($accessTokenExpiryTime < round(microtime(true) * 1000)) {
+            $this->generateAccessTokenFromRefreshToken();
+        }
     }
 }

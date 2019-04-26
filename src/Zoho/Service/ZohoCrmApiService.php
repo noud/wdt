@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Service\Zoho;
+namespace App\Zoho\Service;
 
 use App\Entity\User;
+use App\Zoho\Api\ZohoApiService;
 
 class ZohoCrmApiService
 {

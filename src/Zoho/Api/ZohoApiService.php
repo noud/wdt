@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Zoho;
+namespace App\Zoho\Api;
 
 class ZohoApiService
 {
@@ -27,15 +27,10 @@ class ZohoApiService
         $this->zohoAccessTokenService->init();
     }
 
-    public function getRequest(string $urlPart)
+    public function getRequest(string $urlPart): \stdClass
     {
         $url = $this->apiBaseUrl.$urlPart;
-
-        $this->zohoAccessTokenService->setAccessToken();
-        $accessTokenExpiryTime = $this->zohoAccessTokenService->getAccessTokenExpiryTime();
-        if ($accessTokenExpiryTime < round(microtime(true) * 1000)) {
-            $this->zohoAccessTokenService->generateAccessTokenFromRefreshToken();
-        }
+        $this->zohoAccessTokenService->checkAccessTokenExpiryTime();
 
         /** @var resource $ch */
         $ch = curl_init($url);
@@ -48,7 +43,7 @@ class ZohoApiService
             'Authorization: Zoho-oauthtoken '.$this->zohoAccessTokenService->getAccessToken(),
         ]);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 400); //timeout in seconds
+        curl_setopt($ch, CURLOPT_TIMEOUT, 400);
 
         /** @var string $result */
         $result = curl_exec($ch);
@@ -59,20 +54,18 @@ class ZohoApiService
             }
         }
 
-        try {
-            $result = json_decode($result);
-        } catch (\Exception $e) {
+        $result = json_decode($result);
+        if (JSON_ERROR_NONE !== json_last_error()) {
             curl_close($ch);
-            throw new \Exception('Json decode error in getRequest. '.json_last_error_msg());
+            throw new \Exception(sprintf('Json decode error in getRequest: %s.', json_last_error_msg()));
         }
 
         if (57 === $result->code) {
-            // this should not happen
             curl_close($ch);
-            throw new \Exception('Token is not valid anymore and needs to be refreshed in getRequest.');
+            throw new \Exception('Token is not valid anymore and needs to be refreshed in getRequest');
         } elseif (0 !== $result->code) {
             curl_close($ch);
-            throw new \Exception('General error occurre in getRequest.');
+            throw new \Exception('General error occured in getRequest.');
         }
 
         return $result;

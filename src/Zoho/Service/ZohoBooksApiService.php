@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Service\Zoho;
+namespace App\Zoho\Service;
+
+use App\Zoho\Api\ZohoApiService;
 
 class ZohoBooksApiService
 {
@@ -19,7 +21,7 @@ class ZohoBooksApiService
         $this->apiService = $zohoBooksApiService;
     }
 
-    public function getOrganizations()
+    public function getOrganizations(): \stdClass
     {
         return $this->apiService->getRequest('organizations');
     }
@@ -31,14 +33,14 @@ class ZohoBooksApiService
         return $organizations->organizations[0]->organization_id;
     }
 
-    public function getContacts()
+    public function getContacts(): \stdClass
     {
         $this->organizationId = $this->getOrganizationId();
 
         return $this->apiService->getRequest('contacts?organization_id='.$this->organizationId);
     }
 
-    public function getInvoices()
+    public function getInvoices(): \stdClass
     {
         $this->organizationId = $this->getOrganizationId();
 
