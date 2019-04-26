@@ -2,11 +2,6 @@
 
 namespace App\Zoho\Entity\Desk;
 
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
-/**
- * @UniqueEntity("email")
- */
 class Ticket
 {
     /**
@@ -44,7 +39,7 @@ class Ticket
     private $description;
 
     /**
-     * @var string
+     * @var ?string
      */
     private $priority;
 
@@ -83,7 +78,7 @@ class Ticket
         $this->description = $description;
     }
 
-    public function setPriority(string $priority): void
+    public function setPriority(?string $priority): void
     {
         $this->priority = $priority;
     }
@@ -123,7 +118,7 @@ class Ticket
         return $this->description;
     }
 
-    public function getPriority(): string
+    public function getPriority(): ?string
     {
         return $this->priority;
     }

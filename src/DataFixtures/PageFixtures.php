@@ -97,7 +97,7 @@ class PageFixtures extends Fixture
         $manager->persist($page);
 
         $page = new Page();
-        $page->setSlug('/desk/tickets/view');
+        $page->setSlug('/ticket/view');
         $page->setTitle('Ticket');
         $page->setMetaTitle('Dit zijn de gegevens van het ticket');
         $page->setContent('Dit zijn de gegevens van het ticket.');
