@@ -21,15 +21,13 @@ class OrganizationService
 
     public function getAllOrganizations(): array
     {
-        $this->zohoDeskApiService->setService('organizations');
-
-        return $this->zohoDeskApiService->getRequest();
+        return $this->zohoDeskApiService->get('organizations');
     }
 
-    public function getOrganizationId(): int
+    public function getOrganizationId(): ?int
     {
         $organizations = $this->getAllOrganizations();
 
-        return $organizations['data'][0]['id'];
+        return isset($organizations['data'][0]) ? $organizations['data'][0]['id'] : null;
     }
 }

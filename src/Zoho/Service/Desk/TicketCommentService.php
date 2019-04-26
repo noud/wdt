@@ -25,9 +25,9 @@ class TicketCommentService
     public function getAllTicketComments(string $ticketId): array
     {
         $this->zohoDeskApiService->setOrganizationId();
-        $this->zohoDeskApiService->setService('tickets/'.$ticketId.'/comments');
+        $organisationId = $this->zohoDeskApiService->getOrganizationId();
 
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
+        return $this->zohoDeskApiService->get('tickets/'.$ticketId.'/comments', $organisationId);
     }
 
     public function getAllPublicTicketComments(string $ticketId): array
@@ -62,8 +62,8 @@ class TicketCommentService
             'contentType' => 'html',
         ];
 
-        $this->zohoDeskApiService->setService('tickets/'.$ticketId.'/comments');
+        $organisationId = $this->zohoDeskApiService->getOrganizationId();
 
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId(), $data);
+        return $this->zohoDeskApiService->get('tickets/'.$ticketId.'/comments', $organisationId, [], $data);
     }
 }

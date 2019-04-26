@@ -39,7 +39,7 @@ class TicketCommentController extends AbstractController
             return $this->redirectToRoute('zoho_desk_tickets_comment_create_thanks');
         }
 
-        return $this->render('desk/ticket_comment/add.html.twig', [
+        return $this->render('ticket_comment/add.html.twig', [
             'form' => $form->createView(),
             'page' => $this->pageService->getPageBySlug($this->pathStripLastPart($request->getPathInfo())),
         ]);
@@ -52,7 +52,7 @@ class TicketCommentController extends AbstractController
      */
     public function addCommentThanks(Request $request): Response
     {
-        return $this->render('desk/thanks.html.twig', [
+        return $this->render('ticket/thanks.html.twig', [
             'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
         ]);
     }
