@@ -49,7 +49,7 @@ class ZohoApiService
     /**
      * @throws \Exception
      */
-    public function getRequest(?int $orgId = null, $data = null): array
+    public function getRequest(?int $organizationId = null, $data = null): array
     {
         $this->zohoAccessTokenService->setAccessToken();
         $accessTokenExpiryTime = $this->zohoAccessTokenService->getAccessTokenExpiryTime();
@@ -57,9 +57,9 @@ class ZohoApiService
             $this->zohoAccessTokenService->generateAccessTokenFromRefreshToken();
         }
 
-        if ($orgId) {
+        if ($organizationId) {
             $header = [
-                'orgId: '.$orgId,
+                'orgId: '.$organizationId,
                 'Authorization: Zoho-oauthtoken '.$this->zohoAccessTokenService->getAccessToken(),
             ];
         } else {
@@ -68,8 +68,7 @@ class ZohoApiService
                 'Authorization: Zoho-oauthtoken '.$this->zohoAccessTokenService->getAccessToken(),
             ];
         }
-        dump($this->apiUrl);
-        dump($orgId);
+
         /** @var resource $ch */
         $ch = curl_init($this->apiUrl);
         curl_setopt($ch, CURLOPT_VERBOSE, true);
@@ -93,12 +92,11 @@ class ZohoApiService
             }
         }
 
-        return $this->processResult($result, $orgId, $ch);
+        return $this->processResult($result, $organizationId, $ch);
     }
 
-    private function processResult(string $result, ?int $orgId, $ch): array
+    private function processResult(string $result, ?int $organizationId, $ch): array
     {
-        dump($result);
         $result = json_decode($result, true);
         if (JSON_ERROR_NONE !== json_last_error()) {
             curl_close($ch);
@@ -111,12 +109,12 @@ class ZohoApiService
             );
         }
 
-        if (!$orgId && isset($result->code) && 57 === $result->code) {
+        if (!$organizationId && isset($result->code) && 57 === $result->code) {
             // this should not happen
             curl_close($ch);
             $this->zohoAccessTokenService->generateAccessTokenFromRefreshToken();
             throw new \Exception($this->translator->trans('get_request.refresh', [], 'exceptions'));
-        } elseif (!$orgId && isset($result->code) && 0 !== $result->code) {
+        } elseif (!$organizationId && isset($result->code) && 0 !== $result->code) {
             curl_close($ch);
             throw new \Exception($this->translator->trans('get_request.error_in_code', [], 'exceptions'));
         }

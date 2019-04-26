@@ -9,4 +9,10 @@ ticket:
     status: 'Status'
     submit: 'Ticket registreren'
   message:
-    added: 'Ticket is toegevoegdXX.'
+    added: 'Ticket is toegevoegd.'
+enum:
+  ticket_priority:
+    none: '-Geen-'
+    high: 'Hoog'
+    medium: 'Medium'
+    low: 'Laag'

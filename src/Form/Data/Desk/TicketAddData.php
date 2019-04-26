@@ -3,12 +3,8 @@
 namespace App\Form\Data\Desk;
 
 use App\Entity\User;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ UniqueEntity("email")
- */
 class TicketAddData
 {
     /**

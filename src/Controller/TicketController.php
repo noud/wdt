@@ -41,23 +41,7 @@ class TicketController extends AbstractController
     }
 
     /**
-     * @Route("/desk/tickets/all", name="zoho_desk_tickets_all")
-     */
-    public function getDeskTicketsAll(): Response
-    {
-        $result = $this->ticketService->getAllTickets();
-        $ticketsInfo = '';
-        foreach ($result['data'] as $ticket) {
-            $ticketsInfo .= $ticket['ticketNumber'].' '.$ticket['subject'].'<br />';
-        }
-
-        return new Response(
-            '<html><body>Tickets: <br />'.$ticketsInfo.'</body></html>'
-        );
-    }
-
-    /**
-     * @Route("/ticket/overview", name="zoho_desk_tickets")
+     * @Route("/ticket/overview", name="ticket_overview")
      */
     public function overview(Request $request): Response
     {
@@ -66,39 +50,39 @@ class TicketController extends AbstractController
         $email = $user->getEmail();
         $tickets = $this->ticketService->getTickets($email);
 
-        return $this->render('desk/ticket/overview.html.twig', [
+        return $this->render('ticket/overview.html.twig', [
             'tickets' => $tickets,
             'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
         ]);
     }
 
     /**
-     * @Route("/ticket/create", name="zoho_desk_tickets_create")
+     * @Route("/ticket/create", name="ticket_create")
      */
-    public function createDeskTicket(TicketAddHandler $ticketAddHandler, Request $request): Response
+    public function createTicket(TicketAddHandler $ticketAddHandler, Request $request): Response
     {
         $user = $this->getUser();
         $data = new TicketAddData($user);
         $form = $this->createForm(TicketAddType::class, $data);
 
         if ($ticketAddHandler->handleRequest($form, $request)) {
-            $this->addFlash('success', $this->translator->trans('ticket.message.added', [], 'ticket'));
+            $this->addFlash('success', 'ticket.message.added');
 
             return $this->redirectToRoute('zoho_desk_tickets_create_thanks');
         }
 
-        return $this->render('desk/ticket/create.html.twig', [
+        return $this->render('ticket/create.html.twig', [
             'form' => $form->createView(),
             'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
         ]);
     }
 
     /**
-     * @Route("/desk/tickets/create-thanks", name="zoho_desk_tickets_create_thanks")
+     * @Route("/ticket/create-thanks", name="ticket_create_thanks")
      */
     public function addThanks(Request $request): Response
     {
-        return $this->render('desk/ticket/thanks.html.twig', [
+        return $this->render('ticket/thanks.html.twig', [
             'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
         ]);
     }

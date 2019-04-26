@@ -7,6 +7,7 @@ use App\Zoho\Service\Desk\AccountService;
 use App\Zoho\Service\Desk\ContactService;
 use App\Zoho\Service\Desk\DepartmentService;
 use App\Zoho\Service\Desk\OrganizationService;
+use App\Zoho\Service\Desk\TicketService;
 use App\Zoho\Service\ZohoDeskApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,6 +41,11 @@ class ZohoDeskController extends AbstractController
     private $accountService;
 
     /**
+     * @var TicketService
+     */
+    private $ticketService;
+
+    /**
      * @var PageService
      */
     private $pageService;
@@ -50,6 +56,7 @@ class ZohoDeskController extends AbstractController
         DepartmentService $departmentService,
         ContactService $contactService,
         AccountService $accountService,
+        TicketService $ticketService,
         PageService $pageService
     ) {
         $this->deskWebservice = $zohoDeskService;
@@ -57,6 +64,7 @@ class ZohoDeskController extends AbstractController
         $this->departmentService = $departmentService;
         $this->contactService = $contactService;
         $this->accountService = $accountService;
+        $this->ticketService = $ticketService;
         $this->pageService = $pageService;
     }
 
@@ -137,6 +145,22 @@ class ZohoDeskController extends AbstractController
 
         return new Response(
             '<html><body>Account contacts: <br />'.$accountContactsInfo.'</body></html>'
+            );
+    }
+
+    /**
+     * @Route("/desk/tickets/all", name="zoho_desk_tickets_all")
+     */
+    public function getDeskTicketsAll(): Response
+    {
+        $result = $this->ticketService->getAllTickets();
+        $ticketsInfo = '';
+        foreach ($result['data'] as $ticket) {
+            $ticketsInfo .= $ticket['ticketNumber'].' '.$ticket['subject'].'<br />';
+        }
+
+        return new Response(
+            '<html><body>Tickets: <br />'.$ticketsInfo.'</body></html>'
             );
     }
 }
