@@ -8,3 +8,12 @@ ticket:
     priority: 'Prioriteit'
     status: 'Status'
     submit: 'Ticket registreren'
+  placeholder:
+    priority: '-Geen-'
+  message:
+    added: 'Ticket is toegevoegd.'
+enum:
+  ticket_priority:
+    high: 'Hoog'
+    medium: 'Medium'
+    low: 'Laag'

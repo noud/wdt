@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Zoho\Form\Type\Desk;
+namespace App\Form\Type\Desk;
 
-use App\Zoho\Form\Data\Desk\TicketAddData;
+use App\Form\Data\Desk\TicketAddData;
+use App\Zoho\Enum\TicketPriorityEnum;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -39,12 +40,9 @@ class TicketAddType extends AbstractType
             ])
             ->add('priority', ChoiceType::class, [
                 'label' => 'ticket.field.priority',
-                'required' => true,
-                'choices' => [
-                    'Hoog' => 'High',
-                    'Gemiddeld' => 'Medium',
-                    'Laag' => 'Low',
-                ],
+                'required' => false,
+                'choices' => TicketPriorityEnum::getChoices(),
+                'placeholder' => 'ticket.placeholder.priority',
             ])
         ;
     }

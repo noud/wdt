@@ -3,21 +3,41 @@
 namespace App\Controller\Zoho\Development;
 
 use App\Service\PageService;
-use App\Zoho\Form\Data\Desk\TicketAddData;
-use App\Zoho\Form\Handler\Desk\TicketAddHandler;
-use App\Zoho\Form\Type\Desk\TicketAddType;
-use App\Zoho\Service\ZohoDeskApiService;
+use App\Zoho\Service\Desk\AccountService;
+use App\Zoho\Service\Desk\ContactService;
+use App\Zoho\Service\Desk\DepartmentService;
+use App\Zoho\Service\Desk\OrganizationService;
+use App\Zoho\Service\Desk\TicketService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ZohoDeskController extends AbstractController
 {
     /**
-     * @var ZohoDeskApiService
+     * @var OrganizationService
      */
-    private $deskWebservice;
+    private $organizationService;
+
+    /**
+     * @var DepartmentService
+     */
+    private $departmentService;
+
+    /**
+     * @var ContactService
+     */
+    private $contactService;
+
+    /**
+     * @var AccountService
+     */
+    private $accountService;
+
+    /**
+     * @var TicketService
+     */
+    private $ticketService;
 
     /**
      * @var PageService
@@ -25,27 +45,19 @@ class ZohoDeskController extends AbstractController
     private $pageService;
 
     public function __construct(
-        ZohoDeskApiService $zohoDeskService,
+        OrganizationService $organizationService,
+        DepartmentService $departmentService,
+        ContactService $contactService,
+        AccountService $accountService,
+        TicketService $ticketService,
         PageService $pageService
     ) {
-        $this->deskWebservice = $zohoDeskService;
+        $this->organizationService = $organizationService;
+        $this->departmentService = $departmentService;
+        $this->contactService = $contactService;
+        $this->accountService = $accountService;
+        $this->ticketService = $ticketService;
         $this->pageService = $pageService;
-    }
-
-    /**
-     * @Route("/desk/tickets/all", name="zoho_desk_tickets_all")
-     */
-    public function getDeskTicketsAll(): Response
-    {
-        $result = $this->deskWebservice->getTicketsAll();
-        $ticketsInfo = '';
-        foreach ($result->data as $ticket) {
-            $ticketsInfo .= $ticket->ticketNumber.' '.$ticket->subject.'<br />';
-        }
-
-        return new Response(
-            '<html><body>Tickets: <br />'.$ticketsInfo.'</body></html>'
-        );
     }
 
     /**
@@ -53,10 +65,10 @@ class ZohoDeskController extends AbstractController
      */
     public function getDeskOrganizations(): Response
     {
-        $result = $this->deskWebservice->getOrganizations();
+        $result = $this->organizationService->getAllOrganizations();
         $organizationsInfo = '';
-        foreach ($result->data as $organization) {
-            $organizationsInfo .= $organization->id.' '.$organization->companyName.'<br />';
+        foreach ($result['data'] as $organization) {
+            $organizationsInfo .= $organization['id'].' '.$organization['companyName'].'<br />';
         }
 
         return new Response(
@@ -69,10 +81,10 @@ class ZohoDeskController extends AbstractController
      */
     public function getDeskDepartments(): Response
     {
-        $result = $this->deskWebservice->getDepartments();
+        $result = $this->departmentService->getAllDepartments();
         $ticketsInfo = '';
-        foreach ($result->data as $department) {
-            $ticketsInfo .= $department->id.' '.$department->name.'<br />';
+        foreach ($result['data'] as $department) {
+            $ticketsInfo .= $department['id'].' '.$department['name'].'<br />';
         }
 
         return new Response(
@@ -85,10 +97,10 @@ class ZohoDeskController extends AbstractController
      */
     public function getDeskContacts(): Response
     {
-        $result = $this->deskWebservice->getContacts();
+        $result = $this->contactService->getAllContacts();
         $contactsInfo = '';
-        foreach ($result->data as $contact) {
-            $contactsInfo .= $contact->id.' '.$contact->email.'<br />';
+        foreach ($result['data'] as $contact) {
+            $contactsInfo .= $contact['id'].' '.$contact['email'].'<br />';
         }
 
         return new Response(
@@ -101,10 +113,10 @@ class ZohoDeskController extends AbstractController
      */
     public function getDeskAccounts(): Response
     {
-        $result = $this->deskWebservice->getAccounts();
+        $result = $this->accountService->getAllAccounts();
         $accountsInfo = '';
-        foreach ($result->data as $account) {
-            $accountsInfo .= $account->id.' '.$account->accountName.' '.$account->email.'<br />';
+        foreach ($result['data'] as $account) {
+            $accountsInfo .= $account['id'].' '.$account['accountName'].' '.$account['email'].'<br />';
         }
 
         return new Response(
@@ -117,10 +129,10 @@ class ZohoDeskController extends AbstractController
      */
     public function getDeskAccountContacts(string $accountId): Response
     {
-        $result = $this->deskWebservice->getAccountContacts($accountId);
+        $result = $this->accountService->getAllAccountContacts($accountId);
         $accountContactsInfo = '';
-        foreach ($result->data as $accountContact) {
-            $accountContactsInfo .= $accountContact->id.' '.$accountContact->lastName.' '.$accountContact->email.'<br />';
+        foreach ($result['data'] as $accountContact) {
+            $accountContactsInfo .= $accountContact['id'].' '.$accountContact['lastName'].' '.$accountContact['email'].'<br />';
         }
 
         return new Response(
@@ -129,51 +141,18 @@ class ZohoDeskController extends AbstractController
     }
 
     /**
-     * @Route("/ticket/overview", name="zoho_desk_tickets")
+     * @Route("/desk/tickets/all", name="zoho_desk_tickets_all")
      */
-    public function overview(Request $request): Response
+    public function getDeskTicketsAll(): Response
     {
-        $user = $this->getUser();
-        /** @var string $email */
-        $email = $user->getEmail();
-        $tickets = $this->deskWebservice->getTickets($email);
-
-        return $this->render('ticket/overview.html.twig', [
-            'tickets' => $tickets,
-            'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
-        ]);
-    }
-
-    /**
-     * @Route("/ticket/create", name="zoho_desk_tickets_create")
-     */
-    public function createDeskTicket(TicketAddHandler $ticketAddHandler, Request $request): Response
-    {
-        $user = $this->getUser();
-        $data = new TicketAddData($user);
-        $form = $this->createForm(TicketAddType::class, $data);
-
-        if ($ticketAddHandler->handleRequest($form, $request)) {
-            $this->addFlash('success', 'Ticket is toegevoegd.');
-
-            return $this->redirectToRoute('zoho_desk_tickets_create_thanks');
+        $result = $this->ticketService->getAllTickets();
+        $ticketsInfo = '';
+        foreach ($result['data'] as $ticket) {
+            $ticketsInfo .= $ticket['ticketNumber'].' '.$ticket['subject'].'<br />';
         }
 
-        return $this->render('ticket/create.html.twig', [
-            'form' => $form->createView(),
-            'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
-        ]);
-    }
-
-    /**
-     * @Route("/desk/tickets/create-thanks", name="zoho_desk_tickets_create_thanks")
-     *
-     * @throws \Doctrine\ORM\ORMException
-     */
-    public function addThanks(Request $request): Response
-    {
-        return $this->render('ticket/thanks.html.twig', [
-            'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
-        ]);
+        return new Response(
+            '<html><body>Tickets: <br />'.$ticketsInfo.'</body></html>'
+            );
     }
 }

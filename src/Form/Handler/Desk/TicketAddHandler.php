@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Zoho\Form\Handler\Desk;
+namespace App\Form\Handler\Desk;
 
-use App\Zoho\Service\ZohoDeskApiService;
+use App\Form\Data\Desk\TicketAddData;
+use App\Zoho\Service\Desk\TicketService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,19 +16,19 @@ class TicketAddHandler
     private $entityManager;
 
     /**
-     * @var ZohoDeskApiService
+     * @var TicketService
      */
-    private $deskApiService;
+    private $ticketService;
 
     /**
      * JoinHandler constructor.
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        ZohoDeskApiService $deskApiService
+        TicketService $ticketService
     ) {
         $this->entityManager = $entityManager;
-        $this->deskApiService = $deskApiService;
+        $this->ticketService = $ticketService;
     }
 
     /**
@@ -38,9 +39,9 @@ class TicketAddHandler
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var \App\Zoho\Form\Data\Desk\TicketAddData $ticketData */
+            /** @var TicketAddData $ticketData */
             $ticketData = $form->getData();
-            $this->deskApiService->addTicket($ticketData);
+            $this->ticketService->addTicket($ticketData);
 
             return true;
         }

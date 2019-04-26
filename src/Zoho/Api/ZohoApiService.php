@@ -30,10 +30,11 @@ class ZohoApiService
     /**
      * @throws \Exception
      */
-    public function getRequest(string $urlPart, int $organizationId = null, $data = null): \stdClass
+    public function get(string $slug, ?int $organizationId = null, array $filters = [], $data = null): array
     {
-        $url = $this->apiBaseUrl.$urlPart;
         $this->zohoAccessTokenService->checkAccessTokenExpiryTime();
+
+        $url = $this->apiBaseUrl.$slug.'?'.http_build_query($filters);
 
         if ($organizationId) {
             $header = [
@@ -73,9 +74,9 @@ class ZohoApiService
         return $this->processResult($result, $organizationId, $ch);
     }
 
-    private function processResult(string $result, ?int $organizationId, $ch)
+    private function processResult(string $result, ?int $organizationId, $ch): array
     {
-        $result = json_decode($result);
+        $result = json_decode($result, true);
         if (JSON_ERROR_NONE !== json_last_error()) {
             curl_close($ch);
             throw new \Exception(sprintf('Json decode error in getRequest: %s.', json_last_error_msg()));
@@ -84,6 +85,7 @@ class ZohoApiService
         if (!$organizationId && isset($result->code) && 57 === $result->code) {
             // this should not happen
             curl_close($ch);
+            $this->zohoAccessTokenService->generateAccessTokenFromRefreshToken();
             throw new \Exception('Token is not valid anymore and needs to be refreshed in getRequest');
         } elseif (!$organizationId && isset($result->code) && 0 !== $result->code) {
             curl_close($ch);
