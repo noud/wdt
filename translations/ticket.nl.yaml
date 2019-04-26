@@ -19,3 +19,9 @@ ticket_comment:
     content: 'Commentaar'
     submit: 'Commentaar registreren'
     add_comment: 'Commentaar bijvoegen'
+enum:
+  ticket_priority:
+    none: '-Geen-'
+    high: 'Hoog'
+    medium: 'Medium'
+    low: 'Laag'

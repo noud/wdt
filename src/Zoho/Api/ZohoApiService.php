@@ -17,11 +17,6 @@ class ZohoApiService
     private $apiBaseUrl;
 
     /**
-     * @var string
-     */
-    private $apiUrl;
-
-    /**
      * @var TranslatorInterface
      */
     private $translator;
@@ -41,16 +36,10 @@ class ZohoApiService
         $this->zohoAccessTokenService->init();
     }
 
-    public function setService(string $slug, array $filters = [])
-    {
-        $httpQuery = \count($filters) ? '?'.http_build_query($filters) : '';
-        $this->apiUrl = $this->apiBaseUrl.$slug.$httpQuery;
-    }
-
     /**
      * @throws \Exception
      */
-    public function getRequest(?int $orgId = null, $data = null): array
+    public function get(string $slug, ?int $organizationId = null, array $filters = [], $data = null): array
     {
         $this->zohoAccessTokenService->setAccessToken();
         $accessTokenExpiryTime = $this->zohoAccessTokenService->getAccessTokenExpiryTime();
@@ -58,9 +47,11 @@ class ZohoApiService
             $this->zohoAccessTokenService->generateAccessTokenFromRefreshToken();
         }
 
-        if ($orgId) {
+        $url = $this->apiBaseUrl.$slug.'?'.http_build_query($filters);
+
+        if ($organizationId) {
             $header = [
-                'orgId: '.$orgId,
+                'orgId: '.$organizationId,
                 'Authorization: Zoho-oauthtoken '.$this->zohoAccessTokenService->getAccessToken(),
             ];
         } else {
@@ -71,7 +62,7 @@ class ZohoApiService
         }
 
         /** @var resource $ch */
-        $ch = curl_init($this->apiUrl);
+        $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_VERBOSE, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -93,20 +84,20 @@ class ZohoApiService
             }
         }
 
-        return $this->processResult($result, $orgId, $ch);
+        return $this->processResult($result, $organizationId, $ch);
     }
 
-    private function processResult(string $result, ?int $orgId, $ch): array
+    private function processResult(string $result, ?int $organizationId, $ch): array
     {
         if ('Internal Server Error' !== $result && '\n' !== $result) {
             $result = $this->decodeResult($result, $ch);
 
-            if (!$orgId && isset($result['code']) && 57 === $result['code']) {
+            if (!$organizationId && isset($result->code) && 57 === $result->code) {
                 // this should not happen
                 curl_close($ch);
                 $this->zohoAccessTokenService->generateAccessTokenFromRefreshToken();
                 throw new \Exception($this->translator->trans('get_request.refresh', [], 'exceptions'));
-            } elseif (!$orgId && isset($result['code']) && 0 !== $result['code']) {
+            } elseif (!$organizationId && isset($result->code) && 0 !== $result->code) {
                 curl_close($ch);
                 throw new \Exception($this->translator->trans('get_request.error_in_code', [], 'exceptions'));
             }

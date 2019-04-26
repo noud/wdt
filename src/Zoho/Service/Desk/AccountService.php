@@ -23,9 +23,9 @@ class AccountService
     public function getAllAccounts(): array
     {
         $this->zohoDeskApiService->setOrganizationId();
-        $this->zohoDeskApiService->setService('accounts');
+        $organisationId = $this->zohoDeskApiService->getOrganizationId();
 
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
+        return $this->zohoDeskApiService->get('accounts', $organisationId);
     }
 
     public function getAccountIdByEmail(string $email): ?string
@@ -39,16 +39,14 @@ class AccountService
                 }
             }
         }
-
-        return null;
     }
 
     public function getAllAccountContacts(string $accountId): array
     {
         $this->zohoDeskApiService->setOrganizationId();
-        $this->zohoDeskApiService->setService('accounts/'.$accountId.'/contacts');
+        $organisationId = $this->zohoDeskApiService->getOrganizationId();
 
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
+        return $this->zohoDeskApiService->get('accounts/'.$accountId.'/contacts', $organisationId);
     }
 
     public function getAccountContactIdByEmail(string $email): ?string
@@ -62,7 +60,5 @@ class AccountService
                 }
             }
         }
-
-        return null;
     }
 }
