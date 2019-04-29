@@ -100,3 +100,12 @@ services:
         arguments:
             - "%ticket_attachments_dir%"
         
+    App\EventListener\UploadListener:
+        arguments:
+            - '%userdata_attachments_dir%'
+        tags:
+            - { name: kernel.event_listener, event: oneup_uploader.post_persist, method: onUpload }
+
+    App\Uploader\Naming\UploadNamer:
+        public: true
+        
