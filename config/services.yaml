@@ -115,9 +115,14 @@ services:
             - '%ticket_attachments_dir%'
             - "%ticket_tmpupload_dir%"
             
+    App\Form\Handler\Desk\TicketAddHandler:
+        arguments:
+            - '%ticket_attachments_dir%'   
+              
 oneup_uploader:
     mappings:
         gallery:
             frontend: dropzone # or any uploader you use in the frontend
             storage:
-                directory: "%ticket_attachments_dir%"        
+                directory: "%ticket_attachments_dir%"
+                
