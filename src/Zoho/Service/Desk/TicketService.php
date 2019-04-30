@@ -57,9 +57,10 @@ class TicketService
         usort($tickets, function ($a, $b) {
             return $b['ticketNumber'] <=> $a['ticketNumber'];
         });
+
         return $tickets;
     }
-    
+
     /**
      * @return Ticket[]
      */
@@ -71,7 +72,7 @@ class TicketService
         $result = $this->zohoApiService->get('accounts/'.$accountId.'/tickets', $organisationId, [
             'include' => 'assignee,departments,team,isRead',
         ]);
-        
+
         $resultSorted = $this->sortTicketsByNumber($result['data']);
 
         $tickets = [];
