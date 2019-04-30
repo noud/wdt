@@ -104,11 +104,11 @@ class TicketController extends AbstractController
     }
 
     /**
-     * @Route("/ticket/view/{id}", name="zoho_desk_ticket_view")
+     * @Route("/ticket/view/{id}", name="ticket_view")
      *
      * @throws \Doctrine\ORM\ORMException
      */
-    public function view(Request $request, string $id): Response
+    public function view(string $id): Response
     {
         $ticket = $this->ticketService->getTicket($id);
         $resolutionHistory = $this->resolutionHistoryService->getAllResolutionHistory($id);
@@ -118,16 +118,7 @@ class TicketController extends AbstractController
             'ticket' => $ticket,
             'resolutionHistory' => $resolutionHistory,
             'ticketComments' => $ticketComments,
-            'page' => $this->pageService->getPageBySlug($this->pathStripLastPart($request->getPathInfo())),
+            'page' => $this->pageService->getPageBySlug('/ticket/view'),
         ]);
-    }
-
-    private function pathStripLastPart(string $path): string
-    {
-        $slug = explode('/', $path);
-        array_pop($slug);
-        $path = implode('/', $slug);
-
-        return $path;
     }
 }

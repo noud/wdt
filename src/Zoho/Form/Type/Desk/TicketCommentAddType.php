@@ -20,7 +20,6 @@ class TicketCommentAddType extends AbstractType
         $builder
             ->add('content', TextareaType::class, [
                 'label' => 'ticket_comment.field.content',
-                'required' => true,
             ])
         ;
     }
