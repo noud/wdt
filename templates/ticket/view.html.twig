@@ -19,63 +19,63 @@
                                     </div>
                                     <span class="clearfix"></span>
                                         <div class="row">
-                                         	<div class="col-sm-4">
-                                         		<div class="row">
-                                        	    	{{ 'ticket.field.status'|trans }}
-                                        	    </div>
-                                         		<div class="row">
-                                        	    	<b>{{ ticket.status }}</b>
-                                        	    </div>
-                                         		<div class="row">
-                                        	    	{{ 'ticket.field.due_date'|trans }}
-                                        	    </div>
-                                         		<div class="row">
-                                             	    <b>{{ ticket.dueDate|date('d-m-Y') }}</b>
-                                        	    </div>
-                                        	    <div class="row">
-                                            	    {{ 'ticket.field.custom_fields.aantal_minuten_ingeschat'|trans }}
-                                        	    </div>
-                                         		<div class="row">
-                                            	    <b>{{ attribute(ticket.customFields, 'Aantal minuten ingeschat') }}</b>
-                                        	    </div>
-                                        	    <div class="row">
-                                            	    {{ 'ticket.field.custom_fields.aantal_uur_ingeschat'|trans }}
-                                        	    </div>
-                                         		<div class="row">
-                                            	    <b>{{ attribute(ticket.customFields, 'Aantal uur ingeschat') }}</b>
-                                        	    </div>
-                                         		<div class="row">
-                                        	    	{{ 'ticket.field.priority'|trans }}
-                                        	    </div>
-                                         		<div class="row">
-                                        	    	<b>{{ ticket.priority }}</b>
-                                        	    </div>
-                                        	</div>
-                                        	<div class="col-sm-8">
-                                        	    <div class="row">
-                                            	    <b>{{ 'ticket.field.nr'|trans }} {{ ticket.ticketNumber }} {{ ticket.subject }}</b>
-                                        	    </div>
-                                        	    <div class="row">
-                                        	    	<ul>
-                                            	    {% for ticketComment in ticketComments %}
-                                                	    <li>
-                                                	    <div class="row">
-                                                    	    <b>{{ ticketComment.commenter.name }}</b>
-                                                	    </div>
-                                                	    <div class="row">
-                                                    	    {{ ticketComment.content }}
-                                                	    </div>
-                                                	    </li>
-                                            	    {% endfor %}
-                                            	    </ul>
-                                        	    </div>
-                                        	    <div class="row">
-                                                    <a href="{{ path('zoho_desk_tickets_comment_create', {ticketId: ticket.id }) }}" type="submit" class="btn btn-sm btn-primary btn-icon rounded-pill">
+                                             <div class="col-sm-4">
+                                                 <div class="row">
+                                                    {{ 'ticket.field.status'|trans }}
+                                                </div>
+                                                 <div class="row">
+                                                    <b>{{ ticket.status }}</b>
+                                                </div>
+                                                 <div class="row">
+                                                    {{ 'ticket.field.due_date'|trans }}
+                                                </div>
+                                                 <div class="row">
+                                                     <b>{{ ticket.dueDate|date('d-m-Y') }}</b>
+                                                </div>
+                                                <div class="row">
+                                                    {{ 'ticket.field.custom_fields.aantal_minuten_ingeschat'|trans }}
+                                                </div>
+                                                 <div class="row">
+                                                    <b>{{ attribute(ticket.customFields, 'Aantal minuten ingeschat') }}</b>
+                                                </div>
+                                                <div class="row">
+                                                    {{ 'ticket.field.custom_fields.aantal_uur_ingeschat'|trans }}
+                                                </div>
+                                                 <div class="row">
+                                                    <b>{{ attribute(ticket.customFields, 'Aantal uur ingeschat') }}</b>
+                                                </div>
+                                                 <div class="row">
+                                                    {{ 'ticket.field.priority'|trans }}
+                                                </div>
+                                                 <div class="row">
+                                                    <b>{{ ticket.priority }}</b>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <div class="row">
+                                                    <b>{{ 'ticket.field.nr'|trans }} {{ ticket.ticketNumber }} {{ ticket.subject }}</b>
+                                                </div>
+                                                <div class="row">
+                                                    <ul>
+                                                    {% for ticketComment in ticketComments %}
+                                                        <li>
+                                                        <div class="row">
+                                                            <b>{{ ticketComment.commenter.name }}</b>
+                                                        </div>
+                                                        <div class="row">
+                                                            {{ ticketComment.content }}
+                                                        </div>
+                                                        </li>
+                                                    {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                <div class="row">
+                                                    <a href="{{ path('ticket_comment_create', {ticketId: ticket.id }) }}" type="submit" class="btn btn-sm btn-primary btn-icon rounded-pill">
                                                         <span class="btn-inner--text">{{ 'ticket_comment.field.add_comment'|trans }}</span>
                                                         <span class="btn-inner--icon"><i class="fas fa-long-arrow-alt-right"></i></span>
                                                     </a>
-                                        	    </div>
-                                        	</div>
+                                                </div>
+                                            </div>
                                         </div>
                                     <br/>
                                 </div>

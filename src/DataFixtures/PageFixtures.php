@@ -83,7 +83,7 @@ class PageFixtures extends Fixture
         $manager->persist($page);
 
         $page = new Page();
-        $page->setSlug('/desk/tickets/create-thanks');
+        $page->setSlug('/ticket/create-thanks');
         $page->setTitle('Ticket aangemaakt');
         $page->setMetaTitle('Je ticket is aangemaakt en wordt in behandeling genomen');
         $page->setContent('Je ticket is aangemaakt en wordt in behandeling genomen.');
@@ -104,14 +104,14 @@ class PageFixtures extends Fixture
         $manager->persist($page);
 
         $page = new Page();
-        $page->setSlug('/desk/tickets/comment/create');
+        $page->setSlug('/ticket/comment/create');
         $page->setTitle('Ticket commentaar aanmaken');
         $page->setMetaTitle('Je kunt hier ticket commentaar aanmaken');
         $page->setContent('Je kunt hier ticket commentaar aanmaken.');
         $manager->persist($page);
 
         $page = new Page();
-        $page->setSlug('/desk/tickets/comment/create-thanks');
+        $page->setSlug('/ticket/comment/create/success');
         $page->setTitle('Ticket commentaar aangemaakt');
         $page->setMetaTitle('Je ticket commentaar is aangemaakt en wordt in behandeling genomen');
         $page->setContent('Je ticket commentaar is aangemaakt en wordt in behandeling genomen.');

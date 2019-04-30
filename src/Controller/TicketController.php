@@ -6,6 +6,7 @@ use App\Form\Data\Desk\TicketAddData;
 use App\Form\Handler\Desk\TicketAddHandler;
 use App\Form\Type\Desk\TicketAddType;
 use App\Service\PageService;
+use App\Service\PathService;
 use App\Zoho\Service\Desk\ResolutionHistoryService;
 use App\Zoho\Service\Desk\TicketCommentService;
 use App\Zoho\Service\Desk\TicketService;
@@ -104,7 +105,7 @@ class TicketController extends AbstractController
     }
 
     /**
-     * @Route("/ticket/view/{id}", name="zoho_desk_ticket_view")
+     * @Route("/ticket/view/{id}", name="ticket_view")
      *
      * @throws \Doctrine\ORM\ORMException
      */
@@ -118,16 +119,7 @@ class TicketController extends AbstractController
             'ticket' => $ticket,
             'resolutionHistory' => $resolutionHistory,
             'ticketComments' => $ticketComments,
-            'page' => $this->pageService->getPageBySlug($this->pathStripLastPart($request->getPathInfo())),
+            'page' => $this->pageService->getPageBySlug(PathService::pathStripLastPart($request->getPathInfo())),
         ]);
-    }
-
-    private function pathStripLastPart(string $path): string
-    {
-        $slug = explode('/', $path);
-        array_pop($slug);
-        $path = implode('/', $slug);
-
-        return $path;
     }
 }
