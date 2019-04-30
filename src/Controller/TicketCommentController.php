@@ -19,12 +19,12 @@ class TicketCommentController extends AbstractController
      * @var PageService
      */
     private $pageService;
-    
+
     /**
      * @var TranslatorInterface
      */
     private $translator;
-    
+
     public function __construct(
         PageService $pageService,
         TranslatorInterface $translator

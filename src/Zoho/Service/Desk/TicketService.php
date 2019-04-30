@@ -79,6 +79,7 @@ class TicketService
     public function getTicket(string $ticketId): array
     {
         $organisationId = $this->organizationService->getOrganizationId();
+
         return $this->zohoApiService->get('tickets/'.$ticketId, $organisationId, [
             'include' => 'contacts,products,assignee,departments,team',
         ]);
