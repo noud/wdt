@@ -6,7 +6,6 @@ use App\Form\Data\Desk\TicketAddData;
 use App\Form\Handler\Desk\TicketAddHandler;
 use App\Form\Type\Desk\TicketAddType;
 use App\Service\PageService;
-use App\Service\PathService;
 use App\Zoho\Service\Desk\ResolutionHistoryService;
 use App\Zoho\Service\Desk\TicketCommentService;
 use App\Zoho\Service\Desk\TicketService;
@@ -109,7 +108,7 @@ class TicketController extends AbstractController
      *
      * @throws \Doctrine\ORM\ORMException
      */
-    public function view(Request $request, string $id): Response
+    public function view(string $id): Response
     {
         $ticket = $this->ticketService->getTicket($id);
         $resolutionHistory = $this->resolutionHistoryService->getAllResolutionHistory($id);
@@ -119,7 +118,7 @@ class TicketController extends AbstractController
             'ticket' => $ticket,
             'resolutionHistory' => $resolutionHistory,
             'ticketComments' => $ticketComments,
-            'page' => $this->pageService->getPageBySlug(PathService::pathStripLastPart($request->getPathInfo())),
+            'page' => $this->pageService->getPageBySlug('/ticket/view'),
         ]);
     }
 }

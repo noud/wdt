@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Service\PageService;
-use App\Service\PathService;
 use App\Zoho\Form\Data\Desk\TicketCommentAddData;
 use App\Zoho\Form\Handler\Desk\TicketCommentAddHandler;
 use App\Zoho\Form\Type\Desk\TicketCommentAddType;
@@ -34,7 +33,7 @@ class TicketCommentController extends AbstractController
     }
 
     /**
-     * @Route("/ticket/comment/create/{ticketId}", name="ticket_comment_create")
+     * @Route("/ticket/{ticketId}/comment/create", name="ticket_comment_create")
      */
     public function createDeskTicketComment(string $ticketId, TicketCommentAddHandler $ticketCommentAddHandler, Request $request): Response
     {
@@ -49,7 +48,7 @@ class TicketCommentController extends AbstractController
 
         return $this->render('ticket_comment/add.html.twig', [
             'form' => $form->createView(),
-            'page' => $this->pageService->getPageBySlug(PathService::pathStripLastPart($request->getPathInfo())),
+            'page' => $this->pageService->getPageBySlug('/ticket/comment/create'),
         ]);
     }
 
