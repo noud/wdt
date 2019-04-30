@@ -2,30 +2,36 @@
 
 namespace App\Zoho\Service\Desk;
 
-use App\Zoho\Service\ZohoDeskApiService;
+use App\Zoho\Api\zohoApiService;
 
 class TicketAttachmentService
 {
     /**
-     * @var ZohoDeskApiService
+     * @var zohoApiService
      */
-    private $zohoDeskApiService;
+    private $zohoApiService;
+
+    /**
+     * @var OrganizationService
+     */
+    private $organizationService;
 
     /**
      * DepartmentService constructor.
      */
     public function __construct(
-        ZohoDeskApiService $deskApiService
+        ZohoApiService $zohoDeskApiService,
+        OrganizationService $organizationService
     ) {
-        $this->zohoDeskApiService = $deskApiService;
+        $this->zohoApiService = $zohoDeskApiService;
+        $this->organizationService = $organizationService;
     }
 
     public function getAllTicketAttachments(int $ticketId): array
     {
-        $this->zohoDeskApiService->setOrganizationId();
-        $this->zohoDeskApiService->setService('tickets/'.$ticketId.'/attachments');
+        $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
+        return $this->zohoApiService->get('tickets/'.$ticketId.'/attachments', $this->zohoApiService->getOrganizationId());
     }
 
     public function getAllPublicTicketAttachments(int $ticketId): array
@@ -49,21 +55,18 @@ class TicketAttachmentService
         $fileMime = mime_content_type($file);
         $fileName = basename($file);
 
-        $this->zohoDeskApiService->setOrganizationId();
         $data = [
             'isPublic' => 'true',
             'file' => new \CURLFile($file, $fileMime, $fileName),
         ];
-        $this->zohoDeskApiService->setService('tickets/'.$ticketId.'/attachments');
 
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId(), $data, true);
+        return $this->zohoApiService->get('tickets/'.$ticketId.'/attachments', $organisationId, $data, true);
     }
 
     public function removeTicketAttachment(int $ticketId, int $attachmentId): array
     {
-        $this->zohoDeskApiService->setOrganizationId();
-        $this->zohoDeskApiService->setService('tickets/'.$ticketId.'/attachments/'.$attachmentId);
+        $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId(), null, false, true);
+        return $this->zohoApiService->get('tickets/'.$ticketId.'/attachments/'.$attachmentId, $organisationId, null, false, true);
     }
 }
