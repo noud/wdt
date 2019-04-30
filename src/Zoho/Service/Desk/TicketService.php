@@ -52,6 +52,14 @@ class TicketService
         ]);
     }
 
+    private function sortTicketsByNumber(array $tickets): array
+    {
+        usort($tickets, function ($a, $b) {
+            return $b['ticketNumber'] <=> $a['ticketNumber'];
+        });
+        return $tickets;
+    }
+    
     /**
      * @return Ticket[]
      */
@@ -63,13 +71,11 @@ class TicketService
         $result = $this->zohoApiService->get('accounts/'.$accountId.'/tickets', $organisationId, [
             'include' => 'assignee,departments,team,isRead',
         ]);
-
-        usort($result['data'], function ($a, $b) {
-            return ($a['ticketNumber'] > $b['ticketNumber']) ? -1 : 1;
-        });
+        
+        $resultSorted = $this->sortTicketsByNumber($result['data']);
 
         $tickets = [];
-        foreach ($result['data'] as $ticketData) {
+        foreach ($resultSorted as $ticketData) {
             $ticket = new Ticket();
             $ticket->setId($ticketData['id']);
             $ticket->setTicketNumber($ticketData['ticketNumber']);

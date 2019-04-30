@@ -44,7 +44,7 @@ class TicketCommentService
         });
 
         usort($publicTicketComments, function ($a, $b) {
-            return ($a['commentedTime'] > $b['commentedTime']) ? -1 : 1;
+            return $b['commentedTime'] <=> $a['commentedTime'];
         });
 
         return $publicTicketComments;
