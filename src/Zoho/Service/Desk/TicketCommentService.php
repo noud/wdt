@@ -36,12 +36,23 @@ class TicketCommentService
         return $this->zohoApiService->get('tickets/'.$ticketId.'/comments', $organisationId);
     }
 
+    private function sortTicketCommentsByDate(array $ticketComments): array
+    {
+        usort($ticketComments, function ($a, $b) {
+            return $b['commentedTime'] <=> $a['commentedTime'];
+        });
+
+        return $ticketComments;
+    }
+
     public function getAllPublicTicketComments(string $ticketId): array
     {
         $ticketComments = $this->getAllTicketComments($ticketId);
         $publicTicketComments = array_filter($ticketComments['data'], function ($comment) {
             return $comment['isPublic'];
         });
+
+        $publicTicketComments = $this->sortTicketCommentsByDate($publicTicketComments);
 
         return $publicTicketComments;
     }
