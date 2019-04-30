@@ -73,7 +73,7 @@ class AttachmentController extends AbstractController
             $this->ticketAttachmentService->removeTicketAttachment($ticketId, $attachmentId);
         }
 
-        return $this->redirectToRoute('zoho_desk_ticket_view', ['id' => $ticketId]);
+        return $this->redirectToRoute('ticket_view', ['id' => $ticketId]);
     }
 
     /**

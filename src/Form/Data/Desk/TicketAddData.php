@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class TicketAddData
 {
     /**
-     * @var int
+     * @var string
      */
     public $uploadFormId;
 

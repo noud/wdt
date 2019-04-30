@@ -116,7 +116,7 @@ class TicketController extends AbstractController
      *
      * @throws \Doctrine\ORM\ORMException
      */
-    public function view(string $id): Response
+    public function view(int $id): Response
     {
         $ticket = $this->ticketService->getTicket($id);
         $resolutionHistory = $this->resolutionHistoryService->getAllResolutionHistory($id);
