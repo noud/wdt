@@ -2,29 +2,35 @@
 
 namespace App\Zoho\Service\Desk;
 
-use App\Zoho\Service\ZohoDeskApiService;
+use App\Zoho\Api\ZohoApiService;
 
 class ResolutionHistoryService
 {
     /**
-     * @var ZohoDeskApiService
+     * @var ZohoApiService
      */
-    private $zohoDeskApiService;
+    private $zohoApiService;
+
+    /**
+     * @var OrganizationService
+     */
+    private $organizationService;
 
     /**
      * DepartmentService constructor.
      */
     public function __construct(
-        ZohoDeskApiService $deskApiService
+        ZohoApiService $zohoDeskApiService,
+        OrganizationService $organizationService
     ) {
-        $this->zohoDeskApiService = $deskApiService;
+        $this->zohoApiService = $zohoDeskApiService;
+        $this->organizationService = $organizationService;
     }
 
     public function getAllResolutionHistory(int $ticketId)
     {
-        $this->zohoDeskApiService->setOrganizationId();
-        $this->zohoDeskApiService->setService('tickets/'.$ticketId.'/resolutionHistory');
+        $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
+        return $this->zohoApiService->get('tickets/'.$ticketId.'/resolutionHistory', $organisationId);
     }
 }

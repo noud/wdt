@@ -3,44 +3,56 @@
 namespace App\Zoho\Service\Desk;
 
 use App\Form\Data\Desk\TicketCommentAddData;
+use App\Zoho\Api\ZohoApiService;
 use App\Zoho\Entity\Desk\TicketComment;
-use App\Zoho\Service\ZohoDeskApiService;
 
 class TicketCommentService
 {
     /**
-     * @var ZohoDeskApiService
+     * @var ZohoApiService
      */
-    private $zohoDeskApiService;
+    private $zohoApiService;
+
+    /**
+     * @var OrganizationService
+     */
+    private $organizationService;
 
     /**
      * DepartmentService constructor.
      */
     public function __construct(
-        ZohoDeskApiService $deskApiService
+        ZohoApiService $zohoDeskApiService,
+        OrganizationService $organizationService
     ) {
-        $this->zohoDeskApiService = $deskApiService;
+        $this->zohoApiService = $zohoDeskApiService;
+        $this->organizationService = $organizationService;
     }
 
     public function getAllTicketComments(int $ticketId): array
     {
-        $this->zohoDeskApiService->setOrganizationId();
-        $this->zohoDeskApiService->setService('tickets/'.$ticketId.'/comments');
+        $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
+        return $this->zohoApiService->get('tickets/'.$ticketId.'/comments', $organisationId);
+    }
+
+    private function sortTicketCommentsByDate(array $ticketComments): array
+    {
+        usort($ticketComments, function ($a, $b) {
+            return $b['commentedTime'] <=> $a['commentedTime'];
+        });
+
+        return $ticketComments;
     }
 
     public function getAllPublicTicketComments(int $ticketId): array
     {
         $ticketComments = $this->getAllTicketComments($ticketId);
-        $filterBy = true;
-        $publicTicketComments = array_filter($ticketComments['data'], function ($var) use ($filterBy) {
-            return $var['isPublic'] === $filterBy;
+        $publicTicketComments = array_filter($ticketComments['data'], function ($comment) {
+            return $comment['isPublic'];
         });
 
-        usort($publicTicketComments, function ($a, $b) {
-            return ($a['commentedTime'] > $b['commentedTime']) ? -1 : 1;
-        });
+        $publicTicketComments = $this->sortTicketCommentsByDate($publicTicketComments);
 
         return $publicTicketComments;
     }
@@ -55,15 +67,14 @@ class TicketCommentService
 
     public function createTicketComment(TicketComment $ticketComment, int $ticketId)
     {
-        $this->zohoDeskApiService->setOrganizationId();
         $data = [
             'isPublic' => 'true',
             'content' => $ticketComment->getContent(),
             'contentType' => 'html',
         ];
 
-        $this->zohoDeskApiService->setService('tickets/'.$ticketId.'/comments');
+        $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId(), $data);
+        return $this->zohoApiService->get('tickets/'.$ticketId.'/comments', $organisationId, [], $data);
     }
 }

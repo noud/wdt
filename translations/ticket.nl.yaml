@@ -13,6 +13,8 @@ ticket:
       aantal_minuten_ingeschat: 'Aantal minuten ingeschat'
       aantal_uur_ingeschat: 'Aantal uur ingeschat'
     submit: 'Ticket registreren'
+  placeholder:
+    priority: '-Geen-'
   message:
     added: 'Ticket is toegevoegd.'
 ticket_comment:
@@ -23,3 +25,8 @@ ticket_comment:
 ticket_attachment:
   field:
     add_attachment: 'Attachment toevoegen'
+enum:
+  ticket_priority:
+    high: 'Hoog'
+    medium: 'Medium'
+    low: 'Laag'

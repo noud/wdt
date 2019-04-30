@@ -2,14 +2,14 @@
 
 namespace App\Zoho\Service\Desk;
 
-use App\Zoho\Service\ZohoDeskApiService;
+use App\Zoho\Api\ZohoApiService;
 
 class DepartmentService
 {
     /**
-     * @var ZohoDeskApiService
+     * @var ZohoApiService
      */
-    private $zohoDeskApiService;
+    private $zohoApiService;
 
     /**
      * @var OrganizationService
@@ -20,22 +20,21 @@ class DepartmentService
      * DepartmentService constructor.
      */
     public function __construct(
-        ZohoDeskApiService $deskApiService,
+        ZohoApiService $zohoDeskApiService,
         OrganizationService $organizationService
     ) {
-        $this->zohoDeskApiService = $deskApiService;
+        $this->zohoApiService = $zohoDeskApiService;
         $this->organizationService = $organizationService;
     }
 
     public function getAllDepartments(): array
     {
-        $this->zohoDeskApiService->setOrganizationId();
-        $this->zohoDeskApiService->setService('departments', [
+        $organisationId = $this->organizationService->getOrganizationId();
+
+        return $this->zohoApiService->get('departments', $organisationId, [
             'isEnabled' => 'true',
             'chatStatus' => 'AVAILABLE',
         ]);
-
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
     }
 
     public function getDepartmentId(): int

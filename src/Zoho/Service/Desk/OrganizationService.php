@@ -9,27 +9,25 @@ class OrganizationService
     /**
      * @var ZohoApiService
      */
-    private $zohoDeskApiService;
+    private $zohoApiService;
 
     /**
      * OrganizationService constructor.
      */
     public function __construct(ZohoApiService $zohoDeskApiService)
     {
-        $this->zohoDeskApiService = $zohoDeskApiService;
+        $this->zohoApiService = $zohoDeskApiService;
     }
 
     public function getAllOrganizations(): array
     {
-        $this->zohoDeskApiService->setService('organizations');
-
-        return $this->zohoDeskApiService->getRequest();
+        return $this->zohoApiService->get('organizations');
     }
 
-    public function getOrganizationId(): int
+    public function getOrganizationId(): ?int
     {
         $organizations = $this->getAllOrganizations();
 
-        return $organizations['data'][0]['id'];
+        return isset($organizations['data'][0]) ? $organizations['data'][0]['id'] : null;
     }
 }

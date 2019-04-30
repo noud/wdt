@@ -2,30 +2,36 @@
 
 namespace App\Zoho\Service\Desk;
 
-use App\Zoho\Service\ZohoDeskApiService;
+use App\Zoho\Api\ZohoApiService;
 
 class AccountService
 {
     /**
-     * @var ZohoDeskApiService
+     * @var ZohoApiService
      */
-    private $zohoDeskApiService;
+    private $zohoApiService;
+
+    /**
+     * @var OrganizationService
+     */
+    private $organizationService;
 
     /**
      * DepartmentService constructor.
      */
     public function __construct(
-        ZohoDeskApiService $deskApiService
+        ZohoApiService $zohoDeskApiService,
+        OrganizationService $organizationService
     ) {
-        $this->zohoDeskApiService = $deskApiService;
+        $this->zohoApiService = $zohoDeskApiService;
+        $this->organizationService = $organizationService;
     }
 
     public function getAllAccounts(): array
     {
-        $this->zohoDeskApiService->setOrganizationId();
-        $this->zohoDeskApiService->setService('accounts');
+        $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
+        return $this->zohoApiService->get('accounts', $organisationId);
     }
 
     public function getAccountIdByEmail(string $email): ?string
@@ -39,16 +45,13 @@ class AccountService
                 }
             }
         }
-
-        return null;
     }
 
     public function getAllAccountContacts(string $accountId): array
     {
-        $this->zohoDeskApiService->setOrganizationId();
-        $this->zohoDeskApiService->setService('accounts/'.$accountId.'/contacts');
+        $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoDeskApiService->getRequest($this->zohoDeskApiService->getOrganizationId());
+        return $this->zohoApiService->get('accounts/'.$accountId.'/contacts', $organisationId);
     }
 
     public function getAccountContactIdByEmail(string $email): ?string
@@ -62,7 +65,5 @@ class AccountService
                 }
             }
         }
-
-        return null;
     }
 }

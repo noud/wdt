@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TicketCommentController extends AbstractController
 {
@@ -18,14 +19,21 @@ class TicketCommentController extends AbstractController
      */
     private $pageService;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     public function __construct(
-        PageService $pageService
+        PageService $pageService,
+        TranslatorInterface $translator
     ) {
         $this->pageService = $pageService;
+        $this->translator = $translator;
     }
 
     /**
-     * @Route("/desk/tickets/comment/create/{ticketId}", name="zoho_desk_tickets_comment_create")
+     * @Route("/ticket/{ticketId}/comment/create", name="ticket_comment_create")
      */
     public function createDeskTicketComment(int $ticketId, TicketCommentAddHandler $ticketCommentAddHandler, Request $request): Response
     {
@@ -33,35 +41,26 @@ class TicketCommentController extends AbstractController
         $form = $this->createForm(TicketCommentAddType::class, $data);
 
         if ($ticketCommentAddHandler->handleRequest($form, $request, $ticketId)) {
-            $this->addFlash('success', 'Ticket comment is toegevoegd.');
+            $this->addFlash('success', $this->translator->trans('ticket.message.added', [], 'ticket'));
 
-            return $this->redirectToRoute('zoho_desk_tickets_comment_create_thanks');
+            return $this->redirectToRoute('ticket_comment_create_success');
         }
 
-        return $this->render('desk/ticket_comment/add.html.twig', [
+        return $this->render('ticket_comment/add.html.twig', [
             'form' => $form->createView(),
-            'page' => $this->pageService->getPageBySlug($this->pathStripLastPart($request->getPathInfo())),
+            'page' => $this->pageService->getPageBySlug('/ticket/comment/create'),
         ]);
     }
 
     /**
-     * @Route("/desk/tickets/comment/create-thanks", name="zoho_desk_tickets_comment_create_thanks")
+     * @Route("/ticket/comment/create/success", name="ticket_comment_create_success")
      *
      * @throws \Doctrine\ORM\ORMException
      */
     public function addCommentThanks(Request $request): Response
     {
-        return $this->render('desk/thanks.html.twig', [
+        return $this->render('ticket/thanks.html.twig', [
             'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
         ]);
-    }
-
-    private function pathStripLastPart(string $path): string
-    {
-        $slug = explode('/', $path);
-        array_pop($slug);
-        $path = implode('/', $slug);
-
-        return $path;
     }
 }
