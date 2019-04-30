@@ -27,6 +27,16 @@
                                     {{ form_row(form.priority) }}
 
                                     <br/>
+                                         <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label" for="my-awesome-dropzone">Bijlage(n)</label>
+                                                    <div class="dropzone dropzone-previews" id="my-dropzone"></div>
+                                                </div>
+                                            </div>
+                            			</div>
+                                    <br/>
+                                    
                                     <button type="submit" class="btn btn-sm btn-primary btn-icon rounded-pill">
                                         <span class="btn-inner--text">{{ 'ticket.field.submit'|trans }}</span>
                                         <span class="btn-inner--icon"><i class="fas fa-long-arrow-alt-right"></i></span>
@@ -40,4 +50,11 @@
             </div>
         </section>
     </div>
+    <div id="uploader" data-endpoint="{{ oneup_uploader_endpoint('gallery') }}" data-upload-form-id="{{ form.vars.value.uploadFormId }}" />
+{#     <div id="attachment_remove" data-attachment_remove="{{ path('attachment_remove') }}" />#}
+    <div id="urls" data-attachment-post="{{path('attachment_post', {'id': 1}) }}" data-attachment-remove="{{path('attachment_new_remove', {'ticketId': 1}) }}" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('add') }}
 {% endblock %}

@@ -40,7 +40,7 @@ class AttachmentController extends AbstractController
     }
 
     /**
-     * @Route("/attachment/post/{id}", methods={"POST"}, name="attachment_post")
+     * @Route("/attachment/post/{id}", methods={"POST"}, name="attachment_edit_post")
      */
     public function post(
         Request $request,
@@ -63,7 +63,7 @@ class AttachmentController extends AbstractController
     }
 
     /**
-     * @Route("/attachment/remove/{ticketId}/{attachmentId}", methods={"DELETE"}, name="attachment_remove")
+     * @Route("/attachment/remove/{ticketId}/{attachmentId}", methods={"DELETE"}, name="attachment_edit_remove")
      */
     public function remove(Request $request, int $ticketId, int $attachmentId): Response
     {
@@ -77,7 +77,7 @@ class AttachmentController extends AbstractController
     }
 
     /**
-     * @Route("/attachment/remove/{ticketId}", name="attachment_new_remove")
+     * @Route("/attachment/remove/{ticketId}", name="attachment_edit_new_remove")
      */
     public function removeNew(
         Request $request,

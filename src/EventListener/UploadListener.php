@@ -4,14 +4,13 @@ namespace App\EventListener;
 
 use App\Entity\Attachment;
 use App\Service\AttachmentService;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
 
 class UploadListener
 {
     /**
-     * @var ObjectManager
+     * @var EntityManagerInterface
      */
     private $entityManager;
 
@@ -27,12 +26,12 @@ class UploadListener
     
     /**
      * @param string $attachmentsDirectoryPart
-     * @param EntityManager $defaultEntityManager
+     * @param EntityManagerInterface $defaultEntityManager
      * @param AttachmentService $attachmentService
      */
     public function __construct(
-        $attachmentsDirectoryPart,
-        EntityManager $defaultEntityManager,
+        string $attachmentsDirectoryPart,
+        EntityManagerInterface $defaultEntityManager,
         AttachmentService $attachmentService
     ) {
         $this->attachmentsDirectoryPart = $attachmentsDirectoryPart;

@@ -3,10 +3,21 @@
 namespace App\Form\Data\Desk;
 
 use App\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class TicketAddData
 {
+    /**
+     * @var int
+     */
+    public $uploadFormId;
+    
+    /**
+     * @var ArrayCollection
+     */
+    public $attachments;
+    
     /**
      * @var string
      * @Assert\NotBlank()
@@ -38,6 +49,8 @@ class TicketAddData
 
     public function __construct(User $user)
     {
+        $this->uploadFormId = uniqid('', true);
+        $this->attachments = new ArrayCollection();
         $this->contactName = $user->getFullName();
         /** @var string $email */
         $email = $user->getEmail();

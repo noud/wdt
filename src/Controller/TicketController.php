@@ -118,7 +118,7 @@ class TicketController extends AbstractController
     }
 
     /**
-     * @Route("/desk/tickets/create-thanks", name="zoho_desk_tickets_create_thanks")
+     * @Route("/ticket/create-thanks", name="zoho_desk_tickets_create_thanks")
      */
     public function addThanks(Request $request): Response
     {
@@ -128,7 +128,7 @@ class TicketController extends AbstractController
     }
 
     /**
-     * @Route("/desk/tickets/view/{id}", name="zoho_desk_ticket_view")
+     * @Route("/ticket/view/{id}", name="zoho_desk_ticket_view")
      *
      * @throws \Doctrine\ORM\ORMException
      */

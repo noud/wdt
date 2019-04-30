@@ -22,6 +22,7 @@ parameters:
     zoho.crm.api.base_url: ''
     zoho.desk.api.base_url: 'https://desk.zoho.eu/api/v1/'
     ticket_attachments_dir: '%kernel.project_dir%%env(TICKET_ATTACHMENTS_DIR)%'
+    ticket_tmpupload_dir: '%kernel.project_dir%/userdata/tmp/uploads'
 
 services:
     # default configuration for services in *this* file
@@ -102,10 +103,21 @@ services:
         
     App\EventListener\UploadListener:
         arguments:
-            - '%userdata_attachments_dir%'
+            - '%ticket_attachments_dir%'
         tags:
             - { name: kernel.event_listener, event: oneup_uploader.post_persist, method: onUpload }
 
     App\Uploader\Naming\UploadNamer:
         public: true
-        
+ 
+    App\Service\AttachmentService:
+        arguments:
+            - '%ticket_attachments_dir%'
+            - "%ticket_tmpupload_dir%"
+            
+oneup_uploader:
+    mappings:
+        gallery:
+            frontend: dropzone # or any uploader you use in the frontend
+            storage:
+                directory: "%ticket_attachments_dir%"        

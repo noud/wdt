@@ -65,7 +65,7 @@
                                                 	    <div class="row">
                                                     	    <div class="col-sm-6">
                                                         	    <b><a href="{{ ticketAttachment.href }}?portalname=webdesigntilburg&inline=true" target="_blank">{{ ticketAttachment.name }}</a></b> 
-                                                                <form action="{{ path('attachment_remove', {ticketId: ticket.id, attachmentId: ticketAttachment.id }) }}" onsubmit="return window.confirm('Weet u zeker dat u {{ ticketAttachment.name|e('html_attr') }} wilt verwijderen?');" method="post">
+                                                                <form action="{{ path('attachment_edit_remove', {ticketId: ticket.id, attachmentId: ticketAttachment.id }) }}" onsubmit="return window.confirm('Weet u zeker dat u {{ ticketAttachment.name|e('html_attr') }} wilt verwijderen?');" method="post">
                                                                     <input type="hidden" name="_method" value="DELETE" />
                                                                     <input type="hidden" name="token" value="{{ csrf_token('ticket-attachment-delete') }}" />
                                                                     <button type="submit" class="delete-link" class="btn btn-sm btn-primary btn-icon rounded-pill">verwijder</button>
@@ -77,13 +77,15 @@
                                             	    </ul>
                                         	    </div>
                                                 <div class="row">
-                                                    <div class="col-md-6">
+                                                    <div class="col-xs-6">
                                                         <div class="form-group">
-                                                            <label class="control-label" for="my-awesome-dropzone">Bijlage(n)</label>
-                                                            <div class="dropzone dropzone-previews" id="my-dropzone"></div>
+                                                            <label class="control-label">Toevoegen</label>
+                                                            <div action="/" id="ticket-dropzone">
+                                                                <div class="dz-message" data-dz-message><span>Sleep uw bestand om te uploaden</span></div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                    			</div>
+                                                </div>
                                         	</div>
                                         	<div class="col-sm-8">
                                         	    <div class="row">
@@ -125,7 +127,7 @@
             </div>
         </section>
     </div>
-    <div id="urls" data-attachment-post="{{path('attachment_post', {'id':ticket.id}) }}" data-attachment-remove="{{path('attachment_new_remove', {'ticketId':ticket.id}) }}" />
+    <div id="urls" data-attachment-post="{{path('attachment_edit_post', {'id':ticket.id}) }}" data-attachment-remove="{{path('attachment_edit_new_remove', {'ticketId':ticket.id}) }}" />
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
