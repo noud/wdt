@@ -8,8 +8,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
- * Class AttachmentService
- * @package App\Service
+ * Class AttachmentService.
  */
 class AttachmentService
 {
@@ -17,7 +16,7 @@ class AttachmentService
      * @var string
      */
     private $attachmentsPath;
-    
+
     /**
      * @var string
      */
@@ -27,13 +26,9 @@ class AttachmentService
      * @var EntityManagerInterface
      */
     private $entityManager;
-    
+
     /**
      * AttachmentService constructor.
-     * @param string $attachmentsPath
-     * @param string $tmpAttachmentsPath
-     * @param EntityManagerInterface $defaultEntityManager
-     * @param AttachmentRepository $attachmentRepository
      */
     public function __construct(
         string $attachmentsPath,
@@ -47,6 +42,7 @@ class AttachmentService
 
     /**
      * @param string $uploadFormId
+     *
      * @throws \Doctrine\ORM\ORMException
      */
     public function moveAttachments($uploadFormId)
@@ -57,10 +53,10 @@ class AttachmentService
             $attachment->setName($fileName);
             // and move the file
             $fileId = $attachment->getId();
-            $dirToRemove = $this->tmpAttachmentsPath . DIRECTORY_SEPARATOR . $attachment->getUniqueUploadId();
-            $file = new File($dirToRemove . DIRECTORY_SEPARATOR . $fileId);
-            $newPath = $this->attachmentsPath .
-                DIRECTORY_SEPARATOR . $attachment->getArticle()->getId() . DIRECTORY_SEPARATOR;
+            $dirToRemove = $this->tmpAttachmentsPath.\DIRECTORY_SEPARATOR.$attachment->getUniqueUploadId();
+            $file = new File($dirToRemove.\DIRECTORY_SEPARATOR.$fileId);
+            $newPath = $this->attachmentsPath.
+                \DIRECTORY_SEPARATOR.$attachment->getArticle()->getId().\DIRECTORY_SEPARATOR;
             $file->move($newPath, $fileId);
             $fileSystem = new Filesystem();
             $fileSystem->remove($dirToRemove);
@@ -69,7 +65,8 @@ class AttachmentService
 
     /**
      * @param string $uniqueUploadId
-     * @return null|array|\Doctrine\DBAL\Driver\Statement
+     *
+     * @return array|\Doctrine\DBAL\Driver\Statement|null
      */
     public function removeAttachment($uniqueUploadId)
     {
@@ -86,10 +83,10 @@ class AttachmentService
 //             }
 //             $this->entityManager->remove($attachment);
 //         } elseif ($attachment) {
-            $fileSystem = new Filesystem();
-            $fileDir = $this->tmpAttachmentsPath . DIRECTORY_SEPARATOR . $attachment->getUniqueUploadId();
-            $fileSystem->remove($fileDir . DIRECTORY_SEPARATOR . $attachmentId);
-            $fileSystem->remove($fileDir);
+        $fileSystem = new Filesystem();
+        $fileDir = $this->tmpAttachmentsPath.\DIRECTORY_SEPARATOR.$attachment->getUniqueUploadId();
+        $fileSystem->remove($fileDir.\DIRECTORY_SEPARATOR.$attachmentId);
+        $fileSystem->remove($fileDir);
 //            $this->entityManager->remove($attachment);
 //        }
         return $attachment;

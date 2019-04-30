@@ -12,12 +12,12 @@ class TicketAddData
      * @var int
      */
     public $uploadFormId;
-    
+
     /**
      * @var ArrayCollection
      */
     public $attachments;
-    
+
     /**
      * @var string
      * @Assert\NotBlank()

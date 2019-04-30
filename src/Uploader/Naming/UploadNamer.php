@@ -12,25 +12,21 @@ class UploadNamer implements NamerInterface
      * @var AttachmentService
      */
     private $attachmentService;
-    
-    /**
-     * @param AttachmentService $attachmentService
-     */
+
     public function __construct(AttachmentService $attachmentService)
     {
         $this->attachmentService = $attachmentService;
     }
-    
+
     /**
      * Gets original name for the file being uploaded.
      *
-     * @param FileInterface $file
-     * @return string The directory name.
+     * @return string the directory name
      */
     public function name(FileInterface $file): string
     {
         $attachment = $this->attachmentService->createUploaded($file->getClientOriginalName());
-        
-        return $attachment->getUniqueUploadId() . '/' . $attachment->getId();
+
+        return $attachment->getUniqueUploadId().'/'.$attachment->getId();
     }
 }
