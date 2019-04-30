@@ -5,6 +5,7 @@ namespace App\EventListener;
 use App\Service\AttachmentService;
 use Doctrine\ORM\EntityManagerInterface;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
+use Symfony\Component\Filesystem\Filesystem;
 
 class UploadListener
 {
@@ -41,19 +42,36 @@ class UploadListener
         $request = $event->getRequest();
         $uploadFormId = $request->get('uploadFormId');
 
+        $file = $event->getFile();
         $targetFile = $event->getFile()->getPathName();
+        $fileSize = $event->getFile()->getSize();
         $targetFileArr = explode('/', $targetFile);
-        $uniqueUploadId = $targetFileArr[\count($targetFileArr) - 2];
+        $uniqueUploadId = $targetFileArr[\count($targetFileArr) - 1];
 
         // seek by $uniqueUploadId and set $uploadFormId
-        $attachment = $this->attachmentService->getByUniqueUploadId($uniqueUploadId);
-        $attachment->setUploadFormId($uploadFormId);
-        $this->entityManager->persist($attachment);
-        $this->entityManager->flush();
+//         $attachment = $this->attachmentService->getByUniqueUploadId($uniqueUploadId);
+//         $attachment->setUploadFormId($uploadFormId);
+//         $this->entityManager->persist($attachment);
+//         $this->entityManager->flush();
 
+        // place the file in the uploadFormId dir
+        try {
+            $finalPath = $this->attachmentsDirectoryPart . '/' . $uploadFormId;
+            $filesystem = new Filesystem();
+            $filesystem->mkdir($finalPath, 0700);
+            $file->move(
+                $finalPath,
+                $uniqueUploadId
+            );
+        } catch (FileException $e) {
+            throw error \Exception('Error moving uploaded file.');
+        }
+        
+        
         //if everything went fine
         $response = $event->getResponse();
         $response['success'] = true;
+        $response['upload_form_id'] = $uploadFormId;
         $response['unique_upload_id'] = $uniqueUploadId;
         $response['target_file'] = $targetFile;
         $filePathName = $event->getFile()->getPathName();
@@ -61,7 +79,7 @@ class UploadListener
             $filePathName,
             mb_strpos($filePathName, $this->attachmentsDirectoryPart) + \mb_strlen($this->attachmentsDirectoryPart)
         );
-        $response['target_size'] = $event->getFile()->getSize();
+        $response['target_size'] = $fileSize;
 
         return $response;
     }
