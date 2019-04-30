@@ -24,11 +24,11 @@ class TicketAddType extends AbstractType
         $builder
             ->add('contactName', TextType::class, [
                 'label' => 'ticket.field.contact_name',
-                'required' => true,
+                'disabled' => true,
             ])
             ->add('email', EmailType::class, [
                 'label' => 'ticket.field.email',
-                'required' => true,
+                'disabled' => true,
             ])
             ->add('subject', TextType::class, [
                 'label' => 'ticket.field.subject',

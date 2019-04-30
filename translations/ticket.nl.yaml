@@ -1,17 +1,27 @@
 ticket:
   field:
-    nr: 'Nr.'
+    nr: '#'
     contact_name: 'Contactpersoon naam'
     email: 'E-mailadres'
     subject: 'Onderwerp'
     description: 'Beschrijving'
     priority: 'Prioriteit'
     status: 'Status'
+    due_date: 'Opleveringsdatum'
+    classification: 'Classificatie'
+    custom_fields:
+      aantal_minuten_ingeschat: 'Aantal minuten ingeschat'
+      aantal_uur_ingeschat: 'Aantal uur ingeschat'
     submit: 'Ticket registreren'
   placeholder:
     priority: '-Geen-'
   message:
     added: 'Ticket is toegevoegd.'
+ticket_comment:
+  field:
+    content: 'Commentaar'
+    submit: 'Commentaar registreren'
+    add_comment: 'Commentaar bijvoegen'
 enum:
   ticket_priority:
     high: 'Hoog'

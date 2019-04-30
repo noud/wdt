@@ -52,6 +52,15 @@ class TicketService
         ]);
     }
 
+    private function sortTicketsByNumber(array $tickets): array
+    {
+        usort($tickets, function ($a, $b) {
+            return $b['ticketNumber'] <=> $a['ticketNumber'];
+        });
+
+        return $tickets;
+    }
+
     /**
      * @return Ticket[]
      */
@@ -63,9 +72,13 @@ class TicketService
         $result = $this->zohoApiService->get('accounts/'.$accountId.'/tickets', $organisationId, [
             'include' => 'assignee,departments,team,isRead',
         ]);
+
+        $resultSorted = $this->sortTicketsByNumber($result['data']);
+
         $tickets = [];
-        foreach ($result['data'] as $ticketData) {
+        foreach ($resultSorted as $ticketData) {
             $ticket = new Ticket();
+            $ticket->setId($ticketData['id']);
             $ticket->setTicketNumber($ticketData['ticketNumber']);
             $ticket->setSubject($ticketData['subject']);
             $ticket->setStatus($ticketData['status']);
@@ -73,6 +86,15 @@ class TicketService
         }
 
         return $tickets;
+    }
+
+    public function getTicket(string $ticketId): array
+    {
+        $organisationId = $this->organizationService->getOrganizationId();
+
+        return $this->zohoApiService->get('tickets/'.$ticketId, $organisationId, [
+            'include' => 'contacts,products,assignee,departments,team',
+        ]);
     }
 
     public function addTicket(TicketAddData $ticketData): ?array
