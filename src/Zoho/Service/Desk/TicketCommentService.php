@@ -39,8 +39,8 @@ class TicketCommentService
     public function getAllPublicTicketComments(string $ticketId): array
     {
         $ticketComments = $this->getAllTicketComments($ticketId);
-        $publicTicketComments = array_filter($ticketComments['data'], function ($var) {
-            return $var['isPublic'];
+        $publicTicketComments = array_filter($ticketComments['data'], function ($comment) {
+            return $comment['isPublic'];
         });
 
         return $publicTicketComments;
