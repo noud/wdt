@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Attachment;
+use App\Form\Data\AttachmentRemoveEditData;
 use App\Form\Data\AttachmentRemoveNewData;
 use App\Form\Data\PostAttachmentData;
+use App\Form\Handler\AttachmentRemoveEditHandler;
 use App\Form\Handler\AttachmentRemoveNewHandler;
 use App\Form\Handler\PostAttachmentHandler;
+use App\Form\Type\AttachmentRemoveEditType;
 use App\Form\Type\AttachmentRemoveNewType;
 use App\Form\Type\PostAttachmentType;
 use App\Zoho\Service\Desk\TicketAttachmentService;
@@ -16,8 +19,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
-//use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class AttachmentController extends AbstractController
 {
@@ -81,12 +82,12 @@ class AttachmentController extends AbstractController
      */
     public function removeNew2(
         Request $request,
-        AttachmentRemoveNewHandler $formHandler,
+        AttachmentRemoveEditHandler $formHandler,
         int $ticketId
     ): Response {
-        $data = new AttachmentRemoveNewData();
+        $data = new AttachmentRemoveEditData();
 
-        $form = $this->createForm(AttachmentRemoveNewType::class, $data);
+        $form = $this->createForm(AttachmentRemoveEditType::class, $data);
 
         if ($formHandler->handleRequest($form, $request, $ticketId)) {
             return new Response('', 200);
