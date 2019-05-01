@@ -11,7 +11,7 @@ Dropzone.autoDiscover = false;
 var myDropzone = new Dropzone("#my-dropzone", {
     url: endpoint + "?uploadFormId=" + uploadFormId,
     dictDefaultMessage: 'Sleep uw bijlage(n) om te uploaden.',
-    dictRemoveFile: 'Verwijder bijlage.',
+    dictRemoveFile: 'Verwijder bijlage',
     dictCancelUpload: 'Stop toevoeging',
     dictCancelUploadConfirmation: 'Weet u zeker dat u deze bijlage wilt verwijderen?',
 });

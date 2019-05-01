@@ -1,5 +1,10 @@
 import $ from 'jquery';
+
+import 'dropzone/dist/basic.css';
+import 'dropzone/dist/dropzone.css';
 import Dropzone from 'dropzone';
+
+Dropzone.autoDiscover = false;
 
 $(document).ready(function() {
     let urlPost = document.getElementById('urls').getAttribute('data-attachment-post');
@@ -21,7 +26,10 @@ $(document).ready(function() {
 		{
 			url: urlPost,
 			addRemoveLinks: true,
-			dictRemoveFile: 'Verwijder bestand'
+		    dictDefaultMessage: 'Sleep uw bijlage(n) om te uploaden.',
+		    dictRemoveFile: 'Verwijder bijlage',
+		    dictCancelUpload: 'Stop toevoeging',
+		    dictCancelUploadConfirmation: 'Weet u zeker dat u deze bijlage wilt verwijderen?',
 		}
 	);
 	myDropzone.on("sending", function(file, xhr, formData) {
