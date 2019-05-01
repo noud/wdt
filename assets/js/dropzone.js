@@ -17,12 +17,12 @@ $(document).ready(function() {
 	    });
 	});
 	var myDropzone = new Dropzone(
-			"div#ticket-dropzone",
-			{
-				url: urlPost,
-				addRemoveLinks: true,
-				dictRemoveFile: 'Verwijder bestand'
-			}
+		"div#ticket-dropzone",
+		{
+			url: urlPost,
+			addRemoveLinks: true,
+			dictRemoveFile: 'Verwijder bestand'
+		}
 	);
 	myDropzone.on("sending", function(file, xhr, formData) {
 		  formData.append("filename", file.name);
