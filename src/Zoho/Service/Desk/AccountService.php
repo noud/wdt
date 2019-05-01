@@ -37,6 +37,7 @@ class AccountService
     public function getAccountIdByEmail(string $email): ?string
     {
         $accounts = $this->getAllAccounts();
+
         foreach ($accounts['data'] as $account) {
             $accountContacts = $this->getAllAccountContacts($account['id']);
             foreach ($accountContacts['data'] as $contact) {
