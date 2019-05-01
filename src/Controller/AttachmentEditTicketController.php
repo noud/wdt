@@ -69,7 +69,7 @@ class AttachmentEditTicketController extends AbstractController
     /**
      * @Route("/ticket/attachment/remove/{ticketId}", name="attachment_edit_new_remove")
      */
-    public function removeNew2(
+    public function removeNew(
         Request $request,
         AttachmentRemoveEditHandler $formHandler,
         int $ticketId
