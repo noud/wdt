@@ -37,7 +37,7 @@ class PostAttachmentHandler
 
             $fileName = $data->filename;
             $binary = $data->file;
-            $dirName = $this->ticketAttachmentPath.'/'.$id.'/';
+            $dirName = $this->ticketAttachmentPath.\DIRECTORY_SEPARATOR.$id.\DIRECTORY_SEPARATOR;
             if (!is_dir($dirName)) {
                 mkdir($dirName, 0777, true);
             }

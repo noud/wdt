@@ -53,7 +53,7 @@ class UploadListener
 
         // place the file in the uploadFormId dir
         try {
-            $finalPath = $this->attachmentsDirectoryPart.'/'.$uploadFormId;
+            $finalPath = $this->attachmentsDirectoryPart.\DIRECTORY_SEPARATOR.$uploadFormId;
             $filesystem = new Filesystem();
             $filesystem->mkdir($finalPath, 0700);
             $file->move(

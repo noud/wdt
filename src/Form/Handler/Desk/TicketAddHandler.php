@@ -70,7 +70,7 @@ class TicketAddHandler
 
             // now put the attachments
             $uploadFormId = $ticketData->uploadFormId;
-            $dirName = $this->ticketAttachmentPath.'/'.$uploadFormId.'/';
+            $dirName = $this->ticketAttachmentPath.\DIRECTORY_SEPARATOR.$uploadFormId.\DIRECTORY_SEPARATOR;
             $files = Finder::create()
                 ->files()
                 ->in($dirName);
