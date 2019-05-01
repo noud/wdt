@@ -3,9 +3,9 @@ import 'dropzone/dist/dropzone.css';
 import Dropzone from 'dropzone';
 
 $(document).ready(function() {
-	let endpoint = $("#uploader").data('endpoint');
-	let uploadFormId = $("#uploader").data('upload-form-id');
-	let attachmentRemove =  $("#attachment_remove").data('attachment_remove');
+    let endpoint = $("#uploader").data('endpoint');
+    let uploadFormId = $("#uploader").data('upload-form-id');
+    let attachmentRemove =  $("#attachment_remove").data('attachment_remove');
 
     Dropzone.autoDiscover = false;
 
@@ -16,15 +16,15 @@ $(document).ready(function() {
         dictCancelUpload: 'Stop toevoeging',
         dictCancelUploadConfirmation: 'Weet u zeker dat u deze bijlage wilt verwijderen?',
     });
-	myDropzone.on("addedfile", function(file) {
-		if(file.size > (1024 * 1024 * 20)) // not more than 20mb
-		{
-			this.removeFile(file); // if you want to remove the file or you can add alert or presentation of a message
-		}
-	});
-	myDropzone.on("sending", function(file, xhr, formData) {
-	  formData.append("filename", file.name);
-	});
+    myDropzone.on("addedfile", function(file) {
+        if(file.size > (1024 * 1024 * 20)) // not more than 20mb
+        {
+            this.removeFile(file); // if you want to remove the file or you can add alert or presentation of a message
+        }
+    });
+    myDropzone.on("sending", function(file, xhr, formData) {
+      formData.append("filename", file.name);
+    });
 
     myDropzone.on("success", function (file, response) {
         if (response['target_file'] != '') {
