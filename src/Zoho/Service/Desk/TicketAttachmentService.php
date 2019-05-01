@@ -49,13 +49,15 @@ class TicketAttachmentService
         return $publicTicketAttachments;
     }
 
-    public function createTicketAttachment(string $file, int $ticketId): array
+    public function createTicketAttachment(string $file, int $ticketId, string $fileName = null): array
     {
         $organisationId = $this->organizationService->getOrganizationId();
         
         /** @var string $fileMime */
         $fileMime = mime_content_type($file);
-        $fileName = basename($file);
+        if (!$fileName) {
+            $fileName = basename($file);
+        }
 
         $data = [
             'isPublic' => 'true',

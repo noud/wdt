@@ -22,14 +22,17 @@ let attachmentRemove =  $("#attachment_remove").data('attachment_remove');
     			this.removeFile(file); // if you want to remove the file or you can add alert or presentation of a message
     		}
     	});
+    	myDropzone.on("sending", function(file, xhr, formData) {
+  		  formData.append("filename", file.name);
+  		});
 
         myDropzone.on("success", function (file, response) {
             if (response['target_file'] != '') {
                 var currentValue = jQuery('#ticket_add_attachments').val();
                 if (currentValue == '') {
-                    jQuery('#ticket_add_attachments').val(response['target_file'] + '|' + response['target_size'] + '|' + response['target_url']);
+                    jQuery('#ticket_add_attachments').val(response['file_name'] + '|' + response['target_file'] + '|' + response['target_size'] + '|' + response['target_url']);
                 } else {
-                    jQuery('#ticket_add_attachments').val(currentValue + ", " + response['target_file'] + '|' + response['target_size'] + '|' + response['target_url']);
+                    jQuery('#ticket_add_attachments').val(currentValue + ", " + response['file_name'] + '|' + response['target_file'] + '|' + response['target_size'] + '|' + response['target_url']);
                 }
             }
         });

@@ -55,6 +55,14 @@ class TicketAddHandler
             $ticketResponse = $this->ticketService->addTicket($ticketData);   // @TODO get the new ticket id
             $ticketId = $ticketResponse['id'];
             
+            $attachments = [];
+            $ticketAttachmentsString = $ticketData->attachments;
+            $ticketAttachments = explode(',', $ticketAttachmentsString);
+            foreach ($ticketAttachments as $ticketAttachmentString) {
+                $ticketAttachment = explode('|', $ticketAttachmentString);
+                $attachments[$ticketAttachment[3]] = $ticketAttachment[0];
+            }
+            
             // now put the attachments
             $uploadFormId = $ticketData->uploadFormId;
             $dirName = $this->ticketAttachmentPath.'/'.$uploadFormId.'/';
@@ -63,7 +71,10 @@ class TicketAddHandler
                 ->in($dirName);
             foreach ($files as $file) {
                 $fileName = $file->getFilename();
-                $this->ticketAttachmentService->createTicketAttachment($dirName.$fileName, $ticketId);
+                $actualFileName = $attachments[$file->getFilename()];
+                // @TODO get this working..
+                //$file->move($dirName.$actualFileName);
+                $this->ticketAttachmentService->createTicketAttachment($dirName.$fileName, $ticketId, $actualFileName);
                 unlink($dirName.$fileName);
             }
             rmdir($dirName);

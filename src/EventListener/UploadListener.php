@@ -42,17 +42,13 @@ class UploadListener
         $request = $event->getRequest();
         $uploadFormId = $request->get('uploadFormId');
 
+        $fileName = $event->getRequest()->get('filename');
+        
         $file = $event->getFile();
         $targetFile = $event->getFile()->getPathName();
         $fileSize = $event->getFile()->getSize();
         $targetFileArr = explode('/', $targetFile);
         $uniqueUploadId = $targetFileArr[\count($targetFileArr) - 1];
-
-        // seek by $uniqueUploadId and set $uploadFormId
-//         $attachment = $this->attachmentService->getByUniqueUploadId($uniqueUploadId);
-//         $attachment->setUploadFormId($uploadFormId);
-//         $this->entityManager->persist($attachment);
-//         $this->entityManager->flush();
 
         // place the file in the uploadFormId dir
         try {
@@ -66,14 +62,14 @@ class UploadListener
         } catch (FileException $e) {
             throw error \Exception('Error moving uploaded file.');
         }
-        
-        
+
         //if everything went fine
         $response = $event->getResponse();
         $response['success'] = true;
         $response['upload_form_id'] = $uploadFormId;
         $response['unique_upload_id'] = $uniqueUploadId;
         $response['target_file'] = $targetFile;
+        $response['file_name'] = $fileName;
         $filePathName = $event->getFile()->getPathName();
         $response['target_url'] = mb_substr(
             $filePathName,
