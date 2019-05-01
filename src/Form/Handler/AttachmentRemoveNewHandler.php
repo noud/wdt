@@ -33,18 +33,8 @@ class AttachmentRemoveNewHandler
 
             // remove from filesystem
             $this->attachmentService->removeAttachment($uploadFormId, $fileName);
-            dump($fileName);
 
             return true;
-            // //            $publicAttachments = $this->ticketAttachmentService->getAllPublicTicketAttachments($ticketId);
-//             foreach ($publicAttachments as $publicAttachment) {
-//                 if ($fileName === $publicAttachment['name']) {
-//                     $attachmentId = $publicAttachment['id'];
-//                     //$this->ticketAttachmentService->removeTicketAttachment($ticketId, $attachmentId);
-
-//                     return true;
-//                 }
-//             }
         }
 
         return false;

@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class AttachmentNewTicketController extends AbstractController
 {
     /**
-     * @Route("/attachment/remove", name="attachment_new_new_remove")
+     * @Route("/ticket/attachment/remove", name="attachment_new_new_remove")
      */
     public function removeNew(
         Request $request,

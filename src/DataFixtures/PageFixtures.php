@@ -116,20 +116,6 @@ class PageFixtures extends Fixture
         $page->setMetaTitle('Je ticket commentaar is aangemaakt en wordt in behandeling genomen');
         $page->setContent('Je ticket commentaar is aangemaakt en wordt in behandeling genomen.');
         $manager->persist($page);
-
-        $page = new Page();
-        $page->setSlug('/desk/tickets/attachment/create');
-        $page->setTitle('Ticket attachment aanmaken');
-        $page->setMetaTitle('Je kunt hier ticket attachment aanmaken');
-        $page->setContent('Je kunt hier ticket attachment aanmaken.');
-        $manager->persist($page);
-
-        $page = new Page();
-        $page->setSlug('/desk/tickets/attachment/create-thanks');
-        $page->setTitle('Ticket attachment aangemaakt');
-        $page->setMetaTitle('Je ticket attachment is aangemaakt en wordt in behandeling genomen');
-        $page->setContent('Je ticket attachment is aangemaakt en wordt in behandeling genomen.');
-        $manager->persist($page);
     }
 
     public function load(ObjectManager $manager): void

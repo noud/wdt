@@ -57,7 +57,7 @@ class TicketAddHandler
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var TicketAddData $ticketData */
             $ticketData = $form->getData();
-            $ticketResponse = $this->ticketService->addTicket($ticketData);   // @TODO get the new ticket id
+            $ticketResponse = $this->ticketService->addTicket($ticketData);
             $ticketId = $ticketResponse['id'];
 
             $attachments = [];

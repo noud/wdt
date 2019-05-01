@@ -30,7 +30,7 @@ class ZohoApiService
     /**
      * @throws \Exception
      */
-    public function get(string $slug, ?int $organizationId = null, array $filters = [], array $data = null, $putFile = false, $delete = false): array
+    public function get(string $slug, ?int $organizationId = null, array $filters = [], array $data = null, bool $putFile = false, bool $delete = false): array
     {
         $this->zohoAccessTokenService->checkAccessTokenExpiryTime();
 
