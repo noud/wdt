@@ -52,7 +52,7 @@ class TicketAttachmentService
     public function createTicketAttachment(string $file, int $ticketId, string $fileName = null): array
     {
         $organisationId = $this->organizationService->getOrganizationId();
-        
+
         /** @var string $fileMime */
         $fileMime = mime_content_type($file);
         if (!$fileName) {
@@ -63,6 +63,7 @@ class TicketAttachmentService
             'isPublic' => 'true',
             'file' => new \CURLFile($file, $fileMime, $fileName),
         ];
+
         return $this->zohoApiService->get('tickets/'.$ticketId.'/attachments', $organisationId, [], $data, true);
     }
 

@@ -2,22 +2,23 @@
 
 namespace App\Form\Type;
 
-use App\Form\Data\AttachmentRemoveNewData;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AttachmentRemoveNewType extends AbstractType
+class AttachmentRemoveEditType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Symfony\Component\Form\AbstractType::buildForm()
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class)
-            ->add('id', TextType::class)
-            ->add('uploadFormId', TextType::class)
-            ->add('uniqueUploadId', TextType::class)
-        ;
+            ->add('filename', TextType::class, [])
+       ;
     }
 
     /**
@@ -25,10 +26,9 @@ class AttachmentRemoveNewType extends AbstractType
      *
      * @see \Symfony\Component\Form\AbstractType::configureOptions()
      */
-    public function configureOptions(OptionsResolver $resolver): void
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => AttachmentRemoveNewData::class,
             'csrf_protection' => false,
         ]);
     }
@@ -38,8 +38,8 @@ class AttachmentRemoveNewType extends AbstractType
      *
      * @see \Symfony\Component\Form\AbstractType::getBlockPrefix()
      */
-    public function getBlockPrefix(): ?string
+    public function getBlockPrefix()
     {
-        return 'removeAttachment';
+        return '';
     }
 }

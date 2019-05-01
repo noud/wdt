@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Repository\AttachmentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
@@ -64,31 +65,20 @@ class AttachmentService
     }
 
     /**
-     * @param string $uniqueUploadId
-     *
      * @return array|\Doctrine\DBAL\Driver\Statement|null
      */
-    public function removeAttachment($uniqueUploadId)
+    public function removeAttachment(string $uploadFormId, string $attachmentId): void
     {
-        //$attachment = $this->attachmentRepository->getByUniqueUploadId($uniqueUploadId);
-//         $attachmentId = $attachment->getId();
-//         $article = $attachment->getArticle();
-//         if ($attachment && $article) {
-//             $articleId = $article->getId();
-//             $fileSystem = new Filesystem();
-//             $fileDir = $this->attachmentsPath . DIRECTORY_SEPARATOR . $articleId;
-//             $fileSystem->remove($fileDir . DIRECTORY_SEPARATOR . $attachmentId);
-//             if (file_exists($fileDir) && count(scandir($fileDir, SCANDIR_SORT_NONE)) === 2) {
-//                 $fileSystem->remove($fileDir);
-//             }
-//             $this->entityManager->remove($attachment);
-//         } elseif ($attachment) {
         $fileSystem = new Filesystem();
-        $fileDir = $this->tmpAttachmentsPath.\DIRECTORY_SEPARATOR.$attachment->getUniqueUploadId();
+        $fileDir = $this->attachmentsPath.\DIRECTORY_SEPARATOR.$uploadFormId;
         $fileSystem->remove($fileDir.\DIRECTORY_SEPARATOR.$attachmentId);
-        $fileSystem->remove($fileDir);
-//            $this->entityManager->remove($attachment);
-//        }
-        return $attachment;
+
+        $dirName = $fileDir.\DIRECTORY_SEPARATOR;
+        $files = Finder::create()
+            ->files()
+            ->in($dirName);
+        if (0 === \count($files)) {
+            $fileSystem->remove($fileDir);
+        }
     }
 }

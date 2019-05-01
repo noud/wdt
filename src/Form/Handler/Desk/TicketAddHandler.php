@@ -21,12 +21,12 @@ class TicketAddHandler
      * @var TicketService
      */
     private $ticketService;
-    
+
     /**
      * @var TicketAttachmentService
      */
     private $ticketAttachmentService;
-    
+
     /**
      * JoinHandler constructor.
      */
@@ -54,7 +54,7 @@ class TicketAddHandler
             $ticketData = $form->getData();
             $ticketResponse = $this->ticketService->addTicket($ticketData);   // @TODO get the new ticket id
             $ticketId = $ticketResponse['id'];
-            
+
             $attachments = [];
             $ticketAttachmentsString = $ticketData->attachments;
             $ticketAttachments = explode(',', $ticketAttachmentsString);
@@ -62,7 +62,7 @@ class TicketAddHandler
                 $ticketAttachment = explode('|', $ticketAttachmentString);
                 $attachments[$ticketAttachment[3]] = $ticketAttachment[0];
             }
-            
+
             // now put the attachments
             $uploadFormId = $ticketData->uploadFormId;
             $dirName = $this->ticketAttachmentPath.'/'.$uploadFormId.'/';
@@ -78,7 +78,7 @@ class TicketAddHandler
                 unlink($dirName.$fileName);
             }
             rmdir($dirName);
-            
+
             return true;
         }
 

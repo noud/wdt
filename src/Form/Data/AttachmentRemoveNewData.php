@@ -7,5 +7,20 @@ class AttachmentRemoveNewData
     /**
      * @var string
      */
-    public $filename;
+    public $name;
+
+    /**
+     * @var int
+     */
+    public $id;
+
+    /**
+     * @var string
+     */
+    public $uploadFormId;
+
+    /**
+     * @var string
+     */
+    public $uniqueUploadId;
 }

@@ -3,24 +3,24 @@
 namespace App\Form\Handler;
 
 use App\Form\Data\AttachmentRemoveNewData;
-use App\Zoho\Service\Desk\TicketAttachmentService;
+use App\Service\AttachmentService;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class AttachmentRemoveNewHandler
 {
     /**
-     * @var TicketAttachmentService
+     * @var AttachmentService
      */
-    private $ticketAttachmentService;
+    private $attachmentService;
 
     public function __construct(
-        TicketAttachmentService $ticketAttachmentService
+        AttachmentService $attachmentService
     ) {
-        $this->ticketAttachmentService = $ticketAttachmentService;
+        $this->attachmentService = $attachmentService;
     }
 
-    public function handleRequest(FormInterface $form, Request $request, int $ticketId): bool
+    public function handleRequest(FormInterface $form, Request $request): bool
     {
         $form->handleRequest($request);
 
@@ -28,16 +28,23 @@ class AttachmentRemoveNewHandler
             /** @var AttachmentRemoveNewData $data */
             $data = $form->getData();
 
-            $fileName = $data->filename;
-            $publicAttachments = $this->ticketAttachmentService->getAllPublicTicketAttachments($ticketId);
-            foreach ($publicAttachments as $publicAttachment) {
-                if ($fileName === $publicAttachment['name']) {
-                    $attachmentId = $publicAttachment['id'];
-                    $this->ticketAttachmentService->removeTicketAttachment($ticketId, $attachmentId);
+            $uploadFormId = $data->uploadFormId;
+            $fileName = $data->uniqueUploadId;
 
-                    return true;
-                }
-            }
+            // remove from filesystem
+            $this->attachmentService->removeAttachment($uploadFormId, $fileName);
+            dump($fileName);
+
+            return true;
+            // //            $publicAttachments = $this->ticketAttachmentService->getAllPublicTicketAttachments($ticketId);
+//             foreach ($publicAttachments as $publicAttachment) {
+//                 if ($fileName === $publicAttachment['name']) {
+//                     $attachmentId = $publicAttachment['id'];
+//                     //$this->ticketAttachmentService->removeTicketAttachment($ticketId, $attachmentId);
+
+//                     return true;
+//                 }
+//             }
         }
 
         return false;

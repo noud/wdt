@@ -43,7 +43,7 @@ class UploadListener
         $uploadFormId = $request->get('uploadFormId');
 
         $fileName = $event->getRequest()->get('filename');
-        
+
         $file = $event->getFile();
         $targetFile = $event->getFile()->getPathName();
         $fileSize = $event->getFile()->getSize();
@@ -52,7 +52,7 @@ class UploadListener
 
         // place the file in the uploadFormId dir
         try {
-            $finalPath = $this->attachmentsDirectoryPart . '/' . $uploadFormId;
+            $finalPath = $this->attachmentsDirectoryPart.'/'.$uploadFormId;
             $filesystem = new Filesystem();
             $filesystem->mkdir($finalPath, 0700);
             $file->move(
@@ -73,7 +73,7 @@ class UploadListener
         $filePathName = $event->getFile()->getPathName();
         $response['target_url'] = mb_substr(
             $filePathName,
-            mb_strpos($filePathName, $this->attachmentsDirectoryPart) + \mb_strlen($this->attachmentsDirectoryPart)
+            mb_strpos($filePathName, $this->attachmentsDirectoryPart) + mb_strlen($this->attachmentsDirectoryPart)
         );
         $response['target_size'] = $fileSize;
 

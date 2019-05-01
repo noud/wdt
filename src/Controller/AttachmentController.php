@@ -79,7 +79,7 @@ class AttachmentController extends AbstractController
     /**
      * @Route("/attachment/remove/{ticketId}", name="attachment_edit_new_remove")
      */
-    public function removeNew(
+    public function removeNew2(
         Request $request,
         AttachmentRemoveNewHandler $formHandler,
         int $ticketId
@@ -89,6 +89,24 @@ class AttachmentController extends AbstractController
         $form = $this->createForm(AttachmentRemoveNewType::class, $data);
 
         if ($formHandler->handleRequest($form, $request, $ticketId)) {
+            return new Response('', 200);
+        }
+
+        return new Response('', 404);
+    }
+
+    /**
+     * @Route("/attachment/remove", name="attachment_new_new_remove")
+     */
+    public function removeNew(
+        Request $request,
+        AttachmentRemoveNewHandler $formHandler
+    ): Response {
+        $data = new AttachmentRemoveNewData();
+
+        $form = $this->createForm(AttachmentRemoveNewType::class, $data);
+
+        if ($formHandler->handleRequest($form, $request)) {
             return new Response('', 200);
         }
 
