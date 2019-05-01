@@ -4,39 +4,28 @@ namespace App\Controller;
 
 use App\Entity\Attachment;
 use App\Form\Data\AttachmentRemoveEditData;
-use App\Form\Data\AttachmentRemoveNewData;
 use App\Form\Data\PostAttachmentData;
 use App\Form\Handler\AttachmentRemoveEditHandler;
-use App\Form\Handler\AttachmentRemoveNewHandler;
 use App\Form\Handler\PostAttachmentHandler;
 use App\Form\Type\AttachmentRemoveEditType;
-use App\Form\Type\AttachmentRemoveNewType;
 use App\Form\Type\PostAttachmentType;
 use App\Zoho\Service\Desk\TicketAttachmentService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class AttachmentController extends AbstractController
+class AttachmentEditTicketController extends AbstractController
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
     /**
      * @var TicketAttachmentService
      */
     private $ticketAttachmentService;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
         TicketAttachmentService $ticketAttachmentService
     ) {
-        $this->entityManager = $entityManager;
         $this->ticketAttachmentService = $ticketAttachmentService;
     }
 
@@ -90,24 +79,6 @@ class AttachmentController extends AbstractController
         $form = $this->createForm(AttachmentRemoveEditType::class, $data);
 
         if ($formHandler->handleRequest($form, $request, $ticketId)) {
-            return new Response('', 200);
-        }
-
-        return new Response('', 404);
-    }
-
-    /**
-     * @Route("/attachment/remove", name="attachment_new_new_remove")
-     */
-    public function removeNew(
-        Request $request,
-        AttachmentRemoveNewHandler $formHandler
-    ): Response {
-        $data = new AttachmentRemoveNewData();
-
-        $form = $this->createForm(AttachmentRemoveNewType::class, $data);
-
-        if ($formHandler->handleRequest($form, $request)) {
             return new Response('', 200);
         }
 

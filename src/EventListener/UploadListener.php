@@ -6,6 +6,7 @@ use App\Service\AttachmentService;
 use Doctrine\ORM\EntityManagerInterface;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class UploadListener
 {
@@ -60,7 +61,7 @@ class UploadListener
                 $uniqueUploadId
             );
         } catch (FileException $e) {
-            throw error \Exception('Error moving uploaded file.');
+            throw new \Exception('Error moving uploaded file.');
         }
 
         //if everything went fine

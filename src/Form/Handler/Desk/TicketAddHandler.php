@@ -28,6 +28,11 @@ class TicketAddHandler
     private $ticketAttachmentService;
 
     /**
+     * @var string
+     */
+    private $ticketAttachmentPath;
+
+    /**
      * JoinHandler constructor.
      */
     public function __construct(
@@ -72,8 +77,6 @@ class TicketAddHandler
             foreach ($files as $file) {
                 $fileName = $file->getFilename();
                 $actualFileName = $attachments[$file->getFilename()];
-                // @TODO get this working..
-                //$file->move($dirName.$actualFileName);
                 $this->ticketAttachmentService->createTicketAttachment($dirName.$fileName, $ticketId, $actualFileName);
                 unlink($dirName.$fileName);
             }

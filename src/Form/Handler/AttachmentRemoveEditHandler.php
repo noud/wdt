@@ -2,7 +2,7 @@
 
 namespace App\Form\Handler;
 
-use App\Form\Data\AttachmentRemoveNewData;
+use App\Form\Data\AttachmentRemoveEditData;
 use App\Zoho\Service\Desk\TicketAttachmentService;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +25,7 @@ class AttachmentRemoveEditHandler
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var AttachmentRemoveNewData $data */
+            /** @var AttachmentRemoveEditData $data */
             $data = $form->getData();
 
             $fileName = $data->filename;

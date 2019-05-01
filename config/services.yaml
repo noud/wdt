@@ -106,14 +106,10 @@ services:
             - '%ticket_attachments_dir%'
         tags:
             - { name: kernel.event_listener, event: oneup_uploader.post_persist, method: onUpload }
-
-    App\Uploader\Naming\UploadNamer:
-        public: true
  
     App\Service\AttachmentService:
         arguments:
             - '%ticket_attachments_dir%'
-            - "%ticket_tmpupload_dir%"
             
     App\Form\Handler\Desk\TicketAddHandler:
         arguments:

@@ -10,6 +10,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AttachmentRemoveNewType extends AbstractType
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Symfony\Component\Form\AbstractType::buildForm()
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
