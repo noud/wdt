@@ -13,7 +13,7 @@ class TicketStatusEnum extends AbstractEnum
     const WAIT_ON_FEEDBACK = 'Wacht op feedback klant';
     const ESTIMATED = 'Ingeschat';
     const SIGNED_OFF_LIVE = 'Afgemeld - staat live';
-    const SIGNED_OFF_CANCELED = 'signed_off_canceled';
+    const SIGNED_OFF_CANCELED = 'Afgemeld - geannuleerd';
     const SIGNED_OFF_PROCESSED = 'Afgemeld - administratief verwerkt';
 
     /**

@@ -37,16 +37,20 @@ class TicketAttachmentService
     public function getAllPublicTicketAttachments(int $ticketId): array
     {
         $ticketAttachments = $this->getAllTicketAttachments($ticketId);
-        $filterBy = true;
-        $publicTicketAttachments = array_filter($ticketAttachments['data'], function ($var) use ($filterBy) {
-            return $var['isPublic'] === $filterBy;
-        });
+        if (isset($ticketAttachments['data'])) {
+            $filterBy = true;
+            $publicTicketAttachments = array_filter($ticketAttachments['data'], function ($var) use ($filterBy) {
+                return $var['isPublic'] === $filterBy;
+            });
 
-        usort($publicTicketAttachments, function ($a, $b) {
-            return ($a['createdTime'] > $b['createdTime']) ? -1 : 1;
-        });
+            usort($publicTicketAttachments, function ($a, $b) {
+                return ($a['createdTime'] > $b['createdTime']) ? -1 : 1;
+            });
 
-        return $publicTicketAttachments;
+            return $publicTicketAttachments;
+        }
+
+        return [];
     }
 
     public function createTicketAttachment(string $file, int $ticketId, string $fileName = null): array
