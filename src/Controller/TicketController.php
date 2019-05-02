@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use App\Form\Data\Desk\TicketAddData;
-use App\Form\Handler\Desk\TicketAddHandler;
-use App\Form\Type\Desk\TicketAddType;
+use App\Form\Data\Desk\TicketStatusData;
+use App\Form\Handler\Desk\TicketStatusHandler;
+use App\Form\Type\Desk\TicketStatusType;
 use App\Service\PageService;
 use App\Zoho\Service\Desk\ResolutionHistoryService;
 use App\Zoho\Service\Desk\TicketAttachmentService;
@@ -67,46 +67,24 @@ class TicketController extends AbstractController
     /**
      * @Route("/ticket/overview", name="ticket_overview")
      */
-    public function overview(Request $request): Response
+    public function overviewWithStatus(TicketStatusHandler $ticketStatusHandler, Request $request): Response
     {
         $user = $this->getUser();
         /** @var string $email */
         $email = $user->getEmail();
-        $tickets = $this->ticketService->getTickets($email);
 
-        return $this->render('ticket/overview.html.twig', [
-            'tickets' => $tickets,
-            'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
-        ]);
-    }
+        $data = new TicketStatusData();
+        $form = $this->createForm(TicketStatusType::class, $data);
 
-    /**
-     * @Route("/ticket/create", name="ticket_create")
-     */
-    public function createTicket(TicketAddHandler $ticketAddHandler, Request $request): Response
-    {
-        $user = $this->getUser();
-        $data = new TicketAddData($user);
-        $form = $this->createForm(TicketAddType::class, $data);
-
-        if ($ticketAddHandler->handleRequest($form, $request)) {
-            $this->addFlash('success', 'ticket.message.added');
-
-            return $this->redirectToRoute('ticket_create_thanks');
+        if ($status = $ticketStatusHandler->handleRequest($form, $request)) {
+            $tickets = $this->ticketService->searchTickets($email, $status);
+        } else {
+            $tickets = $this->ticketService->getTickets($email);
         }
 
-        return $this->render('ticket/create.html.twig', [
+        return $this->render('ticket/overview.html.twig', [
             'form' => $form->createView(),
-            'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
-        ]);
-    }
-
-    /**
-     * @Route("/ticket/create-thanks", name="ticket_create_thanks")
-     */
-    public function addThanks(Request $request): Response
-    {
-        return $this->render('ticket/thanks.html.twig', [
+            'tickets' => $tickets,
             'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
         ]);
     }

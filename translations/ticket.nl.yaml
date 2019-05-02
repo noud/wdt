@@ -15,6 +15,7 @@ ticket:
     submit: 'Ticket registreren'
   placeholder:
     priority: '-Geen-'
+    status: '-Alle-'
   message:
     added: 'Ticket is toegevoegd.'
 ticket_comment:
@@ -32,7 +33,7 @@ enum:
     low: 'Laag'
   ticket_status:
     open: 'Open'
-    staging: 'Staging /acceptatie'
+    staging: 'Staging / acceptatie'
     code_review: 'Code review'
     in_progress: 'In behandeling'
     escalated: 'Escalated'

@@ -4,18 +4,18 @@ namespace App\Zoho\Enum;
 
 class TicketStatusEnum extends AbstractEnum
 {
-    const OPEN = 'open';
-    const STAGING = 'staging';
-    const CODE_REVIEW = 'code_review';
-    const IN_PROGRESS = 'in_progress';
-    const ESCALATED = 'escalated';
-    const READY_FOR_LIVE = 'ready_for_live';
-    const WAIT_ON_FEEDBACK = 'wait_on_feedback';
-    const ESTIMATED = 'estimated';
-    const SIGNED_OFF_LIVE = 'signed_off_live';
+    const OPEN = 'Open';
+    const STAGING = 'Staging / acceptatie';
+    const CODE_REVIEW = 'Code review';
+    const IN_PROGRESS = 'In behandeling';
+    const ESCALATED = 'Escalated';
+    const READY_FOR_LIVE = 'Klaar voor live';
+    const WAIT_ON_FEEDBACK = 'Wacht op feedback klant';
+    const ESTIMATED = 'Ingeschat';
+    const SIGNED_OFF_LIVE = 'Afgemeld - staat live';
     const SIGNED_OFF_CANCELED = 'signed_off_canceled';
-    const SIGNED_OFF_PROCESSED = 'signed_off_processed';
-    
+    const SIGNED_OFF_PROCESSED = 'Afgemeld - administratief verwerkt';
+
     /**
      * @return string[]
      */
