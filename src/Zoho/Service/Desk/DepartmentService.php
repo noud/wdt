@@ -31,10 +31,26 @@ class DepartmentService
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('departments', $organisationId, [
-            'isEnabled' => 'true',
-            'chatStatus' => 'AVAILABLE',
-        ]);
+        $from = 0;
+        $limit = 200;
+        $totalResult = [];
+
+        while (true) {
+            $result = $this->zohoApiService->get('departments', $organisationId, [
+                'isEnabled' => 'true',
+                'chatStatus' => 'AVAILABLE',
+                'from' => $from,
+                'limit' => $limit,
+            ]);
+            if (isset($result['data']) && \count($result['data'])) {
+                $totalResult = array_merge($totalResult, $result['data']);
+                $from += $limit;
+            } else {
+                break;
+            }
+        }
+
+        return $totalResult;
     }
 
     public function getDepartmentId(): int

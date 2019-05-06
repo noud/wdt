@@ -7,6 +7,7 @@ use App\Zoho\Service\Desk\AccountService;
 use App\Zoho\Service\Desk\ContactService;
 use App\Zoho\Service\Desk\DepartmentService;
 use App\Zoho\Service\Desk\OrganizationService;
+use App\Zoho\Service\Desk\TicketResolutionHistoryService;
 use App\Zoho\Service\Desk\TicketService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,6 +41,11 @@ class ZohoDeskController extends AbstractController
     private $ticketService;
 
     /**
+     * @var TicketResolutionHistoryService
+     */
+    private $ticketResolutionHistoryService;
+
+    /**
      * @var PageService
      */
     private $pageService;
@@ -50,6 +56,7 @@ class ZohoDeskController extends AbstractController
         ContactService $contactService,
         AccountService $accountService,
         TicketService $ticketService,
+        TicketResolutionHistoryService $ticketResolutionHistoryService,
         PageService $pageService
     ) {
         $this->organizationService = $organizationService;
@@ -57,6 +64,7 @@ class ZohoDeskController extends AbstractController
         $this->contactService = $contactService;
         $this->accountService = $accountService;
         $this->ticketService = $ticketService;
+        $this->ticketResolutionHistoryService = $ticketResolutionHistoryService;
         $this->pageService = $pageService;
     }
 
@@ -83,7 +91,7 @@ class ZohoDeskController extends AbstractController
     {
         $result = $this->departmentService->getAllDepartments();
         $ticketsInfo = '';
-        foreach ($result['data'] as $department) {
+        foreach ($result as $department) {
             $ticketsInfo .= $department['id'].' '.$department['name'].'<br />';
         }
 
@@ -99,7 +107,7 @@ class ZohoDeskController extends AbstractController
     {
         $result = $this->contactService->getAllContacts();
         $contactsInfo = '';
-        foreach ($result['data'] as $contact) {
+        foreach ($result as $contact) {
             $contactsInfo .= $contact['id'].' '.$contact['email'].'<br />';
         }
 
@@ -115,7 +123,7 @@ class ZohoDeskController extends AbstractController
     {
         $result = $this->accountService->getAllAccounts();
         $accountsInfo = '';
-        foreach ($result['data'] as $account) {
+        foreach ($result as $account) {
             $accountsInfo .= $account['id'].' '.$account['accountName'].' '.$account['email'].'<br />';
         }
 
@@ -131,7 +139,7 @@ class ZohoDeskController extends AbstractController
     {
         $result = $this->accountService->getAllAccountContacts($accountId);
         $accountContactsInfo = '';
-        foreach ($result['data'] as $accountContact) {
+        foreach ($result as $accountContact) {
             $accountContactsInfo .= $accountContact['id'].' '.$accountContact['lastName'].' '.$accountContact['email'].'<br />';
         }
 
@@ -147,12 +155,28 @@ class ZohoDeskController extends AbstractController
     {
         $result = $this->ticketService->getAllTickets();
         $ticketsInfo = '';
-        foreach ($result['data'] as $ticket) {
-            $ticketsInfo .= $ticket['ticketNumber'].' '.$ticket['subject'].'<br />';
+        foreach ($result as $ticket) {
+            $ticketsInfo .= $ticket['id'].' '.$ticket['ticketNumber'].' '.$ticket['subject'].'<br />';
         }
 
         return new Response(
             '<html><body>Tickets: <br />'.$ticketsInfo.'</body></html>'
             );
+    }
+
+    /**
+     * @Route("/desk/tickets/resolution-history/{ticketId}", name="zoho_desk_ticket_resolution_history")
+     */
+    public function getDeskTicketResolutionHistory(int $ticketId): Response
+    {
+        $result = $this->ticketResolutionHistoryService->getAllTicketResolutionHistory($ticketId);
+        $ticketResolutionHistories = '';
+        foreach ($result as $ticketResolutionHistory) {
+            $ticketResolutionHistories .= $ticketResolutionHistory['content'].'<br />';
+        }
+
+        return new Response(
+            '<html><body>Resolution history: <br />'.$ticketResolutionHistories.'</body></html>'
+        );
     }
 }

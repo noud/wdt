@@ -33,26 +33,33 @@ class TicketCommentService
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('tickets/'.$ticketId.'/comments', $organisationId);
-    }
+        $from = 0;
+        $limit = 200000;
+        $totalResult = [];
 
-    private function sortTicketCommentsByDate(array $ticketComments): array
-    {
-        usort($ticketComments, function ($a, $b) {
-            return $b['commentedTime'] <=> $a['commentedTime'];
-        });
+        while (true) {
+            $result = $this->zohoApiService->get('tickets/'.$ticketId.'/comments', $organisationId, [
+                'from' => $from,
+                'limit' => $limit,
+                'sortBy' => '-commentedTime',
+            ]);
+            if (isset($result['data']) && \count($result['data'])) {
+                $totalResult = array_merge($totalResult, $result['data']);
+                $from += $limit;
+            } else {
+                break;
+            }
+        }
 
-        return $ticketComments;
+        return $totalResult;
     }
 
     public function getAllPublicTicketComments(int $ticketId): array
     {
         $ticketComments = $this->getAllTicketComments($ticketId);
-        $publicTicketComments = array_filter($ticketComments['data'], function ($comment) {
+        $publicTicketComments = array_filter($ticketComments, function ($comment) {
             return $comment['isPublic'];
         });
-
-        $publicTicketComments = $this->sortTicketCommentsByDate($publicTicketComments);
 
         return $publicTicketComments;
     }

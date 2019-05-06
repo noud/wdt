@@ -4,7 +4,7 @@ namespace App\Zoho\Service\Desk;
 
 use App\Zoho\Api\ZohoApiService;
 
-class ContactService
+class TicketResolutionHistoryService
 {
     /**
      * @var ZohoApiService
@@ -27,17 +27,16 @@ class ContactService
         $this->organizationService = $organizationService;
     }
 
-    public function getAllContacts(): array
+    public function getAllTicketResolutionHistory(int $ticketId)
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
         $from = 0;
-        $limit = 20;
+        $limit = 99;
         $totalResult = [];
 
         while (true) {
-            $result = $this->zohoApiService->get('contacts', $organisationId, [
-                'include' => 'accounts',
+            $result = $this->zohoApiService->get('tickets/'.$ticketId.'/resolutionHistory', $organisationId, [
                 'from' => $from,
                 'limit' => $limit,
             ]);

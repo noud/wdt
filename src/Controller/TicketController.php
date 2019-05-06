@@ -6,9 +6,9 @@ use App\Form\Data\Desk\TicketStatusData;
 use App\Form\Handler\Desk\TicketStatusHandler;
 use App\Form\Type\Desk\TicketStatusType;
 use App\Service\PageService;
-use App\Zoho\Service\Desk\ResolutionHistoryService;
 use App\Zoho\Service\Desk\TicketAttachmentService;
 use App\Zoho\Service\Desk\TicketCommentService;
+use App\Zoho\Service\Desk\TicketResolutionHistoryService;
 use App\Zoho\Service\Desk\TicketService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,9 +24,9 @@ class TicketController extends AbstractController
     private $ticketService;
 
     /**
-     * @var ResolutionHistoryService
+     * @var TicketResolutionHistoryService
      */
-    private $resolutionHistoryService;
+    private $ticketResolutionHistoryService;
 
     /**
      * @var TicketCommentService
@@ -50,14 +50,14 @@ class TicketController extends AbstractController
 
     public function __construct(
         TicketService $ticketService,
-        ResolutionHistoryService $resolutionHistoryService,
+        TicketResolutionHistoryService $ticketResolutionHistoryService,
         TicketCommentService $ticketCommentService,
         TicketAttachmentService $ticketAttachmentService,
         PageService $pageService,
         TranslatorInterface $translator
     ) {
         $this->ticketService = $ticketService;
-        $this->resolutionHistoryService = $resolutionHistoryService;
+        $this->ticketResolutionHistoryService = $ticketResolutionHistoryService;
         $this->ticketCommentService = $ticketCommentService;
         $this->ticketAttachmentService = $ticketAttachmentService;
         $this->pageService = $pageService;
@@ -97,7 +97,7 @@ class TicketController extends AbstractController
     public function view(int $id): Response
     {
         $ticket = $this->ticketService->getTicket($id);
-        $resolutionHistory = $this->resolutionHistoryService->getAllResolutionHistory($id);
+        $resolutionHistory = $this->ticketResolutionHistoryService->getAllTicketResolutionHistory($id);
         $ticketComments = $this->ticketCommentService->getAllPublicTicketComments($id);
         $ticketAttachments = $this->ticketAttachmentService->getAllPublicTicketAttachments($id);
 

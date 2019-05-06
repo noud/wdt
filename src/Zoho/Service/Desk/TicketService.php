@@ -49,26 +49,26 @@ class TicketService
         $organisationId = $this->organizationService->getOrganizationId();
 
         $from = 0;
+        $limit = 100;
         $totalResult = [];
 
         while (true) {
             $result = $this->zohoApiService->get('tickets/search', $organisationId, [
                 'from' => $from,
-                'limit' => '100',
+                'limit' => $limit,
                 'accountId' => $accountId,
                 'status' => $status,
+                'sortBy' => '-createdTime',
             ]);
             if (isset($result['data']) && \count($result['data'])) {
                 $totalResult = array_merge($totalResult, $result['data']);
-                $from += 100;
+                $from += $limit;
             } else {
                 break;
             }
         }
 
-        $resultSorted = $this->sortTicketsByNumber($totalResult);
-
-        return $this->copyTickets($resultSorted);
+        return $this->copyTickets($totalResult);
     }
 
     private function copyTickets(array $ticketsData): array
@@ -90,18 +90,26 @@ class TicketService
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('tickets', $organisationId, [
-            'include' => 'contacts,assignee,departments,team,isRead',
-        ]);
-    }
+        $from = 0;
+        $limit = 99;
+        $totalResult = [];
 
-    private function sortTicketsByNumber(array $tickets): array
-    {
-        usort($tickets, function ($a, $b) {
-            return $b['ticketNumber'] <=> $a['ticketNumber'];
-        });
+        while (true) {
+            $result = $this->zohoApiService->get('tickets', $organisationId, [
+                'from' => $from,
+                'limit' => $limit,
+                'include' => 'contacts,assignee,departments,team,isRead',
+                'sortBy' => '-createdTime',
+            ]);
+            if (isset($result['data']) && \count($result['data'])) {
+                $totalResult = array_merge($totalResult, $result['data']);
+                $from += $limit;
+            } else {
+                break;
+            }
+        }
 
-        return $tickets;
+        return $totalResult;
     }
 
     /**
@@ -113,25 +121,25 @@ class TicketService
         $organisationId = $this->organizationService->getOrganizationId();
 
         $from = 0;
+        $limit = 100;
         $totalResult = [];
 
         while (true) {
             $result = $this->zohoApiService->get('accounts/'.$accountId.'/tickets', $organisationId, [
                 'include' => 'products,assignee,departments,team,isRead',
                 'from' => $from,
-                'limit' => '100',
+                'limit' => $limit,
+                'sortBy' => '-createdTime',
             ]);
             if (isset($result['data']) && \count($result['data'])) {
                 $totalResult = array_merge($totalResult, $result['data']);
-                $from += 100;
+                $from += $limit;
             } else {
                 break;
             }
         }
 
-        $resultSorted = $this->sortTicketsByNumber($totalResult);
-
-        return $this->copyTickets($resultSorted);
+        return $this->copyTickets($totalResult);
     }
 
     public function getTicket(int $ticketId): array
