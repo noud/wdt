@@ -41,9 +41,10 @@ class PostAttachmentHandler
             if (!is_dir($dirName)) {
                 mkdir($dirName, 0777, true);
             }
-            if (move_uploaded_file($binary, $dirName.$fileName)) {
-                $this->ticketAttachmentService->createTicketAttachment($dirName.$fileName, $id);
-                unlink($dirName.$fileName);
+            $fullName = $dirName.$fileName;
+            if (move_uploaded_file($binary, $fullName)) {
+                $this->ticketAttachmentService->createTicketAttachment($fullName, $id);
+                unlink($fullName);
                 rmdir($dirName);
 
                 return true;
