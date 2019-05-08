@@ -68,6 +68,8 @@ class AttachmentEditTicketController extends AbstractController
 
     /**
      * @Route("/ticket/attachment/remove/{ticketId}", name="attachment_edit_new_remove")
+     *
+     * @throws HttpNotFoundException
      */
     public function removeNew(
         Request $request,
@@ -81,7 +83,6 @@ class AttachmentEditTicketController extends AbstractController
         if ($formHandler->handleRequest($form, $request, $ticketId)) {
             return new Response('', 200);
         }
-
-        return new Response('', 404);
+        throw new HttpNotFoundException('Upload bestaat niet.');
     }
 }
