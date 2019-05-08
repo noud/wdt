@@ -5,9 +5,6 @@ namespace App\Service;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
-/**
- * Class AttachmentService.
- */
 class AttachmentService
 {
     /**
