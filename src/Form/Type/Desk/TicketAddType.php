@@ -45,8 +45,8 @@ class TicketAddType extends AbstractType
                 'choices' => TicketPriorityEnum::getChoices(),
                 'placeholder' => 'ticket.placeholder.priority',
             ])
-            ->add('attachments', HiddenType::class, [])
-            ->add('uploadFormId', HiddenType::class, [])
+            ->add('attachments', HiddenType::class)
+            ->add('uploadFormId', HiddenType::class)
         ;
     }
 

@@ -17,7 +17,7 @@ class AttachmentRemoveEditType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('filename', TextType::class, [])
+            ->add('filename', TextType::class)
        ;
     }
 
