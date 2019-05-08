@@ -7,10 +7,10 @@ import Dropzone from 'dropzone';
 Dropzone.autoDiscover = false;
 
 $(document).ready(function() {
-    let urlPost = document.getElementById('urls').getAttribute('data-attachment-post');
-    let urlRemove = document.getElementById('urls').getAttribute('data-attachment-remove');
+    const urlPost = document.getElementById('urls').getAttribute('data-attachment-post');
+    const urlRemove = document.getElementById('urls').getAttribute('data-attachment-remove');
     
-	var frm = $('#quotation');
+	const frm = $('#quotation');
 	
 	frm.submit(function (e) {
 	    e.preventDefault();
@@ -21,7 +21,7 @@ $(document).ready(function() {
 	        data: frm.serialize(),
 	    });
 	});
-	var myDropzone = new Dropzone(
+	const myDropzone = new Dropzone(
 		"div#ticket-dropzone",
 		{
 			url: urlPost,
