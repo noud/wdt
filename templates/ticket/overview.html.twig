@@ -21,18 +21,15 @@
                                             {{ form_start(form, {'attr': {'autocomplete' : 'off', 'id' : 'ticket_status'}}) }}
                                                {{ form_row(form.status) }}                                    
                                             {{ form_end(form) }}
-                                        </div>
-                                    <span class="clearfix"></span>
-                                        <div class="row">
-                                            <div class="col-sm-2">
-                                                <b>{{ 'ticket.field.nr'|trans }}</b>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <b>{{ 'ticket.field.subject'|trans }}</b>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <b>{{ 'ticket.field.status'|trans }}</b>
-                                            </div>
+                                        	<div class="col-sm-2">
+                                        	    <strong>{{ 'ticket.field.nr'|trans }}</strong>
+                                        	</div>
+                                        	<div class="col-sm-6">
+                                        	    <strong>{{ 'ticket.field.subject'|trans }}</strong>
+                                        	</div>
+                                        	<div class="col-sm-4">
+                                        	    <strong>{{ 'ticket.field.status'|trans }}</strong>
+                                        	</div>
                                         </div>
                                         {% for ticket in tickets %}
                                             <div class="row">

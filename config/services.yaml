@@ -104,8 +104,6 @@ services:
     App\EventListener\UploadListener:
         arguments:
             - '%ticket_attachments_dir%'
-        tags:
-            - { name: kernel.event_listener, event: oneup_uploader.post_persist, method: onUpload }
  
     App\Service\AttachmentService:
         arguments:
