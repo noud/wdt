@@ -70,7 +70,7 @@
                                                         <div class="row">
                                                             <div class="col-sm-6">
                                                                 <strong><a href="{{ ticketAttachment.href }}?portalname=webdesigntilburg&inline=true" target="_blank">{{ ticketAttachment.name }}</a></strong> 
-                                                                <form action="{{ path('attachment_edit_remove', {ticketId: ticket.id, attachmentId: ticketAttachment.id }) }}" onsubmit="return window.confirm('Weet u zeker dat u {{ ticketAttachment.name|e('html_attr') }} wilt verwijderen?');" method="post">
+                                                                <form action="{{ path('ticket_attachment_edit_remove', {ticketId: ticket.id, attachmentId: ticketAttachment.id }) }}" onsubmit="return window.confirm('Weet u zeker dat u {{ ticketAttachment.name|e('html_attr') }} wilt verwijderen?');" method="post">
                                                                     <input type="hidden" name="_method" value="DELETE" />
                                                                     <input type="hidden" name="token" value="{{ csrf_token('ticket-attachment-delete') }}" />
                                                                     <button type="submit" class="delete-link" class="btn btn-sm btn-primary btn-icon rounded-pill">verwijder</button>

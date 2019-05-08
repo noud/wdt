@@ -53,7 +53,7 @@ class AttachmentEditTicketController extends AbstractController
     }
 
     /**
-     * @Route("/ticket/attachment/remove/{ticketId}/{attachmentId}", methods={"DELETE"}, name="attachment_edit_remove")
+     * @Route("/ticket/attachment/remove/{ticketId}/{attachmentId}", methods={"DELETE"}, name="ticket_attachment_edit_remove")
      */
     public function remove(Request $request, int $ticketId, int $attachmentId): Response
     {
