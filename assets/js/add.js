@@ -9,7 +9,7 @@ let attachmentRemove =  $("#attachment_remove").data('attachment_remove');
 Dropzone.autoDiscover = false;
 
 const maxUploadFiles = 30;
-const maxFileSize = 1024 * 1024 * 20; // not more than 20mb
+const maxUploadFileSize = 1024 * 1024 * 20; // not more than 20mb
 
 const myDropzone = new Dropzone("#my-dropzone", {
     url: endpoint + "?uploadFormId=" + uploadFormId,
@@ -19,7 +19,7 @@ const myDropzone = new Dropzone("#my-dropzone", {
     dictCancelUploadConfirmation: 'Weet u zeker dat u deze bijlage wilt verwijderen?',
 });
 myDropzone.on("addedfile", function(file) {
-    if(file.size > maxFileSize)
+    if(file.size > maxUploadFileSize)
     {
         this.removeFile(file); // if you want to remove the file or you can add alert or presentation of a message
     }
