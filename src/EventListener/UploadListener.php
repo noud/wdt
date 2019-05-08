@@ -66,17 +66,19 @@ class UploadListener
 
         //if everything went fine
         $response = $event->getResponse();
-        $response['success'] = true;
-        $response['upload_form_id'] = $uploadFormId;
-        $response['unique_upload_id'] = $uniqueUploadId;
-        $response['target_file'] = $targetFile;
-        $response['file_name'] = $fileName;
-        $filePathName = $event->getFile()->getPathName();
+        $response[] = [
+            'success' => true,
+            'upload_form_id' => $uploadFormId,
+            'unique_upload_id' => $uniqueUploadId,
+            'target_file' => $targetFile,
+            'target_size' => $fileSize,
+            'file_name' => $fileName,
+        ];
+        $filePathName = $file->getPathName();
         $response['target_url'] = mb_substr(
             $filePathName,
             mb_strpos($filePathName, $this->attachmentsDirectoryPart) + mb_strlen($this->attachmentsDirectoryPart)
         );
-        $response['target_size'] = $fileSize;
 
         return $response;
     }
