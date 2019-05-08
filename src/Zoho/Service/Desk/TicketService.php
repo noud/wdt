@@ -54,7 +54,7 @@ class TicketService
         while (true) {
             $result = $this->zohoApiService->get('tickets/search', $organisationId, [
                 'from' => $from,
-                'limit' => '100',
+                'limit' => 100,
                 'accountId' => $accountId,
                 'status' => $status,
             ]);
@@ -119,7 +119,7 @@ class TicketService
             $result = $this->zohoApiService->get('accounts/'.$accountId.'/tickets', $organisationId, [
                 'include' => 'products,assignee,departments,team,isRead',
                 'from' => $from,
-                'limit' => '100',
+                'limit' => 100,
             ]);
             if (isset($result['data']) && \count($result['data'])) {
                 $totalResult = array_merge($totalResult, $result['data']);
