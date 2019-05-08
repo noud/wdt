@@ -38,7 +38,9 @@ class AttachmentService
     {
         $fileSystem = new Filesystem();
         $fileDir = $this->attachmentsPath.\DIRECTORY_SEPARATOR.$uploadFormId.\DIRECTORY_SEPARATOR;
-        $fileSystem->remove($fileDir.$attachmentId);
+        if (file_exists($fileDir.$attachmentId)) {
+            $fileSystem->remove($fileDir.$attachmentId);
+        }
         $this->removeDirectoryIfEmpty($fileDir);
     }
 }
