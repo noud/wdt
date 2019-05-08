@@ -40,7 +40,7 @@ class AttachmentEditTicketController extends AbstractController
     /**
      * @Route("/ticket/attachment/post/{id}", methods={"POST"}, name="ticket_attachment_edit_post")
      */
-    public function post(
+    public function edit(
         Request $request,
         PostAttachmentHandler $formHandler,
         int $id
