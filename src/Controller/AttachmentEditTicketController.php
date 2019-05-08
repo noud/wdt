@@ -38,7 +38,7 @@ class AttachmentEditTicketController extends AbstractController
     }
 
     /**
-     * @Route("/ticket/attachment/post/{id}", methods={"POST"}, name="attachment_edit_post")
+     * @Route("/ticket/attachment/post/{id}", methods={"POST"}, name="ticket_attachment_edit_post")
      */
     public function post(
         Request $request,
@@ -52,11 +52,10 @@ class AttachmentEditTicketController extends AbstractController
             return new Response('', 201);
         }
 
-        return new JsonResponse(
+        return $this->json(
             [
                 'error' => $this->translator->trans('attachment.message.file_type', [], 'attachment'),
-            ],
-            Response::HTTP_BAD_REQUEST
+            ]
         );
     }
 
