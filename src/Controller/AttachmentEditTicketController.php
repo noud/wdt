@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AttachmentEditTicketController extends AbstractController
 {
@@ -22,11 +23,18 @@ class AttachmentEditTicketController extends AbstractController
      * @var TicketAttachmentService
      */
     private $ticketAttachmentService;
-
+    
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+    
     public function __construct(
-        TicketAttachmentService $ticketAttachmentService
+        TicketAttachmentService $ticketAttachmentService,
+        TranslatorInterface $translator
     ) {
         $this->ticketAttachmentService = $ticketAttachmentService;
+        $this->translator = $translator;
     }
 
     /**
@@ -46,7 +54,7 @@ class AttachmentEditTicketController extends AbstractController
 
         return new JsonResponse(
             [
-                'error' => 'Upload is waarschijnlijk het verkeerde bestandstype.',
+                'error' => $this->translator->trans('attachment.message.file_type', [], 'attachment'),
             ],
             Response::HTTP_BAD_REQUEST
         );
@@ -83,6 +91,6 @@ class AttachmentEditTicketController extends AbstractController
         if ($formHandler->handleRequest($form, $request, $ticketId)) {
             return new Response('', 200);
         }
-        throw new HttpNotFoundException('Upload bestaat niet.');
+        throw new HttpNotFoundException($this->translator->trans('attachment.message.file_not_exist', [], 'attachment'));
     }
 }
