@@ -45,9 +45,7 @@ class AttachmentEditTicketController extends AbstractController
         PostAttachmentHandler $formHandler,
         int $id
     ): Response {
-        $data = new PostAttachmentData();
-
-        $form = $this->createForm(PostAttachmentType::class, $data);
+        $form = $this->createForm(PostAttachmentType::class);
         if ($formHandler->handleRequest($form, $request, $id)) {
             return new Response('', 201);
         }

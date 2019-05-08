@@ -20,9 +20,7 @@ class AttachmentNewTicketController extends AbstractController
         Request $request,
         AttachmentRemoveNewHandler $formHandler
     ): Response {
-        $data = new AttachmentRemoveNewData();
-
-        $form = $this->createForm(AttachmentRemoveNewType::class, $data);
+        $form = $this->createForm(AttachmentRemoveNewType::class);
 
         if ($formHandler->handleRequest($form, $request)) {
             return new Response('', 200);
