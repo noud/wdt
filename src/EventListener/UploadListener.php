@@ -5,10 +5,11 @@ namespace App\EventListener;
 use App\Service\AttachmentService;
 use Doctrine\ORM\EntityManagerInterface;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
-class UploadListener
+class UploadListener implements EventSubscriberInterface
 {
     /**
      * @var EntityManagerInterface
@@ -33,6 +34,16 @@ class UploadListener
         $this->attachmentsDirectoryPart = $attachmentsDirectoryPart;
         $this->entityManager = $defaultEntityManager;
         $this->attachmentService = $attachmentService;
+    }
+
+    /**
+     * @return string[]
+     */
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            'oneup_uploader.post_persist' => 'onUpload',
+        ];
     }
 
     /**
