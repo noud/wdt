@@ -4,16 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Attachment;
 use App\Form\Data\AttachmentRemoveEditData;
-use App\Form\Data\PostAttachmentData;
 use App\Form\Handler\AttachmentRemoveEditHandler;
 use App\Form\Handler\PostAttachmentHandler;
 use App\Form\Type\AttachmentRemoveEditType;
 use App\Form\Type\PostAttachmentType;
 use App\Zoho\Service\Desk\TicketAttachmentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -23,12 +22,12 @@ class TicketAttachmentEditController extends AbstractController
      * @var TicketAttachmentService
      */
     private $ticketAttachmentService;
-    
+
     /**
      * @var TranslatorInterface
      */
     private $translator;
-    
+
     public function __construct(
         TicketAttachmentService $ticketAttachmentService,
         TranslatorInterface $translator
@@ -74,8 +73,6 @@ class TicketAttachmentEditController extends AbstractController
 
     /**
      * @Route("/ticket/attachment/remove/{ticketId}", name="attachment_edit_new_remove")
-     *
-     * @throws HttpNotFoundException
      */
     public function removeNew(
         Request $request,
@@ -89,6 +86,6 @@ class TicketAttachmentEditController extends AbstractController
         if ($formHandler->handleRequest($form, $request, $ticketId)) {
             return new Response('', 200);
         }
-        throw new HttpNotFoundException($this->translator->trans('attachment.message.file_not_exist', [], 'attachment'));
+        throw new NotFoundHttpException($this->translator->trans('attachment.message.file_not_exist', [], 'attachment'));
     }
 }

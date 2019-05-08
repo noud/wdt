@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Attachment;
-use App\Form\Data\AttachmentRemoveNewData;
 use App\Form\Handler\AttachmentRemoveNewHandler;
 use App\Form\Type\AttachmentRemoveNewType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,15 +17,16 @@ class TicketLocalAttachmentController extends AbstractController
      * @var TranslatorInterface
      */
     private $translator;
-    
+
     public function __construct(
         TranslatorInterface $translator
     ) {
         $this->translator = $translator;
     }
-    
+
     /**
      * Remove a local attachment, that's not uploaded to Zoho but saved locally until the ticket is created.
+     *
      * @Route("/ticket/attachment/remove", name="ticket_local_attachment_remove")
      */
     public function remove(

@@ -64,13 +64,13 @@ class TicketAttachmentService
             'file' => new \CURLFile($file, $fileMime, $fileName),
         ];
 
-        return $this->zohoApiService->get('tickets/'.$ticketId.'/attachments', $organisationId, [], $data, true);
+        return $this->zohoApiService->get('tickets/'.$ticketId.'/attachments', $organisationId, [], $data);
     }
 
     public function removeTicketAttachment(int $ticketId, int $attachmentId): array
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('tickets/'.$ticketId.'/attachments/'.$attachmentId, $organisationId, [], null, false, true);
+        return $this->zohoApiService->get('tickets/'.$ticketId.'/attachments/'.$attachmentId, $organisationId, [], null, true);
     }
 }

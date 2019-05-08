@@ -23,6 +23,7 @@ class AttachmentService
 
     private function removeDirectoryIfEmpty(string $path): void
     {
+        $fileSystem = new Filesystem();
         $files = Finder::create()
             ->files()
             ->in($path);
@@ -30,7 +31,7 @@ class AttachmentService
             $fileSystem->remove($path);
         }
     }
-    
+
     public function removeAttachment(string $uploadFormId, string $attachmentId): void
     {
         $fileSystem = new Filesystem();

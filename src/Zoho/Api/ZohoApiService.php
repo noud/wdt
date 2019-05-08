@@ -30,7 +30,7 @@ class ZohoApiService
     /**
      * @throws \Exception
      */
-    public function get(string $slug, ?int $organizationId = null, array $filters = [], array $data = null, bool $putFile = false, bool $delete = false): array
+    public function get(string $slug, ?int $organizationId = null, array $filters = [], $data = null, bool $delete = false): array
     {
         $this->zohoAccessTokenService->checkAccessTokenExpiryTime();
 
@@ -57,11 +57,7 @@ class ZohoApiService
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         if ($data) {
             curl_setopt($ch, CURLOPT_POST, 1);
-            if ($putFile) {
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-            } else {
-                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-            }
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         }
         if ($delete) {
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');

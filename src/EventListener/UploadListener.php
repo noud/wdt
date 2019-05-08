@@ -77,14 +77,12 @@ class UploadListener implements EventSubscriberInterface
 
         //if everything went fine
         $response = $event->getResponse();
-        $response[] = [
-            'success' => true,
-            'upload_form_id' => $uploadFormId,
-            'unique_upload_id' => $uniqueUploadId,
-            'target_file' => $targetFile,
-            'target_size' => $fileSize,
-            'file_name' => $fileName,
-        ];
+        $response['success'] = true;
+        $response['upload_form_id'] = $uploadFormId;
+        $response['unique_upload_id'] = $uniqueUploadId;
+        $response['target_file'] = $targetFile;
+        $response['target_size'] = $fileSize;
+        $response['file_name'] = $fileName;
         $filePathName = $file->getPathName();
         $response['target_url'] = mb_substr(
             $filePathName,
