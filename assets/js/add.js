@@ -8,7 +8,7 @@ const attachmentRemove =  $("#attachment_remove").data('attachment_remove');
 
 Dropzone.autoDiscover = false;
 
-const maxUploadFiles = 30;
+const maxUploadFiles = 5;
 const maxUploadFileSize = 1024 * 1024 * 20; // not more than 20mb
 
 const myDropzone = new Dropzone("#my-dropzone", {
