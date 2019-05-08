@@ -46,8 +46,8 @@ class UploadListener
         $fileName = $event->getRequest()->get('filename');
 
         $file = $event->getFile();
-        $targetFile = $event->getFile()->getPathName();
-        $fileSize = $event->getFile()->getSize();
+        $targetFile = $file->getPathName();
+        $fileSize = $file->getSize();
         $targetFileArr = explode('/', $targetFile);
         $uniqueUploadId = $targetFileArr[\count($targetFileArr) - 1];
 
