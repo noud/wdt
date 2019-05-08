@@ -27,6 +27,6 @@ class TicketLocalAttachmentController extends AbstractController
             return new Response('', 200);
         }
 
-        return new Response('', 404);
+       throw $this->createNotFoundException('Attachment not exists');
     }
 }
