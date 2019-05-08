@@ -2,9 +2,9 @@ import 'dropzone/dist/basic.css';
 import 'dropzone/dist/dropzone.css';
 import Dropzone from 'dropzone';
 
-let endpoint = $("#uploader").data('endpoint');
-let uploadFormId = $("#uploader").data('upload-form-id');
-let attachmentRemove =  $("#attachment_remove").data('attachment_remove');
+const endpoint = $("#uploader").data('endpoint');
+const uploadFormId = $("#uploader").data('upload-form-id');
+const attachmentRemove =  $("#attachment_remove").data('attachment_remove');
 
 Dropzone.autoDiscover = false;
 
