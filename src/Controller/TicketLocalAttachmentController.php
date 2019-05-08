@@ -11,12 +11,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class AttachmentNewTicketController extends AbstractController
+class TicketLocalAttachmentController extends AbstractController
 {
     /**
-     * @Route("/ticket/attachment/remove", name="attachment_new_new_remove")
+     * Remove a local attachment, that's not uploaded to Zoho but saved locally until the ticket is created.
+     * @Route("/ticket/attachment/remove", name="ticket_local_attachment_remove")
      */
-    public function removeNew(
+    public function remove(
         Request $request,
         AttachmentRemoveNewHandler $formHandler
     ): Response {

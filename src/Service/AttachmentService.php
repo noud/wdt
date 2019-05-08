@@ -19,9 +19,9 @@ class AttachmentService
      * AttachmentService constructor.
      */
     public function __construct(
-        string $attachmentsPath
+        string $ticketAttachmentPath
     ) {
-        $this->attachmentsPath = $attachmentsPath;
+        $this->attachmentsPath = $ticketAttachmentPath;
     }
 
     public function removeAttachment(string $uploadFormId, string $attachmentId): void

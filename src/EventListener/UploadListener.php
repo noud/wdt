@@ -27,11 +27,11 @@ class UploadListener implements EventSubscriberInterface
     private $attachmentService;
 
     public function __construct(
-        string $attachmentsDirectoryPart,
+        string $ticketAttachmentPath,
         EntityManagerInterface $defaultEntityManager,
         AttachmentService $attachmentService
     ) {
-        $this->attachmentsDirectoryPart = $attachmentsDirectoryPart;
+        $this->attachmentsDirectoryPart = $ticketAttachmentPath;
         $this->entityManager = $defaultEntityManager;
         $this->attachmentService = $attachmentService;
     }

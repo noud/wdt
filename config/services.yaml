@@ -33,6 +33,7 @@ services:
             $zohoCrmApiService: '@zoho.crm.api.service'
             $zohoBooksApiService: '@zoho.books.api.service'
             $zohoDeskApiService: '@zoho.desk.api.service'
+            $ticketAttachmentPath: '%ticket_attachments_dir%'
                  
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -96,22 +97,6 @@ services:
         arguments:
             - ''
             - '%zoho.desk.api.base_url%'
-            
-    App\Form\Handler\PostAttachmentHandler:
-        arguments:
-            - "%ticket_attachments_dir%"
-        
-    App\EventListener\UploadListener:
-        arguments:
-            - '%ticket_attachments_dir%'
- 
-    App\Service\AttachmentService:
-        arguments:
-            - '%ticket_attachments_dir%'
-            
-    App\Form\Handler\Desk\TicketAddHandler:
-        arguments:
-            - '%ticket_attachments_dir%'   
               
 oneup_uploader:
     mappings:

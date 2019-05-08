@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class AttachmentEditTicketController extends AbstractController
+class TicketAttachmentEditController extends AbstractController
 {
     /**
      * @var TicketAttachmentService
@@ -53,7 +53,8 @@ class AttachmentEditTicketController extends AbstractController
         return $this->json(
             [
                 'error' => $this->translator->trans('attachment.message.file_type', [], 'attachment'),
-            ]
+            ],
+            Response::HTTP_BAD_REQUEST
         );
     }
 
