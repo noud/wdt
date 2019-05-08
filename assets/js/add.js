@@ -30,11 +30,11 @@ myDropzone.on("sending", function(file, xhr, formData) {
 
 myDropzone.on("success", function (file, response) {
     if (response['target_file'] != '') {
-        const currentValue = jQuery('#ticket_add_attachments').val();
+        const currentValue = $('#ticket_add_attachments').val();
         if (currentValue == '') {
-            jQuery('#ticket_add_attachments').val(response['file_name'] + '|' + response['target_file'] + '|' + response['target_size'] + '|' + response['target_url']);
+            $('#ticket_add_attachments').val(response['file_name'] + '|' + response['target_file'] + '|' + response['target_size'] + '|' + response['target_url']);
         } else {
-            jQuery('#ticket_add_attachments').val(currentValue + ", " + response['file_name'] + '|' + response['target_file'] + '|' + response['target_size'] + '|' + response['target_url']);
+            $('#ticket_add_attachments').val(currentValue + ", " + response['file_name'] + '|' + response['target_file'] + '|' + response['target_size'] + '|' + response['target_url']);
         }
     }
 });
@@ -57,7 +57,7 @@ myDropzone.on("removedfile", function (file) {
         url: attachmentRemove,
         data: {'removeAttachment[name]': name, 'removeAttachment[id]': id, 'removeAttachment[uploadFormId]': uploadFormId, 'removeAttachment[uniqueUploadId]': uniqueUploadId},
         success: function (data) {
-        	const currentValue = jQuery('#ticket_add_attachments').val();
+        	const currentValue = $('#ticket_add_attachments').val();
             let myarr = currentValue.split(", ");
             for (let i in myarr) {
                 if (myarr[i].indexOf(data.filename) > -1) {
@@ -65,13 +65,13 @@ myDropzone.on("removedfile", function (file) {
                 }
             }
             let newValue = myarr.join(", ");
-            jQuery('#ticket_add_attachments').val(newValue);
+            $('#ticket_add_attachments').val(newValue);
         }
     });
 });
 myDropzone.options.maxFiles = maxUploadFiles;
 
-const currentValue = jQuery('#ticket_add_attachments').val();
+const currentValue = $('#ticket_add_attachments').val();
 if (currentValue.length > 0) {
 
     let currentArray = currentValue.split(", ");
