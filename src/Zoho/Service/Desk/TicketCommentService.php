@@ -82,6 +82,6 @@ class TicketCommentService
 
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('tickets/'.$ticketId.'/comments', $organisationId, [], json_encode($data));
+        return $this->zohoApiService->post('tickets/'.$ticketId.'/comments', $organisationId, [], json_encode($data));
     }
 }
