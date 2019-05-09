@@ -28,37 +28,37 @@
                                                     {{ 'ticket.field.status'|trans }}
                                                 </div>
                                                  <div class="row">
-                                                    <b>{{ ticket.status }}</b>
+                                                    <strong>{{ ticket.status }}</strong>
                                                 </div>
                                                  <div class="row">
                                                     {{ 'ticket.field.due_date'|trans }}
                                                 </div>
                                                  <div class="row">
-                                                     <b>{{ ticket.dueDate|date('d-m-Y') }}</b>
+                                                     <strong>{{ ticket.dueDate|date('d-m-Y') }}</strong>
                                                 </div>
                                                  <div class="row">
                                                     {{ 'ticket.field.classification'|trans }}
                                                 </div>
                                                  <div class="row">
-                                                     <b>{{ ticket.classification }}</b>
+                                                     <strong>{{ ticket.classification }}</strong>
                                                 </div>
                                                 <div class="row">
                                                     {{ 'ticket.field.custom_fields.aantal_minuten_ingeschat'|trans }}
                                                 </div>
                                                  <div class="row">
-                                                    <b>{{ attribute(ticket.customFields, 'Aantal minuten ingeschat') }}</b>
+                                                    <strong>{{ attribute(ticket.customFields, 'Aantal minuten ingeschat') }}</strong>
                                                 </div>
                                                 <div class="row">
                                                     {{ 'ticket.field.custom_fields.aantal_uur_ingeschat'|trans }}
                                                 </div>
                                                  <div class="row">
-                                                    <b>{{ attribute(ticket.customFields, 'Aantal uur ingeschat') }}</b>
+                                                    <strong>{{ attribute(ticket.customFields, 'Aantal uur ingeschat') }}</strong>
                                                 </div>
                                                  <div class="row">
                                                     {{ 'ticket.field.priority'|trans }}
                                                 </div>
                                                  <div class="row">
-                                                    <b>{{ ticket.priority }}</b>
+                                                    <strong>{{ ticket.priority }}</strong>
                                                 </div>
                                                  <div class="row">
                                                     Toevoegingen
@@ -69,8 +69,8 @@
                                                         <li>
                                                         <div class="row">
                                                             <div class="col-sm-6">
-                                                                <b><a href="{{ ticketAttachment.href }}?portalname=webdesigntilburg&inline=true" target="_blank">{{ ticketAttachment.name }}</a></b> 
-                                                                <form action="{{ path('attachment_edit_remove', {ticketId: ticket.id, attachmentId: ticketAttachment.id }) }}" onsubmit="return window.confirm('Weet u zeker dat u {{ ticketAttachment.name|e('html_attr') }} wilt verwijderen?');" method="post">
+                                                                <strong><a href="{{ ticketAttachment.href }}?portalname=webdesigntilburg&inline=true" target="_blank">{{ ticketAttachment.name }}</a></strong> 
+                                                                <form action="{{ path('ticket_attachment_edit_remove', {ticketId: ticket.id, attachmentId: ticketAttachment.id }) }}" onsubmit="return window.confirm('Weet u zeker dat u {{ ticketAttachment.name|e('html_attr') }} wilt verwijderen?');" method="post">
                                                                     <input type="hidden" name="_method" value="DELETE" />
                                                                     <input type="hidden" name="token" value="{{ csrf_token('ticket-attachment-delete') }}" />
                                                                     <button type="submit" class="delete-link" class="btn btn-sm btn-primary btn-icon rounded-pill">verwijder</button>
@@ -94,7 +94,7 @@
                                             </div>
                                             <div class="col-sm-8">
                                                 <div class="row">
-                                                    <b>{{ 'ticket.field.nr'|trans }} {{ ticket.ticketNumber }} {{ ticket.subject }}</b>
+                                                    <strong>{{ 'ticket.field.nr'|trans }} {{ ticket.ticketNumber }} {{ ticket.subject }}</strong>
                                                 </div>
                                                 <div class="row">
                                                     <ul>
@@ -102,7 +102,7 @@
                                                         <li>
                                                             <div class="row">
                                                                 <div class="col-sm-6">
-                                                                    <b>{{ ticketComment.commenter.name }}</b>
+                                                                    <strong>{{ ticketComment.commenter.name }}</strong>
                                                                  </div>
                                                                 <div class="col-sm-6">
                                                                     {{ ticketComment.commentedTime|date('d-m-Y H:i') }}
@@ -132,7 +132,7 @@
             </div>
         </section>
     </div>
-    <div id="urls" data-attachment-post="{{path('attachment_edit_post', {'id':ticket.id}) }}" data-attachment-remove="{{path('attachment_edit_new_remove', {'ticketId':ticket.id}) }}" />
+    <div id="urls" data-attachment-post="{{path('ticket_attachment_edit', {'id':ticket.id}) }}" data-attachment-remove="{{path('attachment_edit_new_remove', {'ticketId':ticket.id}) }}" />
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}

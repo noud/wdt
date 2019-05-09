@@ -2,10 +2,13 @@
 
 namespace App\Form\Data;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 class AttachmentRemoveNewData
 {
     /**
      * @var string
+     * @Assert\NotBlank()
      */
     public $name;
 
@@ -16,11 +19,13 @@ class AttachmentRemoveNewData
 
     /**
      * @var string
+     * @Assert\NotBlank()
      */
     public $uploadFormId;
 
     /**
      * @var string
+     * @Assert\NotBlank()
      */
     public $uniqueUploadId;
 }

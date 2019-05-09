@@ -1,0 +1,4 @@
+attachment:
+  message:
+    file_type: 'Upload is waarschijnlijk het verkeerde bestandstype.'
+    file_not_exist: 'Upload bestaat niet.'

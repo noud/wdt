@@ -55,16 +55,14 @@ class TicketAttachmentService
     public function getAllPublicTicketAttachments(int $ticketId): array
     {
         $ticketAttachments = $this->getAllTicketAttachments($ticketId);
-        if (\count($ticketAttachments)) {
-            $filterBy = true;
-            $publicTicketAttachments = array_filter($ticketAttachments, function ($var) use ($filterBy) {
-                return $var['isPublic'] === $filterBy;
-            });
-
-            return $publicTicketAttachments;
+        if (!$ticketAttachments) {
+            return [];
         }
+        $publicTicketAttachments = array_filter($ticketAttachments, function ($var) {
+            return $var['isPublic'];
+        });
 
-        return [];
+        return $publicTicketAttachments;
     }
 
     public function createTicketAttachment(string $file, int $ticketId, string $fileName = null): array
@@ -82,13 +80,13 @@ class TicketAttachmentService
             'file' => new \CURLFile($file, $fileMime, $fileName),
         ];
 
-        return $this->zohoApiService->get('tickets/'.$ticketId.'/attachments', $organisationId, [], $data, true);
+        return $this->zohoApiService->get('tickets/'.$ticketId.'/attachments', $organisationId, [], $data);
     }
 
     public function removeTicketAttachment(int $ticketId, int $attachmentId): array
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('tickets/'.$ticketId.'/attachments/'.$attachmentId, $organisationId, [], null, false, true);
+        return $this->zohoApiService->get('tickets/'.$ticketId.'/attachments/'.$attachmentId, $organisationId, [], null, true);
     }
 }

@@ -8,11 +8,13 @@ class PostAttachmentData
 {
     /**
      * @var string
+     * @Assert\NotBlank()
      */
     public $filename;
 
     /**
      * @var int
+     * @Assert\NotBlank()
      */
     public $filesize;
 
