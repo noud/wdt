@@ -4,56 +4,61 @@ namespace App\Controller;
 
 use App\Entity\Attachment;
 use App\Form\Data\AttachmentRemoveEditData;
-use App\Form\Data\PostAttachmentData;
 use App\Form\Handler\AttachmentRemoveEditHandler;
 use App\Form\Handler\PostAttachmentHandler;
 use App\Form\Type\AttachmentRemoveEditType;
 use App\Form\Type\PostAttachmentType;
 use App\Zoho\Service\Desk\TicketAttachmentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class AttachmentEditTicketController extends AbstractController
+class TicketAttachmentEditController extends AbstractController
 {
     /**
      * @var TicketAttachmentService
      */
     private $ticketAttachmentService;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     public function __construct(
-        TicketAttachmentService $ticketAttachmentService
+        TicketAttachmentService $ticketAttachmentService,
+        TranslatorInterface $translator
     ) {
         $this->ticketAttachmentService = $ticketAttachmentService;
+        $this->translator = $translator;
     }
 
     /**
-     * @Route("/ticket/attachment/post/{id}", methods={"POST"}, name="attachment_edit_post")
+     * @Route("/ticket/attachment/post/{id}", methods={"POST"}, name="ticket_attachment_edit")
      */
-    public function post(
+    public function edit(
         Request $request,
         PostAttachmentHandler $formHandler,
         int $id
     ): Response {
-        $data = new PostAttachmentData();
-
-        $form = $this->createForm(PostAttachmentType::class, $data);
+        $form = $this->createForm(PostAttachmentType::class);
         if ($formHandler->handleRequest($form, $request, $id)) {
             return new Response('', 201);
         }
 
-        return new JsonResponse(
+        return $this->json(
             [
-                'error' => 'Upload is waarschijnlijk het verkeerde bestandstype.',
+                'error' => $this->translator->trans('attachment.message.file_type', [], 'attachment'),
             ],
             Response::HTTP_BAD_REQUEST
         );
     }
 
     /**
-     * @Route("/ticket/attachment/remove/{ticketId}/{attachmentId}", methods={"DELETE"}, name="attachment_edit_remove")
+     * @Route("/ticket/attachment/remove/{ticketId}/{attachmentId}", methods={"DELETE"}, name="ticket_attachment_edit_remove")
      */
     public function remove(Request $request, int $ticketId, int $attachmentId): Response
     {
@@ -81,7 +86,6 @@ class AttachmentEditTicketController extends AbstractController
         if ($formHandler->handleRequest($form, $request, $ticketId)) {
             return new Response('', 200);
         }
-
-        return new Response('', 404);
+        throw new NotFoundHttpException($this->translator->trans('attachment.message.file_not_exist', [], 'attachment'));
     }
 }

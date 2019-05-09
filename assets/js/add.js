@@ -8,7 +8,7 @@ const attachmentRemove =  $("#attachment_remove").data('attachment_remove');
 
 Dropzone.autoDiscover = false;
 
-const maxUploadFiles = 30;
+const maxUploadFiles = 5;
 const maxUploadFileSize = 1024 * 1024 * 20; // not more than 20mb
 
 const myDropzone = new Dropzone("#my-dropzone", {
@@ -44,11 +44,11 @@ myDropzone.on("removedfile", function (file) {
     // if not yet saved file.xhr.response contains a json with the unique_upload_id
     if (typeof file.xhr != 'undefined') {
         const obj = JSON.parse(file.xhr.response);
-        const id = null;
-        const uniqueUploadId = obj.unique_upload_id;
+        var id = null;
+        var uniqueUploadId = obj.unique_upload_id;
     } else {
-        const id = file.id;
-        const uniqueUploadId = null;
+        var id = file.id;
+        var uniqueUploadId = null;
     }
 
     const name = file.name;

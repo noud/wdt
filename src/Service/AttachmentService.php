@@ -5,9 +5,6 @@ namespace App\Service;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
-/**
- * Class AttachmentService.
- */
 class AttachmentService
 {
     /**
@@ -19,23 +16,29 @@ class AttachmentService
      * AttachmentService constructor.
      */
     public function __construct(
-        string $attachmentsPath
+        string $ticketAttachmentPath
     ) {
-        $this->attachmentsPath = $attachmentsPath;
+        $this->attachmentsPath = $ticketAttachmentPath;
+    }
+
+    private function removeDirectoryIfEmpty(string $path): void
+    {
+        $fileSystem = new Filesystem();
+        $files = Finder::create()
+            ->files()
+            ->in($path);
+        if (0 === \count($files)) {
+            $fileSystem->remove($path);
+        }
     }
 
     public function removeAttachment(string $uploadFormId, string $attachmentId): void
     {
         $fileSystem = new Filesystem();
-        $fileDir = $this->attachmentsPath.\DIRECTORY_SEPARATOR.$uploadFormId;
-        $fileSystem->remove($fileDir.\DIRECTORY_SEPARATOR.$attachmentId);
-
-        $dirName = $fileDir.\DIRECTORY_SEPARATOR;
-        $files = Finder::create()
-            ->files()
-            ->in($dirName);
-        if (0 === \count($files)) {
-            $fileSystem->remove($fileDir);
+        $fileDir = $this->attachmentsPath.\DIRECTORY_SEPARATOR.$uploadFormId.\DIRECTORY_SEPARATOR;
+        if (file_exists($fileDir.$attachmentId)) {
+            $fileSystem->remove($fileDir.$attachmentId);
         }
+        $this->removeDirectoryIfEmpty($fileDir);
     }
 }
