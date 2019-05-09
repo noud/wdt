@@ -37,6 +37,9 @@ class TicketAttachmentService
     public function getAllPublicTicketAttachments(int $ticketId): array
     {
         $ticketAttachments = $this->getAllTicketAttachments($ticketId);
+        if (!$ticketAttachments) {
+            return [];
+        }
         $filterBy = true;
         $publicTicketAttachments = array_filter($ticketAttachments['data'], function ($var) use ($filterBy) {
             return $var['isPublic'] === $filterBy;
