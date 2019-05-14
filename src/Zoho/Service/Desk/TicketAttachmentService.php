@@ -31,7 +31,9 @@ class TicketAttachmentService
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('tickets/'.$ticketId.'/attachments', $organisationId);
+        return $this->zohoApiService->get('tickets/'.$ticketId.'/attachments', $organisationId, [
+            'sortBy' => '-createdTime',
+        ]);
     }
 
     public function getAllPublicTicketAttachments(int $ticketId): array
@@ -40,13 +42,8 @@ class TicketAttachmentService
         if (!$ticketAttachments) {
             return [];
         }
-        $filterBy = true;
-        $publicTicketAttachments = array_filter($ticketAttachments['data'], function ($var) use ($filterBy) {
-            return $var['isPublic'] === $filterBy;
-        });
-
-        usort($publicTicketAttachments, function ($a, $b) {
-            return ($a['createdTime'] > $b['createdTime']) ? -1 : 1;
+        $publicTicketAttachments = array_filter($ticketAttachments['data'], function ($var) {
+            return $var['isPublic'];
         });
 
         return $publicTicketAttachments;
