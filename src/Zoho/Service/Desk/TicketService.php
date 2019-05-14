@@ -121,6 +121,6 @@ class TicketService
 
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('tickets', $organisationId, [], json_encode($data));
+        return $this->zohoApiService->post('tickets', $organisationId, [], json_encode($data));
     }
 }
