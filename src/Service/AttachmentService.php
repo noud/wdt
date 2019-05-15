@@ -12,9 +12,6 @@ class AttachmentService
      */
     private $attachmentsPath;
 
-    /**
-     * AttachmentService constructor.
-     */
     public function __construct(
         string $ticketAttachmentPath
     ) {
