@@ -63,7 +63,7 @@ class ZohoApiService
         curl_setopt($ch, CURLOPT_TIMEOUT, 400);
 
         /** @var string $result */
-        $result = curl_exec($ch);
+        $result = curl_exec($ch);dump($result);
         if ($errorNumber = curl_errno($ch)) {
             if (\in_array($errorNumber, [CURLE_OPERATION_TIMEDOUT, CURLE_OPERATION_TIMEOUTED], true)) {
                 curl_close($ch);

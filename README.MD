@@ -61,6 +61,7 @@ Als eerste dien je dan een grandToken aan te maken.
 Dit kun je doen conform 
 https://www.zoho.com/crm/help/developer/api/auth-request.html
 Tijdens ontwikkeling is de 2de mogelijkheid, Self-Client option gebruikt.
+Dus naar https://accounts.zoho.eu/developerconsole
 We gebruiken daarvoor de scope
 aaaserver.profile.ALL,ZohoCRM.modules.ALL,ZohoBooks.fullaccess.all,Desk.basic.READ,Desk.settings.READ,Desk.tickets.READ,Desk.tickets.UPDATE,Desk.tickets.CREATE,Desk.contacts.READ,Desk.search.READ
 
