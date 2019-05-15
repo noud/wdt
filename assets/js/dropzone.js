@@ -46,7 +46,7 @@ $(document).ready(function() {
 	    });
 	});
 	myDropzone.on("addedfile", function(file) {
-		if(file.size > maxUploadFileSize) // not more than 20mb
+		if(file.size > maxUploadFileSize)
 		{
 			this.removeFile(file); // if you want to remove the file or you can add alert or presentation of a message
 		}
