@@ -95,8 +95,6 @@ class TicketThreadService
 
         $organisationId = $this->organizationService->getOrganizationId();
 
-        $r = $this->zohoApiService->get('tickets/'.$ticketId.'/sendReply', $organisationId, [], $data);
-        dump($r);die();
-        return $r;
+        return $this->zohoApiService->get('tickets/'.$ticketId.'/sendReply', $organisationId, [], $data);
     }
 }

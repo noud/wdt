@@ -69,7 +69,7 @@ class TicketService
         $result = $this->zohoApiService->get('accounts/'.$accountId.'/tickets', $organisationId, [
             'include' => 'assignee,departments,team,isRead',
         ]);
-        dump($result);die();
+
         $resultSorted = $this->sortTicketsByNumber($result['data']);
 
         $tickets = [];
