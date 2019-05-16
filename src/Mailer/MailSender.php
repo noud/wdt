@@ -93,4 +93,26 @@ class MailSender
 
         $this->mailerService->sendMessage($message);
     }
+    
+    public function sendTicketReplyMessage(string $subject, string $email, string $reply): void
+    {
+        $body = $this->mailerService->render('email/ticket_reply.html.twig', [
+            'reply' => $reply,
+        ]);
+        
+        $message = $this->mailerService->createMessage($subject, $body, 'text/html');
+        $message->addPart(
+            $this->mailerService->render(
+                'email/ticket_reply.txt.twig',
+                [
+                    'reply' => $reply,
+                ]
+                ),
+            'text/plain'
+            );
+        
+        $message->addTo($email);
+        
+        $this->mailerService->sendMessageAsUser($message);
+    }
 }

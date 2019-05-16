@@ -8,6 +8,7 @@ use Twig_Environment;
 use Twig_Error_Loader;
 use Twig_Error_Runtime;
 use Twig_Error_Syntax;
+use Symfony\Component\Security\Core\Security;
 
 class MailerService
 {
@@ -30,13 +31,24 @@ class MailerService
      * @var string
      */
     private $defaultFromName;
-
-    public function __construct(Swift_Mailer $mailer, Twig_Environment $twig, string $defaultFromEmail, string $defaultFromName)
-    {
+    
+    /**
+     * @var Security
+     */
+    private $security;
+    
+    public function __construct(
+        Swift_Mailer $mailer,
+        Twig_Environment $twig,
+        string $defaultFromEmail,
+        string $defaultFromName,
+        Security $security
+    ) {
         $this->mailer = $mailer;
         $this->twig = $twig;
         $this->defaultFromEmail = $defaultFromEmail;
         $this->defaultFromName = $defaultFromName;
+        $this->security = $security;
     }
 
     /**
@@ -63,9 +75,16 @@ class MailerService
 
         return $this->mailer->send($mailMessage);
     }
-
+    
     public function sendMessage(Swift_Message $message): ?int
     {
+        return $this->mailer->send($message);
+    }
+    
+    public function sendMessageAsUser(Swift_Message $message): ?int
+    {
+        $user = $this->security->getUser();
+        $message->setFrom($user->getEmail());
         return $this->mailer->send($message);
     }
 

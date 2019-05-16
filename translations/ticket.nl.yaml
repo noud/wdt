@@ -22,6 +22,11 @@ ticket_comment:
     content: 'Commentaar'
     submit: 'Commentaar registreren'
     add_comment: 'Commentaar bijvoegen'
+    add_reply: 'Reactie bijvoegen'
+ticket_reply:
+  field:
+    content: 'Reactie'
+    submit: 'Reactie registreren'
 enum:
   ticket_priority:
     high: 'Hoog'

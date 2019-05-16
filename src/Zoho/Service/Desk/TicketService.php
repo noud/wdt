@@ -28,9 +28,6 @@ class TicketService
      */
     private $departmentService;
 
-    /**
-     * DepartmentService constructor.
-     */
     public function __construct(
         ZohoApiService $zohoDeskApiService,
         OrganizationService $organizationService,
@@ -72,7 +69,7 @@ class TicketService
         $result = $this->zohoApiService->get('accounts/'.$accountId.'/tickets', $organisationId, [
             'include' => 'assignee,departments,team,isRead',
         ]);
-
+        dump($result);die();
         $resultSorted = $this->sortTicketsByNumber($result['data']);
 
         $tickets = [];
