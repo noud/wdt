@@ -9,6 +9,7 @@ use App\Service\PageService;
 use App\Zoho\Service\Desk\ResolutionHistoryService;
 use App\Zoho\Service\Desk\TicketCommentService;
 use App\Zoho\Service\Desk\TicketService;
+use App\Zoho\Service\Desk\TicketThreadService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,6 +34,11 @@ class TicketController extends AbstractController
     private $ticketCommentService;
 
     /**
+     * @var TicketThreadService
+     */
+    private $ticketThreadService;
+
+    /**
      * @var PageService
      */
     private $pageService;
@@ -46,12 +52,14 @@ class TicketController extends AbstractController
         TicketService $ticketService,
         ResolutionHistoryService $resolutionHistoryService,
         TicketCommentService $ticketCommentService,
+        TicketThreadService $ticketThreadService,
         PageService $pageService,
         TranslatorInterface $translator
     ) {
         $this->ticketService = $ticketService;
         $this->resolutionHistoryService = $resolutionHistoryService;
         $this->ticketCommentService = $ticketCommentService;
+        $this->ticketThreadService = $ticketThreadService;
         $this->pageService = $pageService;
         $this->translator = $translator;
     }
@@ -113,11 +121,13 @@ class TicketController extends AbstractController
         $ticket = $this->ticketService->getTicket($id);
         $resolutionHistory = $this->resolutionHistoryService->getAllResolutionHistory($id);
         $ticketComments = $this->ticketCommentService->getAllPublicTicketComments($id);
+        $ticketThreads = $this->ticketThreadService->getAllPublicTicketThreads($id);
 
         return $this->render('ticket/view.html.twig', [
             'ticket' => $ticket,
             'resolutionHistory' => $resolutionHistory,
             'ticketComments' => $ticketComments,
+            'ticketThreads' => $ticketThreads,
             'page' => $this->pageService->getPageBySlug('/ticket/view'),
         ]);
     }

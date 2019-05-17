@@ -4,7 +4,7 @@ namespace App\Zoho\Service\Desk;
 
 use App\Zoho\Api\ZohoApiService;
 
-class ContactService
+class SupportEmailAddressService
 {
     /**
      * @var ZohoApiService
@@ -24,12 +24,12 @@ class ContactService
         $this->organizationService = $organizationService;
     }
 
-    public function getAllContacts(): array
+    public function getAllSupportEmailAddresses(string $departmentId): array
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('contacts', $organisationId, [
-            'include' => 'contacts',
+        return $this->zohoApiService->get('supportEmailAddress', $organisationId, [
+            'departmentId' => $departmentId,
         ]);
     }
 }

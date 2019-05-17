@@ -11,9 +11,6 @@ class OrganizationService
      */
     private $zohoApiService;
 
-    /**
-     * OrganizationService constructor.
-     */
     public function __construct(ZohoApiService $zohoDeskApiService)
     {
         $this->zohoApiService = $zohoDeskApiService;
