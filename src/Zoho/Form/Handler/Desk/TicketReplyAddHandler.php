@@ -2,20 +2,21 @@
 
 namespace App\Zoho\Form\Handler\Desk;
 
+use App\Entity\User;
 use App\Zoho\Form\Data\Desk\TicketCommentAddData;
-use App\Zoho\Form\Data\Desk\TicketReplyAddData;
 //use App\Service\TicketReplyService;
 use App\Zoho\Service\Desk\TicketThreadService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Security;
 
 class TicketReplyAddHandler
 {
     /**
-     * @var EntityManagerInterface
+     * @var Security
      */
-    private $entityManager;
+    private $security;
 
     /**
      * @var TicketThreadService
@@ -26,10 +27,10 @@ class TicketReplyAddHandler
      * JoinHandler constructor.
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
+        Security $security,
         TicketThreadService $ticketReplyService
     ) {
-        $this->entityManager = $entityManager;
+        $this->security = $security;
         $this->ticketReplyService = $ticketReplyService;
     }
 
@@ -43,8 +44,13 @@ class TicketReplyAddHandler
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var TicketCommentAddData $ticketReplyData */
             $ticketReplyData = $form->getData();
-            //$this->ticketReplyService->addTicketReply($ticketReplyData, $ticketId);
-            $this->ticketReplyService->addTicketThread($ticketReplyData, $ticketId);
+            /** @var TokenInterface $token */
+            $token = $this->security->getToken();
+            /** @var User $user */
+            $user = $token->getUser();
+            /** @var string $email */
+            $email = $user->getEmail();
+            $this->ticketReplyService->addTicketThread($ticketReplyData, $ticketId, $email);
 
             return true;
         }

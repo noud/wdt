@@ -7,6 +7,7 @@ use App\Zoho\Service\Desk\AccountService;
 use App\Zoho\Service\Desk\ContactService;
 use App\Zoho\Service\Desk\DepartmentService;
 use App\Zoho\Service\Desk\OrganizationService;
+use App\Zoho\Service\Desk\SupportEmailAddressService;
 use App\Zoho\Service\Desk\TicketService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,6 +24,11 @@ class ZohoDeskController extends AbstractController
      * @var DepartmentService
      */
     private $departmentService;
+
+    /**
+     * @var SupportEmailAddressService
+     */
+    private $supportEmailAddressService;
 
     /**
      * @var ContactService
@@ -47,6 +53,7 @@ class ZohoDeskController extends AbstractController
     public function __construct(
         OrganizationService $organizationService,
         DepartmentService $departmentService,
+        SupportEmailAddressService $supportEmailAddressService,
         ContactService $contactService,
         AccountService $accountService,
         TicketService $ticketService,
@@ -54,6 +61,7 @@ class ZohoDeskController extends AbstractController
     ) {
         $this->organizationService = $organizationService;
         $this->departmentService = $departmentService;
+        $this->supportEmailAddressService = $supportEmailAddressService;
         $this->contactService = $contactService;
         $this->accountService = $accountService;
         $this->ticketService = $ticketService;
@@ -90,6 +98,22 @@ class ZohoDeskController extends AbstractController
         return new Response(
             '<html><body>Departments: <br />'.$ticketsInfo.'</body></html>'
         );
+    }
+
+    /**
+     * @Route("/desk/department/{departmentId}/supportEmailAddress", name="zoho_desk_department_ support_email_addresss")
+     */
+    public function getDeskDepartmentSupportEmailAddresses(string $departmentId): Response
+    {
+        $result = $this->supportEmailAddressService->getAllSupportEmailAddresses($departmentId);
+        $mailsInfo = '';
+        foreach ($result['data'] as $mail) {
+            $mailsInfo .= $mail['id'].' '.$mail['friendlyName'].' '.$mail['address'].'<br />';
+        }
+
+        return new Response(
+            '<html><body>SupportEmailAddresses: <br />'.$mailsInfo.'</body></html>'
+            );
     }
 
     /**

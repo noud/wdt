@@ -8,8 +8,8 @@ use App\Form\Type\Desk\TicketAddType;
 use App\Service\PageService;
 use App\Zoho\Service\Desk\ResolutionHistoryService;
 use App\Zoho\Service\Desk\TicketCommentService;
-use App\Zoho\Service\Desk\TicketThreadService;
 use App\Zoho\Service\Desk\TicketService;
+use App\Zoho\Service\Desk\TicketThreadService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,12 +32,12 @@ class TicketController extends AbstractController
      * @var TicketCommentService
      */
     private $ticketCommentService;
-    
+
     /**
      * @var TicketThreadService
      */
     private $ticketThreadService;
-    
+
     /**
      * @var PageService
      */

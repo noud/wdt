@@ -116,14 +116,14 @@ class PageFixtures extends Fixture
         $page->setMetaTitle('Je ticket commentaar is aangemaakt en wordt in behandeling genomen');
         $page->setContent('Je ticket commentaar is aangemaakt en wordt in behandeling genomen.');
         $manager->persist($page);
-        
+
         $page = new Page();
         $page->setSlug('/ticket/reply/create');
         $page->setTitle('Ticket reactie aanmaken');
         $page->setMetaTitle('Je kunt hier ticket reactie aanmaken');
         $page->setContent('Je kunt hier ticket reactie aanmaken.');
         $manager->persist($page);
-        
+
         $page = new Page();
         $page->setSlug('/ticket/reply/create/success');
         $page->setTitle('Ticket reactie aangemaakt');
