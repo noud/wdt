@@ -72,7 +72,13 @@ class MailerService
     {
         return $this->mailer->send($message);
     }
-
+    
+    public function sendMessageAsUser(Swift_Message $message, string $email): ?int
+    {
+        $message->setFrom($email);
+        return $this->mailer->send($message);
+    }
+    
     public function createMessage(string $subject = null, string $body = null, string $contentType = null, string $charset = null): Swift_Message
     {
         $message = new Swift_Message($subject, $body, $contentType, $charset);

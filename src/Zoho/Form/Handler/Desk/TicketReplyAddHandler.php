@@ -4,8 +4,8 @@ namespace App\Zoho\Form\Handler\Desk;
 
 use App\Entity\User;
 use App\Zoho\Form\Data\Desk\TicketCommentAddData;
-//use App\Service\TicketReplyService;
-use App\Zoho\Service\Desk\TicketThreadService;
+use App\Service\TicketReplyService;
+//use App\Zoho\Service\Desk\TicketThreadService;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -19,7 +19,7 @@ class TicketReplyAddHandler
     private $security;
 
     /**
-     * @var TicketThreadService
+     * @var TicketReplyService
      */
     private $ticketReplyService;
 
@@ -28,7 +28,7 @@ class TicketReplyAddHandler
      */
     public function __construct(
         Security $security,
-        TicketThreadService $ticketReplyService
+        TicketReplyService $ticketReplyService
     ) {
         $this->security = $security;
         $this->ticketReplyService = $ticketReplyService;
@@ -50,7 +50,10 @@ class TicketReplyAddHandler
             $user = $token->getUser();
             /** @var string $email */
             $email = $user->getEmail();
-            $this->ticketReplyService->addTicketThread($ticketReplyData, $ticketId, $email);
+            // send with e-mail
+            $this->ticketReplyService->addTicketReply($ticketReplyData, $ticketId, $email);
+            // use the API
+            //$this->ticketReplyService->addTicketThread($ticketReplyData, $ticketId, $email);
 
             return true;
         }

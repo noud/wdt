@@ -101,18 +101,25 @@ class TicketThreadService
         $to = $supportEmailAddresses['data'][0]['address'];
 
         // @TODO activate this because noud@webdesigntilburg.nl does not get accepted.
-        //$email = 'support@webdesigntilburg.nl';
-
+//        $email = 'support@webdesigntilburg.nl';
+//        $email = 'kevinvanderlaakwdt@gmail.com';
+//        $email = 'support@wdtinternetbv.zohodesk.eu';
+        
         $data = [
-            'channel' => 'EMAIL',
+            'channel' => 'FORUMS',
             'content' => $ticketThread->getContent(),
             'contentType' => 'html',
             'fromEmailAddress' => $email,
             'to' => $to,
+            'isPrivate' => "false",
+            "isForward" => "true",
         ];
+        dump($data); //die();
 
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('tickets/'.$ticketId.'/sendReply', $organisationId, [], $data);
+        $r = $this->zohoApiService->get('tickets/'.$ticketId.'/sendReply', $organisationId, [], $data);
+        dump($r);die();
+        return $r;
     }
 }
