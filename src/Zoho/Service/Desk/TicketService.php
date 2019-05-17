@@ -67,6 +67,10 @@ class TicketService
     public function getTickets(string $email): array
     {
         $accountId = $this->accountService->getAccountIdByEmail($email);
+        dump($accountId);
+        if (!$accountId) {
+            dump('NONE');
+        }
 
         $organisationId = $this->organizationService->getOrganizationId();
         $result = $this->zohoApiService->get('accounts/'.$accountId.'/tickets', $organisationId, [

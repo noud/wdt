@@ -32,7 +32,7 @@ class ContactService
         $organisationId = $this->organizationService->getOrganizationId();
 
         return $this->zohoApiService->get('contacts', $organisationId, [
-            'include' => 'accounts',
+            'include' => 'contacts',
         ]);
     }
 }

@@ -70,7 +70,11 @@ class ZohoApiService
                 throw new \Exception('Curl timeout in getRequest.');
             }
         }
-
+        
+        if ('' === $result) {
+            return [];
+        }
+        
         return $this->processResult($result, $organizationId, $ch);
     }
 
@@ -97,6 +101,7 @@ class ZohoApiService
 
     private function decodeResult(string $result, $ch): array
     {
+        dump($result);
         $result = json_decode($result, true);
         if (JSON_ERROR_NONE !== json_last_error()) {
             curl_close($ch);

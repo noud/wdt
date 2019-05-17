@@ -48,7 +48,7 @@ class User implements UserInterface
 
     /**
      * @var string
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $token;
 
