@@ -99,7 +99,7 @@ class MailSender
         $body = $this->mailerService->render('email/ticket_reply.html.twig', [
             'reply' => $reply,
         ]);
-        
+
         $message = $this->mailerService->createMessage($subject, $body, 'text/html');
         $message->addPart(
             $this->mailerService->render(
@@ -110,9 +110,9 @@ class MailSender
                 ),
             'text/plain'
             );
-        
+
         $message->addTo($email);
-        
+
         $this->mailerService->sendMessageAsUser($message, $from);
     }
 }

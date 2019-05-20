@@ -76,7 +76,7 @@ class TicketService
 
         if (isset($result['data'])) {
             $resultSorted = $this->sortTicketsByNumber($result['data']);
-    
+
             $tickets = [];
             foreach ($resultSorted as $ticketData) {
                 $ticket = new Ticket();
@@ -86,9 +86,10 @@ class TicketService
                 $ticket->setStatus($ticketData['status']);
                 $tickets[] = $ticket;
             }
-    
+
             return $tickets;
         }
+
         return [];
     }
 

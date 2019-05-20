@@ -96,30 +96,27 @@ class TicketThreadService
 
     public function createTicketThread(TicketThread $ticketThread, string $ticketId, string $email)
     {
-        $departments = $this->departmentService->getAllDepartments();
-        $supportEmailAddresses = $this->supportEmailAddressService->getAllSupportEmailAddresses($departments['data'][0]['id']);
-        $to = $supportEmailAddresses['data'][0]['address'];
+        $to = $this->supportEmailAddressService->getFirstSupportEmailAddress();
 
         // @TODO activate this because noud@webdesigntilburg.nl does not get accepted.
 //        $email = 'support@webdesigntilburg.nl';
 //        $email = 'kevinvanderlaakwdt@gmail.com';
 //        $email = 'support@wdtinternetbv.zohodesk.eu';
-        
+
         $data = [
             'channel' => 'FORUMS',
             'content' => $ticketThread->getContent(),
             'contentType' => 'html',
             'fromEmailAddress' => $email,
             'to' => $to,
-            'isPrivate' => "false",
-            "isForward" => "true",
+            'isPrivate' => 'false',
+            'isForward' => 'true',
         ];
-        dump($data); //die();
 
         $organisationId = $this->organizationService->getOrganizationId();
 
         $r = $this->zohoApiService->get('tickets/'.$ticketId.'/sendReply', $organisationId, [], $data);
-        dump($r);die();
+
         return $r;
     }
 }

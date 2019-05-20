@@ -70,11 +70,11 @@ class ZohoApiService
                 throw new \Exception('Curl timeout in getRequest.');
             }
         }
-        
+
         if ('' === $result) {
             return [];
         }
-        
+
         return $this->processResult($result, $organizationId, $ch);
     }
 
