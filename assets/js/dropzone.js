@@ -9,9 +9,9 @@ const maxUploadFileSize = 1024 * 1024 * 20; // not more than 20mb
 Dropzone.autoDiscover = false;
 
 $(document).ready(function() {
-    const urlPost = document.getElementById('urls').getAttribute('data-attachment-post');
-    const urlRemove = document.getElementById('urls').getAttribute('data-attachment-remove');
-    
+    const urlPost = $('#urls').data('attachment-post');
+    const urlRemove = $('#urls').data('attachment-remove');
+
 	const frm = $('#quotation');
 	
 	frm.submit(function (e) {
