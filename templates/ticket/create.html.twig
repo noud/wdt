@@ -35,7 +35,7 @@
                                          <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="control-label" for="my-awesome-dropzone">Bijlage(n)</label>
+                                                    <label class="control-label">{{ 'ticket.field.attachments'|trans }}</label>
                                                     <div class="dropzone dropzone-previews" id="my-dropzone"></div>
                                                 </div>
                                             </div>
@@ -60,5 +60,5 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('add') }}
+    {{ encore_entry_script_tags('add_ticket') }}
 {% endblock %}
