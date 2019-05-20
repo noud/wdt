@@ -31,7 +31,9 @@ class TicketAttachmentService
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('tickets/'.$ticketId.'/attachments', $organisationId);
+        return $this->zohoApiService->get('tickets/'.$ticketId.'/attachments', $organisationId, [
+            'sortBy' => '-createdTime',
+        ]);
     }
 
     public function getAllPublicTicketAttachments(int $ticketId): array
@@ -44,13 +46,7 @@ class TicketAttachmentService
             return $var['isPublic'];
         });
 
-        usort($publicTicketAttachments, function ($a, $b) {
-            return ($a['createdTime'] > $b['createdTime']) ? -1 : 1;
-        });
-
         return $publicTicketAttachments;
-
-        return [];
     }
 
     public function createTicketAttachment(string $file, int $ticketId, string $fileName = null): array
@@ -68,13 +64,13 @@ class TicketAttachmentService
             'file' => new \CURLFile($file, $fileMime, $fileName),
         ];
 
-        return $this->zohoApiService->get('tickets/'.$ticketId.'/attachments', $organisationId, [], $data);
+        return $this->zohoApiService->post('tickets/'.$ticketId.'/attachments', $organisationId, [], $data);
     }
 
     public function removeTicketAttachment(int $ticketId, int $attachmentId): array
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('tickets/'.$ticketId.'/attachments/'.$attachmentId, $organisationId, [], null, true);
+        return $this->zohoApiService->delete('tickets/'.$ticketId.'/attachments/'.$attachmentId, $organisationId, []);
     }
 }

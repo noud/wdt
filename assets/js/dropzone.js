@@ -4,6 +4,8 @@ import 'dropzone/dist/basic.css';
 import 'dropzone/dist/dropzone.css';
 import Dropzone from 'dropzone';
 
+const maxUploadFileSize = 1024 * 1024 * 20; // not more than 20mb
+
 Dropzone.autoDiscover = false;
 
 $(document).ready(function() {
@@ -44,7 +46,7 @@ $(document).ready(function() {
 	    });
 	});
 	myDropzone.on("addedfile", function(file) {
-		if(file.size > (1024 * 1024 * 20)) // not more than 20mb
+		if(file.size > maxUploadFileSize)
 		{
 			this.removeFile(file); // if you want to remove the file or you can add alert or presentation of a message
 		}
