@@ -104,7 +104,7 @@ class TicketThreadService
 //        $email = 'support@wdtinternetbv.zohodesk.eu';
 
         $data = [
-            'channel' => 'FORUMS',
+            'channel' => 'EMAIL',
             'content' => $ticketThread->getContent(),
             'contentType' => 'html',
             'fromEmailAddress' => $email,

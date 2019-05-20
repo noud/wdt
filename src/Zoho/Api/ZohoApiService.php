@@ -101,7 +101,6 @@ class ZohoApiService
 
     private function decodeResult(string $result, $ch): array
     {
-        dump($result);
         $result = json_decode($result, true);
         if (JSON_ERROR_NONE !== json_last_error()) {
             curl_close($ch);
