@@ -42,8 +42,12 @@ class TicketReplyService
         $ticket = $this->ticketService->getTicket($ticketId);
         $ticketNumber = $ticket['ticketNumber'];
         $subject = '[##' . $ticketNumber . '##]';
+        //$subject = '[## 376 ##]';
+        //$subject = '[## 386 ##]';
+        //$subject = '[## ' . $ticketNumber . ' ##]';
         //$subject = 'Re:[## '.$ticketNumber.' ##]';
-
+        //$subject = 'Re:[## '.$ticketNumber.' ##]';
+        
         $this->mailSender->sendTicketReplyMessage($subject, $to, $reply, $from);
     }
 }
