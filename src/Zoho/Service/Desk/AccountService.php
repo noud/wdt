@@ -38,11 +38,15 @@ class AccountService
     {
         $accounts = $this->getAllAccounts();
 
-        foreach ($accounts['data'] as $account) {
-            $accountContacts = $this->getAllAccountContacts($account['id']);
-            foreach ($accountContacts['data'] as $contact) {
-                if (isset($contact['email']) && $contact['email'] === $email) {
-                    return $account['id'];
+        if (isset($accounts['data'])) {
+            foreach ($accounts['data'] as $account) {
+                $accountContacts = $this->getAllAccountContacts($account['id']);
+                if (isset($accountContacts['data'])) {
+                    foreach ($accountContacts['data'] as $contact) {
+                        if (isset($contact['email']) && $contact['email'] === $email) {
+                            return $account['id'];
+                        }
+                    }
                 }
             }
         }
