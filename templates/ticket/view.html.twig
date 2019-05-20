@@ -61,7 +61,7 @@
                                                     <strong>{{ ticket.priority }}</strong>
                                                 </div>
                                                  <div class="row">
-                                                    Toevoegingen
+                                                    {{ 'ticket.field.attachments'|trans }}
                                                 </div>
                                                  <div class="row">
                                                     <ul>
@@ -84,9 +84,9 @@
                                                 <div class="row">
                                                     <div class="col-xs-6">
                                                         <div class="form-group">
-                                                            <label class="control-label">Toevoegen</label>
+                                                            <label class="control-label">{{ 'ticket.field.attachments_add'|trans }}</label>
                                                             <div action="/" class="dropzone" id="ticket-dropzone">
-                                                                <div class="dz-message" data-dz-message><span>Sleep uw bestand om te uploaden</span></div>
+                                                                <div class="dz-message" data-dz-message><span>{{ 'ticket.field.attachments_drag'|trans }}</span></div>
                                                             </div>
                                                         </div>
                                                     </div>
