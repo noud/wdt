@@ -28,21 +28,35 @@ class AccountService
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('accounts', $organisationId);
+        $from = 0;
+        $limit = 99;
+        $totalResult = [];
+
+        while (true) {
+            $result = $this->zohoApiService->get('accounts', $organisationId, [
+                'from' => $from,
+                'limit' => $limit,
+            ]);
+            if (isset($result['data']) && \count($result['data'])) {
+                $totalResult = array_merge($totalResult, $result['data']);
+                $from += $limit;
+            } else {
+                break;
+            }
+        }
+
+        return $totalResult;
     }
 
     public function getAccountIdByEmail(string $email): ?string
     {
         $accounts = $this->getAllAccounts();
-        if (isset($accounts['data'])) {
-            foreach ($accounts['data'] as $account) {
-                $accountContacts = $this->getAllAccountContacts($account['id']);
-                if (isset($accountContacts['data'])) {
-                    foreach ($accountContacts['data'] as $contact) {
-                        if (isset($contact['email']) && $contact['email'] === $email) {
-                            return $account['id'];
-                        }
-                    }
+
+        foreach ($accounts as $account) {
+            $accountContacts = $this->getAllAccountContacts($account['id']);
+            foreach ($accountContacts as $contact) {
+                if (isset($contact['email']) && $contact['email'] === $email) {
+                    return $account['id'];
                 }
             }
         }
@@ -54,21 +68,34 @@ class AccountService
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('accounts/'.$accountId.'/contacts', $organisationId);
+        $from = 0;
+        $limit = 100;
+        $totalResult = [];
+
+        while (true) {
+            $result = $this->zohoApiService->get('accounts/'.$accountId.'/contacts', $organisationId, [
+                'from' => $from,
+                'limit' => $limit,
+            ]);
+            if (isset($result['data']) && \count($result['data'])) {
+                $totalResult = array_merge($totalResult, $result['data']);
+                $from += $limit;
+            } else {
+                break;
+            }
+        }
+
+        return $totalResult;
     }
 
     public function getAccountContactIdByEmail(string $email): ?string
     {
         $accounts = $this->getAllAccounts();
-        if (isset($accounts['data'])) {
-            foreach ($accounts['data'] as $account) {
-                $accountContacts = $this->getAllAccountContacts($account['id']);
-                if (isset($accountContacts['data'])) {
-                    foreach ($accountContacts['data'] as $contact) {
-                        if (isset($contact['email']) && $contact['email'] === $email) {
-                            return $contact['id'];
-                        }
-                    }
+        foreach ($accounts as $account) {
+            $accountContacts = $this->getAllAccountContacts($account['id']);
+            foreach ($accountContacts as $contact) {
+                if (isset($contact['email']) && $contact['email'] === $email) {
+                    return $contact['id'];
                 }
             }
         }

@@ -2,9 +2,9 @@
 
 namespace App\Zoho\Service\Desk;
 
+use App\Form\Data\Desk\TicketCommentAddData;
 use App\Zoho\Api\ZohoApiService;
 use App\Zoho\Entity\Desk\TicketThread;
-use App\Zoho\Form\Data\Desk\TicketCommentAddData;
 
 class TicketThreadService
 {
@@ -40,14 +40,14 @@ class TicketThreadService
         $this->supportEmailAddressService = $supportEmailAddressService;
     }
 
-    public function getAllTicketThreads(string $ticketId): array
+    public function getAllTicketThreads(int $ticketId): array
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
         return $this->zohoApiService->get('tickets/'.$ticketId.'/threads', $organisationId);
     }
 
-    public function getTicketThread(string $ticketId, string $threadId): array
+    public function getTicketThread(int $ticketId, int $threadId): array
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
@@ -65,7 +65,7 @@ class TicketThreadService
         return $ticketThreads;
     }
 
-    public function getAllPublicTicketThreads(string $ticketId): array
+    public function getAllPublicTicketThreads(int $ticketId): array
     {
         $ticketThreads = $this->getAllTicketThreads($ticketId);
         $publicTicketThreads = array_filter($ticketThreads['data'], function ($comment) {
@@ -86,7 +86,7 @@ class TicketThreadService
         return $ticketThreads;
     }
 
-    public function addTicketThread(TicketCommentAddData $ticketThreadData, string $ticketId, string $email)
+    public function addTicketThread(TicketCommentAddData $ticketThreadData, int $ticketId, string $email)
     {
         $ticketThread = new TicketThread();
         $ticketThread->setContent($ticketThreadData->content);
@@ -94,7 +94,7 @@ class TicketThreadService
         $this->createTicketThread($ticketThread, $ticketId, $email);
     }
 
-    public function createTicketThread(TicketThread $ticketThread, string $ticketId, string $email)
+    public function createTicketThread(TicketThread $ticketThread, int $ticketId, string $email)
     {
         $to = $this->supportEmailAddressService->getFirstSupportEmailAddress();
 
@@ -110,6 +110,6 @@ class TicketThreadService
 
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('tickets/'.$ticketId.'/sendReply', $organisationId, [], $data);
+        return $this->zohoApiService->post('tickets/'.$ticketId.'/sendReply', $organisationId, [], $data);
     }
 }

@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Zoho\Form\Handler\Desk;
+namespace App\Form\Handler\Desk;
 
 use App\Entity\User;
+use App\Form\Data\Desk\TicketCommentAddData;
 use App\Service\TicketReplyService;
-use App\Zoho\Form\Data\Desk\TicketCommentAddData;
-//use App\Zoho\Service\Desk\TicketThreadService;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -37,7 +36,7 @@ class TicketReplyAddHandler
     /**
      * @throws \Doctrine\ORM\ORMException
      */
-    public function handleRequest(FormInterface $form, Request $request, string $ticketId): bool
+    public function handleRequest(FormInterface $form, Request $request, int $ticketId): bool
     {
         $form->handleRequest($request);
 

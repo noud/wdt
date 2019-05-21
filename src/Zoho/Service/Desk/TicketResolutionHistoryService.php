@@ -4,7 +4,7 @@ namespace App\Zoho\Service\Desk;
 
 use App\Zoho\Api\ZohoApiService;
 
-class DepartmentService
+class TicketResolutionHistoryService
 {
     /**
      * @var ZohoApiService
@@ -16,6 +16,9 @@ class DepartmentService
      */
     private $organizationService;
 
+    /**
+     * DepartmentService constructor.
+     */
     public function __construct(
         ZohoApiService $zohoDeskApiService,
         OrganizationService $organizationService
@@ -24,18 +27,16 @@ class DepartmentService
         $this->organizationService = $organizationService;
     }
 
-    public function getAllDepartments(): array
+    public function getAllTicketResolutionHistory(int $ticketId)
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
         $from = 0;
-        $limit = 200;
+        $limit = 99;
         $totalResult = [];
 
         while (true) {
-            $result = $this->zohoApiService->get('departments', $organisationId, [
-                'isEnabled' => 'true',
-                'chatStatus' => 'AVAILABLE',
+            $result = $this->zohoApiService->get('tickets/'.$ticketId.'/resolutionHistory', $organisationId, [
                 'from' => $from,
                 'limit' => $limit,
             ]);
@@ -48,12 +49,5 @@ class DepartmentService
         }
 
         return $totalResult;
-    }
-
-    public function getDepartmentId(): int
-    {
-        $departments = $this->getAllDepartments();
-
-        return (isset($departments['data'][0])) ? $departments['data'][0]['id'] : null;
     }
 }

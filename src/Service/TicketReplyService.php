@@ -2,8 +2,8 @@
 
 namespace App\Service;
 
+use App\Form\Data\Desk\TicketCommentAddData;
 use App\Mailer\MailSender;
-use App\Zoho\Form\Data\Desk\TicketCommentAddData;
 use App\Zoho\Service\Desk\SupportEmailAddressService;
 use App\Zoho\Service\Desk\TicketService;
 
@@ -34,7 +34,7 @@ class TicketReplyService
         $this->supportEmailAddressService = $supportEmailAddressService;
     }
 
-    public function addTicketReply(TicketCommentAddData $ticketCommentData, string $ticketId, string $from)
+    public function addTicketReply(TicketCommentAddData $ticketCommentData, int $ticketId, string $from)
     {
         $to = $this->supportEmailAddressService->getFirstSupportEmailAddress();
 

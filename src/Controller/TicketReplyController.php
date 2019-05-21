@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
+use App\Form\Data\Desk\TicketCommentAddData;
+use App\Form\Handler\Desk\TicketReplyAddHandler;
+use App\Form\Type\Desk\TicketReplyAddType;
 use App\Service\PageService;
-use App\Zoho\Form\Data\Desk\TicketCommentAddData;
-use App\Zoho\Form\Handler\Desk\TicketReplyAddHandler;
-use App\Zoho\Form\Type\Desk\TicketReplyAddType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,7 +35,7 @@ class TicketReplyController extends AbstractController
     /**
      * @Route("/ticket/{ticketId}/reply/create", name="ticket_reply_create")
      */
-    public function createDeskTicketReply(string $ticketId, TicketReplyAddHandler $ticketReplyAddHandler, Request $request): Response
+    public function createDeskTicketReply(int $ticketId, TicketReplyAddHandler $ticketReplyAddHandler, Request $request): Response
     {
         $data = new TicketCommentAddData();
         $form = $this->createForm(TicketReplyAddType::class, $data);

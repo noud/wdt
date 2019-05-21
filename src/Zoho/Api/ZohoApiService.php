@@ -27,10 +27,7 @@ class ZohoApiService
         $this->zohoAccessTokenService->init();
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function get(string $slug, ?int $organizationId = null, array $filters = [], $data = null): array
+    private function request(string $slug, ?int $organizationId = null, array $filters = [])
     {
         $this->zohoAccessTokenService->checkAccessTokenExpiryTime();
 
@@ -55,13 +52,43 @@ class ZohoApiService
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-        if ($data) {
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        }
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
         curl_setopt($ch, CURLOPT_TIMEOUT, 400);
 
+        return $ch;
+    }
+
+    public function get(string $slug, ?int $organizationId = null, array $filters = []): array
+    {
+        $ch = $this->request($slug, $organizationId, $filters);
+
+        return $this->processRequest($organizationId, $ch);
+    }
+
+    // @TODO put
+
+    public function post(string $slug, ?int $organizationId = null, array $filters = [], $data = null): array
+    {
+        $ch = $this->request($slug, $organizationId, $filters);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+
+        return $this->processRequest($organizationId, $ch);
+    }
+
+    public function delete(string $slug, ?int $organizationId = null, array $filters = []): array
+    {
+        $ch = $this->request($slug, $organizationId, $filters);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+
+        return $this->processRequest($organizationId, $ch, true);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function processRequest(?int $organizationId, $ch, bool $delete = false): array
+    {
         /** @var string $result */
         $result = curl_exec($ch);
         if ($errorNumber = curl_errno($ch)) {
@@ -71,7 +98,7 @@ class ZohoApiService
             }
         }
 
-        if ('' === $result) {
+        if ($delete or '' === $result) {
             return [];
         }
 

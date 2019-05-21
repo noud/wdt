@@ -28,8 +28,24 @@ class ContactService
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('contacts', $organisationId, [
-            'include' => 'contacts',
-        ]);
+        $from = 0;
+        $limit = 20;
+        $totalResult = [];
+
+        while (true) {
+            $result = $this->zohoApiService->get('contacts', $organisationId, [
+                'include' => 'accounts,contacts',
+                'from' => $from,
+                'limit' => $limit,
+            ]);
+            if (isset($result['data']) && \count($result['data'])) {
+                $totalResult = array_merge($totalResult, $result['data']);
+                $from += $limit;
+            } else {
+                break;
+            }
+        }
+
+        return $totalResult;
     }
 }

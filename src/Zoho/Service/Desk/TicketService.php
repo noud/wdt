@@ -47,22 +47,73 @@ class TicketService
         $this->searchService = $searchService;
     }
 
+    public function searchTickets(string $email, string $status): array
+    {
+        $accountId = $this->accountService->getAccountIdByEmail($email);
+        $organisationId = $this->organizationService->getOrganizationId();
+
+        $from = 0;
+        $limit = 100;
+        $totalResult = [];
+
+        while (true) {
+            $result = $this->zohoApiService->get('tickets/search', $organisationId, [
+                'from' => $from,
+                'limit' => $limit,
+                'accountId' => $accountId,
+                'status' => $status,
+                'sortBy' => '-createdTime',
+            ]);
+            if (isset($result['data']) && \count($result['data'])) {
+                $totalResult = array_merge($totalResult, $result['data']);
+                $from += $limit;
+            } else {
+                break;
+            }
+        }
+
+        return $this->copyTickets($totalResult);
+    }
+
+    private function copyTickets(array $ticketsData): array
+    {
+        $tickets = [];
+        foreach ($ticketsData as $ticketData) {
+            $ticket = new Ticket();
+            $ticket->setId($ticketData['id']);
+            $ticket->setTicketNumber($ticketData['ticketNumber']);
+            $ticket->setSubject($ticketData['subject']);
+            $ticket->setStatus($ticketData['status']);
+            $tickets[] = $ticket;
+        }
+
+        return $tickets;
+    }
+
     public function getAllTickets(): array
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('tickets', $organisationId, [
-            'include' => 'contacts,assignee,departments,team,isRead',
-        ]);
-    }
+        $from = 0;
+        $limit = 99;
+        $totalResult = [];
 
-    private function sortTicketsByNumber(array $tickets): array
-    {
-        usort($tickets, function ($a, $b) {
-            return $b['ticketNumber'] <=> $a['ticketNumber'];
-        });
+        while (true) {
+            $result = $this->zohoApiService->get('tickets', $organisationId, [
+                'from' => $from,
+                'limit' => $limit,
+                'include' => 'contacts,assignee,departments,team,isRead',
+                'sortBy' => '-createdTime',
+            ]);
+            if (isset($result['data']) && \count($result['data'])) {
+                $totalResult = array_merge($totalResult, $result['data']);
+                $from += $limit;
+            } else {
+                break;
+            }
+        }
 
-        return $tickets;
+        return $totalResult;
     }
 
     /**
@@ -72,44 +123,53 @@ class TicketService
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
+        $from = 0;
+        $limit = 100;
+        $totalResult = [];
+
         $accountId = $this->accountService->getAccountIdByEmail($email);
         if ($accountId) {
-            $result = $this->zohoApiService->get('accounts/'.$accountId.'/tickets', $organisationId, [
-                'include' => 'assignee,departments,team,isRead',
-            ]);
-        } else {
-            $result = $this->searchService->search($email, 'contacts');
-            if ($result) {
-                $contactId = $result['data'][0]['id'];
-                $result = $this->zohoApiService->get('contacts/'.$contactId.'/tickets', $organisationId, [
-                    'include' => 'assignee,departments,team,isRead',
-                    'limit' => 100,
+            while (true) {
+                $result = $this->zohoApiService->get('accounts/'.$accountId.'/tickets', $organisationId, [
+                    'include' => 'products,assignee,departments,team,isRead',
+                    'from' => $from,
+                    'limit' => $limit,
+                    'sortBy' => '-createdTime',
                 ]);
-            } else {
-                $result = [];
+                if (isset($result['data']) && \count($result['data'])) {
+                    $totalResult = array_merge($totalResult, $result['data']);
+                    $from += $limit;
+                } else {
+                    break;
+                }
+            }
+        } else {
+            while (true) {
+                $result = $this->searchService->search($email, 'contacts');
+                if ($result) {
+                    $contactId = $result['data'][0]['id'];
+                    $result = $this->zohoApiService->get('contacts/'.$contactId.'/tickets', $organisationId, [
+                        'include' => 'assignee,departments,team,isRead',
+                        'from' => $from,
+                        'limit' => $limit,
+                        'sortBy' => '-createdTime',
+                    ]);
+                    if (isset($result['data']) && \count($result['data'])) {
+                        $totalResult = array_merge($totalResult, $result['data']);
+                        $from += $limit;
+                    } else {
+                        break;
+                    }
+                } else {
+                    $result = [];
+                }
             }
         }
 
-        if (isset($result['data'])) {
-            $resultSorted = $this->sortTicketsByNumber($result['data']);
-
-            $tickets = [];
-            foreach ($resultSorted as $ticketData) {
-                $ticket = new Ticket();
-                $ticket->setId($ticketData['id']);
-                $ticket->setTicketNumber($ticketData['ticketNumber']);
-                $ticket->setSubject($ticketData['subject']);
-                $ticket->setStatus($ticketData['status']);
-                $tickets[] = $ticket;
-            }
-
-            return $tickets;
-        }
-
-        return [];
+        return $this->copyTickets($totalResult);
     }
 
-    public function getTicket(string $ticketId): array
+    public function getTicket(int $ticketId): array
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
@@ -141,6 +201,6 @@ class TicketService
 
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('tickets', $organisationId, [], $data);
+        return $this->zohoApiService->post('tickets', $organisationId, [], json_encode($data));
     }
 }

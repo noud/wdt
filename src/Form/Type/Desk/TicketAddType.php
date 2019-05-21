@@ -7,6 +7,7 @@ use App\Zoho\Enum\TicketPriorityEnum;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -44,6 +45,8 @@ class TicketAddType extends AbstractType
                 'choices' => TicketPriorityEnum::getChoices(),
                 'placeholder' => 'ticket.placeholder.priority',
             ])
+            ->add('attachments', HiddenType::class)
+            ->add('uploadFormId', HiddenType::class)
         ;
     }
 

@@ -2,9 +2,9 @@
 
 namespace App\Zoho\Service\Desk;
 
+use App\Form\Data\Desk\TicketCommentAddData;
 use App\Zoho\Api\ZohoApiService;
 use App\Zoho\Entity\Desk\TicketComment;
-use App\Zoho\Form\Data\Desk\TicketCommentAddData;
 
 class TicketCommentService
 {
@@ -26,35 +26,42 @@ class TicketCommentService
         $this->organizationService = $organizationService;
     }
 
-    public function getAllTicketComments(string $ticketId): array
+    public function getAllTicketComments(int $ticketId): array
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('tickets/'.$ticketId.'/comments', $organisationId);
+        $from = 0;
+        $limit = 200000;
+        $totalResult = [];
+
+        while (true) {
+            $result = $this->zohoApiService->get('tickets/'.$ticketId.'/comments', $organisationId, [
+                'from' => $from,
+                'limit' => $limit,
+                'sortBy' => '-commentedTime',
+            ]);
+            if (isset($result['data']) && \count($result['data'])) {
+                $totalResult = array_merge($totalResult, $result['data']);
+                $from += $limit;
+            } else {
+                break;
+            }
+        }
+
+        return $totalResult;
     }
 
-    private function sortTicketCommentsByDate(array $ticketComments): array
-    {
-        usort($ticketComments, function ($a, $b) {
-            return $b['commentedTime'] <=> $a['commentedTime'];
-        });
-
-        return $ticketComments;
-    }
-
-    public function getAllPublicTicketComments(string $ticketId): array
+    public function getAllPublicTicketComments(int $ticketId): array
     {
         $ticketComments = $this->getAllTicketComments($ticketId);
-        $publicTicketComments = array_filter($ticketComments['data'], function ($comment) {
+        $publicTicketComments = array_filter($ticketComments, function ($comment) {
             return $comment['isPublic'];
         });
-
-        $publicTicketComments = $this->sortTicketCommentsByDate($publicTicketComments);
 
         return $publicTicketComments;
     }
 
-    public function addTicketComment(TicketCommentAddData $ticketCommentData, string $ticketId)
+    public function addTicketComment(TicketCommentAddData $ticketCommentData, int $ticketId)
     {
         $ticketComment = new TicketComment();
         $ticketComment->setContent($ticketCommentData->content);
@@ -62,7 +69,7 @@ class TicketCommentService
         $this->createTicketComment($ticketComment, $ticketId);
     }
 
-    public function createTicketComment(TicketComment $ticketComment, string $ticketId)
+    public function createTicketComment(TicketComment $ticketComment, int $ticketId)
     {
         $data = [
             'isPublic' => 'true',
@@ -72,6 +79,6 @@ class TicketCommentService
 
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('tickets/'.$ticketId.'/comments', $organisationId, [], $data);
+        return $this->zohoApiService->post('tickets/'.$ticketId.'/comments', $organisationId, [], json_encode($data));
     }
 }

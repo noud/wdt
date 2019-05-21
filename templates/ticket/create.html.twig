@@ -1,6 +1,11 @@
 {% extends 'base.html.twig' %}
 {% trans_default_domain 'ticket' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('add') }}
+{% endblock %}
+
 {% block navbar %}navbar-dark bg-dark border-bottom{% endblock %}
 {% block title %}{{ page.title }}{% endblock %}
 {% block body %}
@@ -27,6 +32,16 @@
                                     {{ form_row(form.priority) }}
 
                                     <br/>
+                                         <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">{{ 'ticket.field.attachments'|trans }}</label>
+                                                    <div class="dropzone dropzone-previews" id="my-dropzone"></div>
+                                                </div>
+                                            </div>
+                            			</div>
+                                    <br/>
+                                    
                                     <button type="submit" class="btn btn-sm btn-primary btn-icon rounded-pill">
                                         <span class="btn-inner--text">{{ 'ticket.field.submit'|trans }}</span>
                                         <span class="btn-inner--icon"><i class="fas fa-long-arrow-alt-right"></i></span>
@@ -40,4 +55,10 @@
             </div>
         </section>
     </div>
+    <div id="uploader" data-endpoint="{{ oneup_uploader_endpoint('gallery') }}" data-upload-form-id="{{ form.vars.value.uploadFormId }}" />
+    <div id="attachment_remove" data-attachment_remove="{{ path('ticket_local_attachment_remove') }}" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('add_ticket') }}
 {% endblock %}

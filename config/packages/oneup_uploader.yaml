@@ -1,0 +1,7 @@
+oneup_uploader:
+    mappings:
+        gallery:
+            frontend: dropzone # or any uploader you use in the frontend
+            storage:
+                directory: "%ticket_attachments_dir%"
+                
