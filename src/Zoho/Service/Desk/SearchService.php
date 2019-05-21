@@ -24,12 +24,12 @@ class SearchService
         $this->organizationService = $organizationService;
     }
 
-    public function search(string $searchStr, string $module): array
+    public function search(string $searchStr, string $module = null): array
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
         $params['searchStr'] = $searchStr;
-        if (\mb_strlen($module)) {
+        if ($module) {
             $params['module'] = $module;
         }
 
