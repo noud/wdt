@@ -27,12 +27,12 @@ class TicketService
      * @var DepartmentService
      */
     private $departmentService;
-    
+
     /**
      * @var SearchService
      */
     private $searchService;
-    
+
     public function __construct(
         ZohoApiService $zohoDeskApiService,
         OrganizationService $organizationService,
@@ -71,7 +71,7 @@ class TicketService
     public function getTickets(string $email): array
     {
         $organisationId = $this->organizationService->getOrganizationId();
-        
+
         $accountId = $this->accountService->getAccountIdByEmail($email);
         if ($accountId) {
             $result = $this->zohoApiService->get('accounts/'.$accountId.'/tickets', $organisationId, [
@@ -79,16 +79,20 @@ class TicketService
             ]);
         } else {
             $result = $this->searchService->search($email, 'contacts');
-            $contactId = $result['data'][0]['id'];
-            $result = $this->zohoApiService->get('contacts/'.$contactId.'/tickets', $organisationId, [
-                'include' => 'assignee,departments,team,isRead',
-                'limit' => 100,
-            ]);
+            if ($result) {
+                $contactId = $result['data'][0]['id'];
+                $result = $this->zohoApiService->get('contacts/'.$contactId.'/tickets', $organisationId, [
+                    'include' => 'assignee,departments,team,isRead',
+                    'limit' => 100,
+                ]);
+            } else {
+                $result = [];
+            }
         }
 
         if (isset($result['data'])) {
             $resultSorted = $this->sortTicketsByNumber($result['data']);
-            
+
             $tickets = [];
             foreach ($resultSorted as $ticketData) {
                 $ticket = new Ticket();
@@ -98,10 +102,10 @@ class TicketService
                 $ticket->setStatus($ticketData['status']);
                 $tickets[] = $ticket;
             }
-            
+
             return $tickets;
         }
-        
+
         return [];
     }
 

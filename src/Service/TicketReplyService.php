@@ -39,17 +39,10 @@ class TicketReplyService
         $to = $this->supportEmailAddressService->getFirstSupportEmailAddress();
 
         $reply = $ticketCommentData->content;
-        //$reply = '#original_sender {' . $from . '}'."\n\n" . $reply;
         $ticket = $this->ticketService->getTicket($ticketId);
         $ticketNumber = $ticket['ticketNumber'];
-        //$subject = '[##' . $ticketNumber . '##]';
-        $subject = '[##' . $ticketNumber . '##]'.' '.$ticket['subject'];
-        //$subject = '[## 376 ##]';
-        //$subject = '[## 386 ##]';
-        //$subject = '[## ' . $ticketNumber . ' ##]';
-        //$subject = 'Re:[## '.$ticketNumber.' ##]';
-        //$subject = 'Re:[## '.$ticketNumber.' ##]';
-        
+        $subject = '[##'.$ticketNumber.'##]'.' '.$ticket['subject'];
+
         $this->mailSender->sendTicketReplyMessage($subject, $to, $reply, $from);
     }
 }

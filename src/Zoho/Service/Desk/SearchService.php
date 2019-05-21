@@ -29,9 +29,10 @@ class SearchService
         $organisationId = $this->organizationService->getOrganizationId();
 
         $params['searchStr'] = $searchStr;
-        if (strlen($module)) {
+        if (\mb_strlen($module)) {
             $params['module'] = $module;
         }
+
         return $this->zohoApiService->get('search', $organisationId, $params);
     }
 }
