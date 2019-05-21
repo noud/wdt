@@ -46,6 +46,7 @@ class AccountService
                 }
             }
         }
+        return null;
     }
 
     public function getAllAccountContacts(string $accountId): array

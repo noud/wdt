@@ -27,17 +27,24 @@ class TicketService
      * @var DepartmentService
      */
     private $departmentService;
-
+    
+    /**
+     * @var SearchService
+     */
+    private $searchService;
+    
     public function __construct(
         ZohoApiService $zohoDeskApiService,
         OrganizationService $organizationService,
         AccountService $accountService,
-        DepartmentService $departmentService
+        DepartmentService $departmentService,
+        SearchService $searchService
     ) {
         $this->zohoApiService = $zohoDeskApiService;
         $this->organizationService = $organizationService;
         $this->accountService = $accountService;
         $this->departmentService = $departmentService;
+        $this->searchService = $searchService;
     }
 
     public function getAllTickets(): array
@@ -63,16 +70,25 @@ class TicketService
      */
     public function getTickets(string $email): array
     {
-        $accountId = $this->accountService->getAccountIdByEmail($email);
-
         $organisationId = $this->organizationService->getOrganizationId();
-        $result = $this->zohoApiService->get('accounts/'.$accountId.'/tickets', $organisationId, [
-            'include' => 'assignee,departments,team,isRead',
-        ]);
+        
+        $accountId = $this->accountService->getAccountIdByEmail($email);
+        if ($accountId) {
+            $result = $this->zohoApiService->get('accounts/'.$accountId.'/tickets', $organisationId, [
+                'include' => 'assignee,departments,team,isRead',
+            ]);
+        } else {
+            $result = $this->searchService->search($email, 'contacts');
+            $contactId = $result['data'][0]['id'];
+            $result = $this->zohoApiService->get('contacts/'.$contactId.'/tickets', $organisationId, [
+                'include' => 'assignee,departments,team,isRead',
+                'limit' => 100,
+            ]);
+        }
 
         if (isset($result['data'])) {
             $resultSorted = $this->sortTicketsByNumber($result['data']);
-
+            
             $tickets = [];
             foreach ($resultSorted as $ticketData) {
                 $ticket = new Ticket();
@@ -82,10 +98,10 @@ class TicketService
                 $ticket->setStatus($ticketData['status']);
                 $tickets[] = $ticket;
             }
-
+            
             return $tickets;
         }
-
+        
         return [];
     }
 
