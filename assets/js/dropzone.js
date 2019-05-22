@@ -12,17 +12,16 @@ $(document).ready(function() {
     const urlPost = $('#urls').data('attachment-post');
     const urlRemove = $('#urls').data('attachment-remove');
 
-	const frm = $('#quotation');
+	const frm = $('.attachment-remove');
 	
 	frm.submit(function (e) {
-	    e.preventDefault();
-	
-	    $.ajax({
-	        type: frm.attr('method'),
-	        url: frm.attr('action'),
-	        data: frm.serialize(),
-	    });
+		let message = frm.attr('data-message');
+		var status = confirm(message);
+		if(status == false){
+			e.preventDefault();
+		}
 	});
+	
 	const myDropzone = new Dropzone(
 		"div#ticket-dropzone",
 		{
