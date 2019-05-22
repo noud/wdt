@@ -16,6 +16,7 @@ ticket:
       aantal_minuten_ingeschat: 'Aantal minuten ingeschat'
       aantal_uur_ingeschat: 'Aantal uur ingeschat'
     submit: 'Ticket registreren'
+    remove: 'verwijder'
   placeholder:
     priority: '-Geen-'
   message:
