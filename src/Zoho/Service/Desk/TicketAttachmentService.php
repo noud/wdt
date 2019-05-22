@@ -53,7 +53,7 @@ class TicketAttachmentService
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
-        /** @var string $fileMime */
+        /** @var string $mime */
         $mime = mime_content_type($name);
         if (!$postname) {
             $postname = basename($name);
