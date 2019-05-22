@@ -79,7 +79,8 @@ class TicketController extends AbstractController
         if ($status = $ticketStatusHandler->handleRequest($form, $request)) {
             $tickets = $this->ticketService->searchTickets($email, $status);
         } else {
-            $tickets = $this->ticketService->getTickets($email);
+            //$tickets = $this->ticketService->getTickets($email);
+            $tickets = $this->ticketService->searchTickets($email);
         }
 
         return $this->render('ticket/overview.html.twig', [

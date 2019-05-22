@@ -47,7 +47,7 @@ class TicketService
         $this->searchService = $searchService;
     }
 
-    public function searchTickets(string $email, string $status): array
+    public function searchTickets(string $email, string $status = null): array
     {
         $accountId = $this->accountService->getAccountIdByEmail($email);
         $organisationId = $this->organizationService->getOrganizationId();
@@ -57,13 +57,16 @@ class TicketService
         $totalResult = [];
 
         while (true) {
-            $result = $this->zohoApiService->get('tickets/search', $organisationId, [
+            $params = [
                 'from' => $from,
                 'limit' => $limit,
                 'accountId' => $accountId,
-                'status' => $status,
                 'sortBy' => '-createdTime',
-            ]);
+            ];
+            if ($status) {
+                $params['status'] = $status;
+            }
+            $result = $this->zohoApiService->get('tickets/search', $organisationId, $params);
             if (isset($result['data']) && \count($result['data'])) {
                 $totalResult = array_merge($totalResult, $result['data']);
                 $from += $limit;
@@ -144,25 +147,25 @@ class TicketService
                 }
             }
         } else {
-            while (true) {
-                $result = $this->searchService->search($email, 'contacts');
-                if ($result) {
-                    $contactId = $result['data'][0]['id'];
+            $result = $this->searchService->search($email, 'contacts');
+            if ($result) {
+                $contactId = $result['data'][0]['id'];
+                while (true) {
                     $result = $this->zohoApiService->get('contacts/'.$contactId.'/tickets', $organisationId, [
-                        'include' => 'assignee,departments,team,isRead',
-                        'from' => $from,
-                        'limit' => $limit,
-                        'sortBy' => '-createdTime',
-                    ]);
+                            'include' => 'assignee,departments,team,isRead',
+                            'from' => $from,
+                            'limit' => $limit,
+                            'sortBy' => '-createdTime',
+                        ]);
                     if (isset($result['data']) && \count($result['data'])) {
                         $totalResult = array_merge($totalResult, $result['data']);
                         $from += $limit;
                     } else {
                         break;
                     }
-                } else {
-                    $result = [];
                 }
+            } else {
+                $result = [];
             }
         }
 
