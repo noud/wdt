@@ -57,6 +57,7 @@ class ZohoDeskController extends AbstractController
     private $pageService;
 
     public function __construct(
+        string $environment,
         OrganizationService $organizationService,
         DepartmentService $departmentService,
         SupportEmailAddressService $supportEmailAddressService,
@@ -66,6 +67,9 @@ class ZohoDeskController extends AbstractController
         TicketResolutionHistoryService $ticketResolutionHistoryService,
         PageService $pageService
     ) {
+        if ('dev' !== $environment) {
+            throw $this->createAccessDeniedException('GET OUT!');
+        }
         $this->organizationService = $organizationService;
         $this->departmentService = $departmentService;
         $this->supportEmailAddressService = $supportEmailAddressService;
