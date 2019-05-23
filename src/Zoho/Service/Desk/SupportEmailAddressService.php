@@ -43,10 +43,8 @@ class SupportEmailAddressService
     public function getFirstSupportEmailAddress(): string
     {
         $departments = $this->departmentService->getAllDepartments();
-        $supportEmailAddresses = $this->getAllSupportEmailAddresses($departments['data'][0]['id']);
+        $supportEmailAddresses = $this->getAllSupportEmailAddresses($departments[0]['id']);
 
-        //return 'noud4@home.nl';
         return $supportEmailAddresses['data'][0]['address'];
-        // return 'support@wdtinternetbv.zohodesk.eu';   // @TODO get from API
     }
 }
