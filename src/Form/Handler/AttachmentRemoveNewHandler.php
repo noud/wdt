@@ -28,8 +28,9 @@ class AttachmentRemoveNewHandler
             /** @var AttachmentRemoveNewData $data */
             $data = $form->getData();
 
-            $uploadFormId = $data->uploadFormId;
-            $fileName = $data->uniqueUploadId;
+            // prevent climbing the path with using basename()
+            $uploadFormId = basename($data->uploadFormId);
+            $fileName = basename($data->uniqueUploadId);
 
             // remove from filesystem
             $this->attachmentService->removeAttachment($uploadFormId, $fileName);
