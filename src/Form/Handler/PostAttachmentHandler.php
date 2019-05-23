@@ -35,7 +35,8 @@ class PostAttachmentHandler
             /** @var PostAttachmentData $data */
             $data = $form->getData();
 
-            $fileName = $data->filename;
+            // prevent climbing the path with using basename()
+            $fileName = basename($data->filename);
             $binary = $data->file;
             $dirName = $this->ticketAttachmentPath.\DIRECTORY_SEPARATOR.$id.\DIRECTORY_SEPARATOR;
             if (!is_dir($dirName)) {
@@ -44,6 +45,8 @@ class PostAttachmentHandler
             $fullName = $dirName.$fileName;
             if (move_uploaded_file($binary, $fullName)) {
                 $this->ticketAttachmentService->createTicketAttachment($fullName, $id);
+
+                return true;
                 unlink($fullName);
                 rmdir($dirName);
 
