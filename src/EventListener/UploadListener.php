@@ -53,6 +53,7 @@ class UploadListener implements EventSubscriberInterface
     {
         $request = $event->getRequest();
         $uploadFormId = $request->get('uploadFormId');
+        $uploadFormId = '../../iets.txt';
 
         $fileName = $event->getRequest()->get('filename');
 
