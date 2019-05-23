@@ -52,8 +52,8 @@ class UploadListener implements EventSubscriberInterface
     public function onUpload(PostPersistEvent $event)
     {
         $request = $event->getRequest();
-        $uploadFormId = $request->get('uploadFormId');
-        $uploadFormId = '../../iets.txt';
+        // prevent climbing the path with using basename()
+        $uploadFormId = basename($request->get('uploadFormId'));
 
         $fileName = $event->getRequest()->get('filename');
 

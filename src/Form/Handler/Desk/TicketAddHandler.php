@@ -69,18 +69,22 @@ class TicketAddHandler
             }
 
             // now put the attachments
-            $uploadFormId = $ticketData->uploadFormId;
+            // prevent climbing the path with using basename()
+            $uploadFormId = basename($ticketData->uploadFormId);
             $dirName = $this->ticketAttachmentPath.\DIRECTORY_SEPARATOR.$uploadFormId.\DIRECTORY_SEPARATOR;
-            $files = Finder::create()
-                ->files()
-                ->in($dirName);
-            foreach ($files as $file) {
-                $fileName = $file->getFilename();
-                $actualFileName = $attachments[$file->getFilename()];
-                $this->ticketAttachmentService->createTicketAttachment($dirName.$fileName, $ticketId, $actualFileName);
-                unlink($dirName.$fileName);
+            try {
+                $files = Finder::create()
+                    ->files()
+                    ->in($dirName);
+                foreach ($files as $file) {
+                    $fileName = $file->getFilename();
+                    $actualFileName = $attachments[$file->getFilename()];
+                    $this->ticketAttachmentService->createTicketAttachment($dirName.$fileName, $ticketId, $actualFileName);
+                    unlink($dirName.$fileName);
+                }
+                rmdir($dirName);
+            } catch (\Exception $e) {
             }
-            rmdir($dirName);
 
             return true;
         }
