@@ -70,7 +70,7 @@ class UserService
     public function activate(User $user): User
     {
         $user->setActive(true);
-        $user->setToken('');
+        $user->setToken(null);
 
         return $user;
     }
