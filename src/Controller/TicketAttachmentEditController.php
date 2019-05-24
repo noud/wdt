@@ -8,7 +8,9 @@ use App\Form\Handler\AttachmentRemoveEditHandler;
 use App\Form\Handler\PostAttachmentHandler;
 use App\Form\Type\AttachmentRemoveEditType;
 use App\Form\Type\PostAttachmentType;
+use App\Zoho\Service\Desk\AccountService;
 use App\Zoho\Service\Desk\TicketAttachmentService;
+use App\Zoho\Service\Desk\TicketService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,15 +26,29 @@ class TicketAttachmentEditController extends AbstractController
     private $ticketAttachmentService;
 
     /**
+     * @var AccountService
+     */
+    private $accountService;
+
+    /**
+     * @var TicketService
+     */
+    private $ticketService;
+
+    /**
      * @var TranslatorInterface
      */
     private $translator;
 
     public function __construct(
         TicketAttachmentService $ticketAttachmentService,
+        AccountService $accountService,
+        TicketService $ticketService,
         TranslatorInterface $translator
     ) {
         $this->ticketAttachmentService = $ticketAttachmentService;
+        $this->accountService = $accountService;
+        $this->ticketService = $ticketService;
         $this->translator = $translator;
     }
 
@@ -57,6 +73,17 @@ class TicketAttachmentEditController extends AbstractController
         );
     }
 
+    private function searchArrayForId($id, $keyname, $array)
+    {
+        foreach ($array as $key => $val) {
+            if ($val[$keyname] === $id) {
+                return $key;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * @Route("/ticket/attachment/remove/{ticketId}/{attachmentId}", methods={"DELETE"}, name="ticket_attachment_edit_remove")
      */
@@ -65,7 +92,21 @@ class TicketAttachmentEditController extends AbstractController
         $submittedToken = $request->request->get('token');
 
         if ($this->isCsrfTokenValid('ticket-attachment-delete', $submittedToken)) {
-            $this->ticketAttachmentService->removeTicketAttachment($ticketId, $attachmentId);
+            $user = $this->getUser();
+            $email = $user->getUsername();
+            //$creatorId = $this->zohoCrmApiService->getContactIdByEmail($email);
+            //$creatorId = $this->accountService->getAccountIdByEmail($email);
+            $creatorId = $this->accountService->getAccountContactIdByEmail($email);
+
+            // check if ticket belongs to user..
+            $ticketAttachments = $this->ticketAttachmentService->getAllPublicTicketAttachments($ticketId);
+            $key = $this->searchArrayForId((string) $attachmentId, 'id', $ticketAttachments);
+            if (null !== $key) {
+                $ticket = $this->ticketService->getTicket($ticketId);
+                if ($ticket['contactId'] === $creatorId) {
+                    $this->ticketAttachmentService->removeTicketAttachment($ticketId, $attachmentId);
+                }
+            }
         }
 
         return $this->redirectToRoute('ticket_view', ['id' => $ticketId]);
