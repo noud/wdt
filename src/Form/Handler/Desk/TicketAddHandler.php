@@ -3,6 +3,7 @@
 namespace App\Form\Handler\Desk;
 
 use App\Form\Data\Desk\TicketAddData;
+use App\Service\StringService;
 use App\Zoho\Service\Desk\TicketAttachmentService;
 use App\Zoho\Service\Desk\TicketService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -65,25 +66,29 @@ class TicketAddHandler
             $ticketAttachments = explode(',', $ticketAttachmentsString);
             foreach ($ticketAttachments as $ticketAttachmentString) {
                 $ticketAttachment = explode('|', $ticketAttachmentString);
-                $attachments[$ticketAttachment[3]] = $ticketAttachment[0];
+                if (isset($ticketAttachment[3])) {
+                    $attachments[$ticketAttachment[3]] = $ticketAttachment[0];
+                }
             }
 
             // now put the attachments
-            // prevent climbing the path with using basename()
-            $uploadFormId = basename($ticketData->uploadFormId);
-            $dirName = $this->ticketAttachmentPath.\DIRECTORY_SEPARATOR.$uploadFormId.\DIRECTORY_SEPARATOR;
-            try {
-                $files = Finder::create()
-                    ->files()
-                    ->in($dirName);
-                foreach ($files as $file) {
-                    $fileName = $file->getFilename();
-                    $actualFileName = $attachments[$file->getFilename()];
-                    $this->ticketAttachmentService->createTicketAttachment($dirName.$fileName, $ticketId, $actualFileName);
-                    unlink($dirName.$fileName);
+            // prevent climbing the path
+            $uploadFormId = $ticketData->uploadFormId;
+            if (StringService::checkCharactersAndNumbersWithDot($uploadFormId)) {
+                $dirName = $this->ticketAttachmentPath.\DIRECTORY_SEPARATOR.$uploadFormId.\DIRECTORY_SEPARATOR;
+                try {
+                    $files = Finder::create()
+                        ->files()
+                        ->in($dirName);
+                    foreach ($files as $file) {
+                        $fileName = $file->getFilename();
+                        $actualFileName = $attachments[$file->getFilename()];
+                        $this->ticketAttachmentService->createTicketAttachment($dirName.$fileName, $ticketId, $actualFileName);
+                        unlink($dirName.$fileName);
+                    }
+                    rmdir($dirName);
+                } catch (\Exception $e) {
                 }
-                rmdir($dirName);
-            } catch (\Exception $e) {
             }
 
             return true;

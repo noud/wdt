@@ -3,6 +3,7 @@
 namespace App\EventListener;
 
 use App\Service\AttachmentService;
+use App\Service\StringService;
 use Doctrine\ORM\EntityManagerInterface;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -52,10 +53,12 @@ class UploadListener implements EventSubscriberInterface
     public function onUpload(PostPersistEvent $event)
     {
         $request = $event->getRequest();
-        // prevent climbing the path with using basename()
-        $uploadFormId = basename($request->get('uploadFormId'));
+        // prevent climbing the path
+        $uploadFormId = $request->get('uploadFormId');
+        StringService::checkCharactersAndNumbersWithDot($uploadFormId);
 
         $fileName = $event->getRequest()->get('filename');
+        $fileName = StringService::checkFilename($fileName);
 
         $file = $event->getFile();
         $targetFile = $file->getPathName();
