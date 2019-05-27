@@ -73,17 +73,6 @@ class TicketAttachmentEditController extends AbstractController
         );
     }
 
-    private function searchArrayForId($id, $keyname, $array)
-    {
-        foreach ($array as $key => $val) {
-            if ($val[$keyname] === $id) {
-                return $key;
-            }
-        }
-
-        return null;
-    }
-
     /**
      * @Route("/ticket/attachment/remove/{ticketId}/{attachmentId}", methods={"DELETE"}, name="ticket_attachment_edit_remove")
      */
@@ -92,21 +81,12 @@ class TicketAttachmentEditController extends AbstractController
         $submittedToken = $request->request->get('token');
 
         if ($this->isCsrfTokenValid('ticket-attachment-delete', $submittedToken)) {
-            $user = $this->getUser();
-            $email = $user->getUsername();
-            //$creatorId = $this->zohoCrmApiService->getContactIdByEmail($email);
-            //$creatorId = $this->accountService->getAccountIdByEmail($email);
-            $creatorId = $this->accountService->getAccountContactIdByEmail($email);
-
-            // check if ticket belongs to user..
-            $ticketAttachments = $this->ticketAttachmentService->getAllPublicTicketAttachments($ticketId);
-            $key = $this->searchArrayForId((string) $attachmentId, 'id', $ticketAttachments);
-            if (null !== $key) {
-                $ticket = $this->ticketService->getTicket($ticketId);
-                if ($ticket['contactId'] === $creatorId) {
-                    $this->ticketAttachmentService->removeTicketAttachment($ticketId, $attachmentId);
-                }
-            }
+            $params = [
+                'ticketId' => $ticketId,
+                'attachmentId' => $attachmentId,
+            ];
+            $this->denyAccessUnlessGranted('TICKET_ATTACHMENT', $params);
+            $this->ticketAttachmentService->removeTicketAttachment($ticketId, $attachmentId);
         }
 
         return $this->redirectToRoute('ticket_view', ['id' => $ticketId]);
