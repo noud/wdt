@@ -34,7 +34,7 @@ class TicketReplyService
         $this->supportEmailAddressService = $supportEmailAddressService;
     }
 
-    public function addTicketReply(TicketCommentAddData $ticketCommentData, int $ticketId, string $from)
+    public function addTicketReply(TicketCommentAddData $ticketCommentData, int $ticketId, string $from): void
     {
         $to = $this->supportEmailAddressService->getFirstSupportEmailAddress();
 
