@@ -10,7 +10,9 @@ Dropzone.autoDiscover = false;
 
 $(document).ready(function() {
     const urlPost = $('#urls').data('attachment-post');
+    const csrfPost = $('#urls').data('attachment-post-csrf');
     const urlRemove = $('#urls').data('attachment-remove');
+    const csrfRemove = $('#urls').data('attachment-remove-csrf');
 
 	const frm = $('.attachment-remove');
 	
@@ -34,14 +36,20 @@ $(document).ready(function() {
 		}
 	);
 	myDropzone.on("sending", function(file, xhr, formData) {
-		  formData.append("filename", file.name);
-		  formData.append("filesize", file.size);
+		  formData.append("ticket_attachment_edit[filename]", file.name);
+		  formData.append("ticket_attachment_edit[filesize]", file.size);
+		  formData.append("ticket_attachment_edit[_token]", csrfPost);
+		  formData.append("ticket_attachment_edit[file]", file);
+		  formData.delete("file");
 		});
 	myDropzone.on("removedfile", function(file, xhr, formData) {
 	    $.ajax({
 	        type: 'POST',
 	        url: urlRemove,
-	        data: {'filename': file.name},
+	        data: {
+	        	'attachment_remove_edit[filename]': file.name,
+	        	'attachment_remove_edit[_token]': csrfRemove
+	        },
 	    });
 	});
 	myDropzone.on("addedfile", function(file) {

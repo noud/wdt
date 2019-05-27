@@ -58,7 +58,7 @@ class TicketAttachmentVoter extends Voter
 
         $email = $user->getUsername();
         $creatorId = $this->accountService->getAccountContactIdByEmail($email);
-        
+
         // check if ticket belongs to user..
         $ticketAttachments = $this->ticketAttachmentService->getAllPublicTicketAttachments($subject['ticketId']);
         $key = ArrayService::searchArrayForId((string) $subject['attachmentId'], 'id', $ticketAttachments);

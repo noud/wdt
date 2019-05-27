@@ -132,7 +132,7 @@
             </div>
         </section>
     </div>
-    <div id="urls" data-attachment-post="{{path('ticket_attachment_edit', {'id':ticket.id}) }}" data-attachment-remove="{{path('attachment_edit_new_remove', {'ticketId':ticket.id}) }}" />
+    <div id="urls" data-attachment-post="{{path('ticket_attachment_edit', {'id':ticket.id}) }}" data-attachment-post-csrf="{{ csrf_token('ticket_attachment_edit') }}" data-attachment-remove="{{path('attachment_edit_new_remove', {'ticketId':ticket.id}) }}" data-attachment-remove-csrf="{{ csrf_token('attachment_remove_edit') }}" />
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
