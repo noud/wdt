@@ -40,7 +40,7 @@ class TicketAttachmentVoter extends Voter
     protected function supports($attribute, $subject): bool
     {
         return 'TICKET_ATTACHMENT' === $attribute &&
-            \is_string($subject);
+            \is_int($subject);
     }
 
     /**
@@ -58,13 +58,13 @@ class TicketAttachmentVoter extends Voter
 
         $email = $user->getUsername();
         $creatorId = $this->accountService->getAccountContactIdByEmail($email);
-
+        
         // check if ticket belongs to user..
         $ticketAttachments = $this->ticketAttachmentService->getAllPublicTicketAttachments($subject['ticketId']);
         $key = ArrayService::searchArrayForId((string) $subject['attachmentId'], 'id', $ticketAttachments);
         if (null !== $key) {
             $ticket = $this->ticketService->getTicket($subject['ticketId']);
-            if ($ticket['contactId'] === $creatorId) {
+            if ($ticket['contactId'] === (string) $creatorId) {
                 return true;
             }
         }

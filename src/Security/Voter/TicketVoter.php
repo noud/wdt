@@ -31,7 +31,7 @@ class TicketVoter extends Voter
     protected function supports($attribute, $subject): bool
     {
         return 'TICKET' === $attribute &&
-            \is_string($subject);
+            \is_int($subject);
     }
 
     /**
@@ -49,10 +49,9 @@ class TicketVoter extends Voter
 
         $email = $user->getUsername();
         $creatorId = $this->accountService->getAccountContactIdByEmail($email);
-
         // check if ticket belongs to user..
         $ticket = $this->ticketService->getTicket($subject);
-        if ($ticket['contactId'] === $creatorId) {
+        if ($ticket['contactId'] === (string) $creatorId) {
             return true;
         }
 
