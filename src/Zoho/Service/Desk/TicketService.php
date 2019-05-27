@@ -74,19 +74,22 @@ class TicketService
             'limit' => '100',
         ]);
 
-        $resultSorted = $this->sortTicketsByNumber($result['data']);
-
-        $tickets = [];
-        foreach ($resultSorted as $ticketData) {
-            $ticket = new Ticket();
-            $ticket->setId($ticketData['id']);
-            $ticket->setTicketNumber($ticketData['ticketNumber']);
-            $ticket->setSubject($ticketData['subject']);
-            $ticket->setStatus($ticketData['status']);
-            $tickets[] = $ticket;
+        if ($result) {
+            $resultSorted = $this->sortTicketsByNumber($result['data']);
+    
+            $tickets = [];
+            foreach ($resultSorted as $ticketData) {
+                $ticket = new Ticket();
+                $ticket->setId($ticketData['id']);
+                $ticket->setTicketNumber($ticketData['ticketNumber']);
+                $ticket->setSubject($ticketData['subject']);
+                $ticket->setStatus($ticketData['status']);
+                $tickets[] = $ticket;
+            }
+    
+            return $tickets;
         }
-
-        return $tickets;
+        return [];
     }
 
     public function getTicket(int $ticketId): array
