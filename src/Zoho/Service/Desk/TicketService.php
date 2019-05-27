@@ -120,6 +120,7 @@ class TicketService
                 'include' => 'products,assignee,departments,team,isRead',
                 'from' => $from,
                 'limit' => 100,
+                'sortBy' => '-createdTime',
             ]);
             if (isset($result['data']) && \count($result['data'])) {
                 $totalResult = array_merge($totalResult, $result['data']);
@@ -129,9 +130,7 @@ class TicketService
             }
         }
 
-        $resultSorted = $this->sortTicketsByNumber($totalResult);
-
-        return $this->copyTickets($resultSorted);
+        return $this->copyTickets($totalResult);
     }
 
     public function getTicket(int $ticketId): array

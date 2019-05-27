@@ -3,7 +3,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ encore_entry_link_tags('add') }}
+    {{ encore_entry_link_tags('add_ticket') }}
 {% endblock %}
 
 {% block navbar %}navbar-dark bg-dark border-bottom{% endblock %}
@@ -39,7 +39,7 @@
                                                     <div class="dropzone dropzone-previews" id="my-dropzone"></div>
                                                 </div>
                                             </div>
-                            			</div>
+                                        </div>
                                     <br/>
                                     
                                     <button type="submit" class="btn btn-sm btn-primary btn-icon rounded-pill">
@@ -56,7 +56,7 @@
         </section>
     </div>
     <div id="uploader" data-endpoint="{{ oneup_uploader_endpoint('gallery') }}" data-upload-form-id="{{ form.vars.value.uploadFormId }}" />
-    <div id="attachment_remove" data-attachment_remove="{{ path('ticket_local_attachment_remove') }}" />
+    <div id="attachment_remove" data-attachment_remove="{{ path('ticket_local_attachment_remove') }}" data-attachment_remove_csrf="{{ csrf_token('attachment_remove_new') }}" />
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
