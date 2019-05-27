@@ -3,20 +3,13 @@
 namespace App\Security\Voter;
 
 use App\Entity\User;
-use App\Service\ArrayService;
 use App\Zoho\Service\Desk\AccountService;
-use App\Zoho\Service\Desk\TicketAttachmentService;
 use App\Zoho\Service\Desk\TicketService;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class TicketAttachmentVoter extends Voter
+class TicketVoter extends Voter
 {
-    /**
-     * @var TicketAttachmentService
-     */
-    private $ticketAttachmentService;
-
     /**
      * @var AccountService
      */
@@ -28,18 +21,16 @@ class TicketAttachmentVoter extends Voter
     private $ticketService;
 
     public function __construct(
-        TicketAttachmentService $ticketAttachmentService,
         AccountService $accountService,
         TicketService $ticketService
     ) {
-        $this->ticketAttachmentService = $ticketAttachmentService;
         $this->accountService = $accountService;
         $this->ticketService = $ticketService;
     }
 
     protected function supports($attribute, $subject): bool
     {
-        return 'TICKET_ATTACHMENT' === $attribute &&
+        return 'TICKET' === $attribute &&
             \is_string($subject);
     }
 
@@ -60,13 +51,9 @@ class TicketAttachmentVoter extends Voter
         $creatorId = $this->accountService->getAccountContactIdByEmail($email);
 
         // check if ticket belongs to user..
-        $ticketAttachments = $this->ticketAttachmentService->getAllPublicTicketAttachments($subject['ticketId']);
-        $key = ArrayService::searchArrayForId((string) $subject['attachmentId'], 'id', $ticketAttachments);
-        if (null !== $key) {
-            $ticket = $this->ticketService->getTicket($subject['ticketId']);
-            if ($ticket['contactId'] === $creatorId) {
-                return true;
-            }
+        $ticket = $this->ticketService->getTicket($subject);
+        if ($ticket['contactId'] === $creatorId) {
+            return true;
         }
 
         return false;

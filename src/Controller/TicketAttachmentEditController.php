@@ -100,6 +100,7 @@ class TicketAttachmentEditController extends AbstractController
         AttachmentRemoveEditHandler $formHandler,
         int $ticketId
     ): Response {
+        $this->denyAccessUnlessGranted('TICKET', $ticketId);
         $data = new AttachmentRemoveEditData();
 
         $form = $this->createForm(AttachmentRemoveEditType::class, $data);
