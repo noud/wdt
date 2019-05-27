@@ -65,8 +65,6 @@ class ZohoApiService
         return $this->processRequest($organizationId, $ch);
     }
 
-    // @TODO put
-
     public function post(string $slug, ?int $organizationId = null, array $filters = [], $data = null): array
     {
         $ch = $this->request($slug, $organizationId, $filters);

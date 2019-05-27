@@ -8,7 +8,9 @@ use App\Form\Handler\AttachmentRemoveEditHandler;
 use App\Form\Handler\PostAttachmentHandler;
 use App\Form\Type\AttachmentRemoveEditType;
 use App\Form\Type\PostAttachmentType;
+use App\Zoho\Service\Desk\AccountService;
 use App\Zoho\Service\Desk\TicketAttachmentService;
+use App\Zoho\Service\Desk\TicketService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,15 +26,29 @@ class TicketAttachmentEditController extends AbstractController
     private $ticketAttachmentService;
 
     /**
+     * @var AccountService
+     */
+    private $accountService;
+
+    /**
+     * @var TicketService
+     */
+    private $ticketService;
+
+    /**
      * @var TranslatorInterface
      */
     private $translator;
 
     public function __construct(
         TicketAttachmentService $ticketAttachmentService,
+        AccountService $accountService,
+        TicketService $ticketService,
         TranslatorInterface $translator
     ) {
         $this->ticketAttachmentService = $ticketAttachmentService;
+        $this->accountService = $accountService;
+        $this->ticketService = $ticketService;
         $this->translator = $translator;
     }
 
@@ -65,6 +81,11 @@ class TicketAttachmentEditController extends AbstractController
         $submittedToken = $request->request->get('token');
 
         if ($this->isCsrfTokenValid('ticket-attachment-delete', $submittedToken)) {
+            $params = [
+                'ticketId' => $ticketId,
+                'attachmentId' => $attachmentId,
+            ];
+            $this->denyAccessUnlessGranted('TICKET_ATTACHMENT', $params);
             $this->ticketAttachmentService->removeTicketAttachment($ticketId, $attachmentId);
         }
 
@@ -79,6 +100,7 @@ class TicketAttachmentEditController extends AbstractController
         AttachmentRemoveEditHandler $formHandler,
         int $ticketId
     ): Response {
+        $this->denyAccessUnlessGranted('TICKET', $ticketId);
         $data = new AttachmentRemoveEditData();
 
         $form = $this->createForm(AttachmentRemoveEditType::class, $data);

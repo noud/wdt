@@ -3,6 +3,7 @@
 namespace App\Form\Handler;
 
 use App\Form\Data\AttachmentRemoveEditData;
+use App\Service\StringService;
 use App\Zoho\Service\Desk\TicketAttachmentService;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,6 +30,7 @@ class AttachmentRemoveEditHandler
             $data = $form->getData();
 
             $fileName = $data->filename;
+            $fileName = StringService::checkFilename($fileName);
             $publicAttachments = $this->ticketAttachmentService->getAllPublicTicketAttachments($ticketId);
             foreach ($publicAttachments as $publicAttachment) {
                 if ($fileName === $publicAttachment['name']) {
