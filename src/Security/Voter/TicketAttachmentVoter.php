@@ -40,7 +40,7 @@ class TicketAttachmentVoter extends Voter
     protected function supports($attribute, $subject): bool
     {
         return 'TICKET_ATTACHMENT' === $attribute &&
-            \is_int($subject);
+            \is_array($subject);
     }
 
     /**

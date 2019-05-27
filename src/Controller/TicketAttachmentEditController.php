@@ -81,12 +81,11 @@ class TicketAttachmentEditController extends AbstractController
         $submittedToken = $request->request->get('token');
 
         if ($this->isCsrfTokenValid('ticket-attachment-delete', $submittedToken)) {
-//             $params = [
-//                 'ticketId' => $ticketId,
-//                 'attachmentId' => $attachmentId,
-//             ];
-//             // @TODO i do not get this working. is it called 2 times?
-//             $this->denyAccessUnlessGranted('TICKET_ATTACHMENT', $params);
+            $params = [
+                'ticketId' => $ticketId,
+                'attachmentId' => $attachmentId,
+            ];
+            $this->denyAccessUnlessGranted('TICKET_ATTACHMENT', $params);
             $this->ticketAttachmentService->removeTicketAttachment($ticketId, $attachmentId);
         }
 
