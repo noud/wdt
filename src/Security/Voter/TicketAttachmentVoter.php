@@ -45,6 +45,8 @@ class TicketAttachmentVoter extends Voter
 
     /**
      * {@inheritdoc}
+     *
+     * @see \Symfony\Component\Security\Core\Authorization\Voter\Voter::voteOnAttribute()
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
