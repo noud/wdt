@@ -206,11 +206,8 @@ class TicketService
     public function addTicket(TicketAddData $ticketData, string $email): ?array
     {
         // delete the old tickets caches..
-        $statuses = TicketStatusEnum::getLabels();
-        foreach ($statuses as $status => $statusMesasge) {
-            $cacheKey = sprintf('zoho_desk_tickets_%s', md5($email.$status));
-            $this->zohoApiService->deleteCacheByKey($cacheKey);
-        }
+        $cacheKey = sprintf('zoho_desk_tickets_%s', md5($email.TicketStatusEnum::OPEN));
+        $this->zohoApiService->deleteCacheByKey($cacheKey);
         $cacheKey = sprintf('zoho_desk_tickets_%s', md5($email.null));
         $this->zohoApiService->deleteCacheByKey($cacheKey);
 
