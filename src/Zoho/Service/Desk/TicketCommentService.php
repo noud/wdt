@@ -53,12 +53,20 @@ class TicketCommentService
 
     public function getAllPublicTicketComments(int $ticketId): array
     {
-        $ticketComments = $this->getAllTicketComments($ticketId);
-        $publicTicketComments = array_filter($ticketComments, function ($comment) {
-            return $comment['isPublic'];
-        });
+        $cacheKey = sprintf('zoho_desk_ticket_comments_%s', md5((string) $ticketId));
+        $hit = $this->zohoApiService->getFromCache($cacheKey);
+        if (false === $hit) {
+            $ticketComments = $this->getAllTicketComments($ticketId);
+            $publicTicketComments = array_filter($ticketComments, function ($comment) {
+                return $comment['isPublic'];
+            });
 
-        return $publicTicketComments;
+            $this->zohoApiService->saveToCache($cacheKey, $publicTicketComments);
+
+            return $publicTicketComments;
+        }
+
+        return $hit;
     }
 
     public function addTicketComment(TicketCommentAddData $ticketCommentData, int $ticketId)

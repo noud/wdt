@@ -67,23 +67,31 @@ class TicketThreadService
 
     public function getAllPublicTicketThreads(int $ticketId): array
     {
-        $ticketThreads = $this->getAllTicketThreads($ticketId);
-        $publicTicketThreads = array_filter($ticketThreads['data'], function ($comment) {
-            return 'public' === $comment['visibility'];
-        });
+        $cacheKey = sprintf('zoho_desk_ticket_threads_%s', md5((string) $ticketId));
+        $hit = $this->zohoApiService->getFromCache($cacheKey);
+        if (false === $hit) {
+            $ticketThreads = $this->getAllTicketThreads($ticketId);
+            $publicTicketThreads = array_filter($ticketThreads['data'], function ($comment) {
+                return 'public' === $comment['visibility'];
+            });
 
-        $publicTicketThreads = $this->sortTicketThreadsByDate($publicTicketThreads);
+            $publicTicketThreads = $this->sortTicketThreadsByDate($publicTicketThreads);
 
-        $ticketThreads = [];
-        foreach ($publicTicketThreads as $publicTicketThread) {
-            $ticketThread = $this->getTicketThread($ticketId, $publicTicketThread['id']);
-            $ticketThreads[] = [
-                'content' => $ticketThread['content'],
-                'fromEmailAddress' => isset($ticketThread['fromEmailAddress']) ? $ticketThread['fromEmailAddress'] : '',
-            ];
+            $ticketThreads = [];
+            foreach ($publicTicketThreads as $publicTicketThread) {
+                $ticketThread = $this->getTicketThread($ticketId, $publicTicketThread['id']);
+                $ticketThreads[] = [
+                    'content' => $ticketThread['content'],
+                    'fromEmailAddress' => isset($ticketThread['fromEmailAddress']) ? $ticketThread['fromEmailAddress'] : '',
+                ];
+            }
+
+            $this->zohoApiService->saveToCache($cacheKey, $ticketThreads);
+
+            return $ticketThreads;
         }
 
-        return $ticketThreads;
+        return $hit;
     }
 
     public function addTicketThread(TicketCommentAddData $ticketThreadData, int $ticketId, string $email)

@@ -54,15 +54,23 @@ class TicketAttachmentService
 
     public function getAllPublicTicketAttachments(int $ticketId): array
     {
-        $ticketAttachments = $this->getAllTicketAttachments($ticketId);
-        if (!$ticketAttachments) {
-            return [];
-        }
-        $publicTicketAttachments = array_filter($ticketAttachments, function ($var) {
-            return $var['isPublic'];
-        });
+        $cacheKey = sprintf('zoho_desk_ticket_attachments_%s', md5((string) $ticketId));
+        $hit = $this->zohoApiService->getFromCache($cacheKey);
+        if (false === $hit) {
+            $ticketAttachments = $this->getAllTicketAttachments($ticketId);
+            if (!$ticketAttachments) {
+                return [];
+            }
+            $publicTicketAttachments = array_filter($ticketAttachments, function ($var) {
+                return $var['isPublic'];
+            });
 
-        return $publicTicketAttachments;
+            $this->zohoApiService->saveToCache($cacheKey, $publicTicketAttachments);
+
+            return $publicTicketAttachments;
+        }
+
+        return $hit;
     }
 
     public function createTicketAttachment(string $file, int $ticketId, string $fileName = null): array
