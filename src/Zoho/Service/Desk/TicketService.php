@@ -113,18 +113,19 @@ class TicketService
         $organisationId = $this->organizationService->getOrganizationId();
 
         $from = 0;
+        $limit = 100;
         $totalResult = [];
 
         while (true) {
             $result = $this->zohoApiService->get('accounts/'.$accountId.'/tickets', $organisationId, [
                 'include' => 'products,assignee,departments,team,isRead',
                 'from' => $from,
-                'limit' => 100,
+                'limit' => $limit,
                 'sortBy' => '-createdTime',
             ]);
             if (isset($result['data']) && \count($result['data'])) {
                 $totalResult = array_merge($totalResult, $result['data']);
-                $from += 100;
+                $from += $limit;
             } else {
                 break;
             }
