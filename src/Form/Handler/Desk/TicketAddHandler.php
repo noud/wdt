@@ -32,9 +32,6 @@ class TicketAddHandler
      */
     private $ticketAttachmentPath;
 
-    /**
-     * JoinHandler constructor.
-     */
     public function __construct(
         string $ticketAttachmentPath,
         EntityManagerInterface $entityManager,
@@ -50,37 +47,39 @@ class TicketAddHandler
     /**
      * @throws \Doctrine\ORM\ORMException
      */
-    public function handleRequest(FormInterface $form, Request $request): bool
+    public function handleRequest(FormInterface $form, Request $request, string $email): bool
     {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var TicketAddData $ticketData */
             $ticketData = $form->getData();
-            $ticketResponse = $this->ticketService->addTicket($ticketData);
+            $ticketResponse = $this->ticketService->addTicket($ticketData, $email);
             $ticketId = $ticketResponse['id'];
 
             $attachments = [];
             $ticketAttachmentsString = $ticketData->attachments;
-            $ticketAttachments = explode(',', $ticketAttachmentsString);
-            foreach ($ticketAttachments as $ticketAttachmentString) {
-                $ticketAttachment = explode('|', $ticketAttachmentString);
-                $attachments[$ticketAttachment[3]] = $ticketAttachment[0];
-            }
+            if (null !== $ticketAttachmentsString) {
+                $ticketAttachments = explode(',', $ticketAttachmentsString);
+                foreach ($ticketAttachments as $ticketAttachmentString) {
+                    $ticketAttachment = explode('|', $ticketAttachmentString);
+                    $attachments[$ticketAttachment[3]] = $ticketAttachment[0];
+                }
 
-            // now put the attachments
-            $uploadFormId = $ticketData->uploadFormId;
-            $dirName = $this->ticketAttachmentPath.\DIRECTORY_SEPARATOR.$uploadFormId.\DIRECTORY_SEPARATOR;
-            $files = Finder::create()
-                ->files()
-                ->in($dirName);
-            foreach ($files as $file) {
-                $fileName = $file->getFilename();
-                $actualFileName = $attachments[$file->getFilename()];
-                $this->ticketAttachmentService->createTicketAttachment($dirName.$fileName, $ticketId, $actualFileName);
-                unlink($dirName.$fileName);
+                // now put the attachments
+                $uploadFormId = $ticketData->uploadFormId;
+                $dirName = $this->ticketAttachmentPath.\DIRECTORY_SEPARATOR.$uploadFormId.\DIRECTORY_SEPARATOR;
+                $files = Finder::create()
+                    ->files()
+                    ->in($dirName);
+                foreach ($files as $file) {
+                    $fileName = $file->getFilename();
+                    $actualFileName = $attachments[$file->getFilename()];
+                    $this->ticketAttachmentService->createTicketAttachment($dirName.$fileName, $ticketId, $actualFileName);
+                    unlink($dirName.$fileName);
+                }
+                rmdir($dirName);
             }
-            rmdir($dirName);
 
             return true;
         }

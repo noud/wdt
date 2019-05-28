@@ -23,8 +23,17 @@ class OrganizationService
 
     public function getOrganizationId(): ?int
     {
-        $organizations = $this->getAllOrganizations();
+        $cacheKey = 'zoho_desk_organization_id';
+        $hit = $this->zohoApiService->getFromCache($cacheKey);
+        if (false === $hit) {
+            $organizations = $this->getAllOrganizations();
 
-        return isset($organizations['data'][0]) ? $organizations['data'][0]['id'] : null;
+            $organizationId = isset($organizations['data'][0]) ? $organizations['data'][0]['id'] : null;
+            $this->zohoApiService->saveToCache($cacheKey, $organizationId);
+
+            return $organizationId;
+        }
+
+        return $hit;
     }
 }

@@ -50,18 +50,27 @@ class AccountService
 
     public function getAccountIdByEmail(string $email): ?string
     {
-        $accounts = $this->getAllAccounts();
+        $cacheKey = sprintf('zoho_desk_account_id_%s', md5($email));
+        $hit = $this->zohoApiService->getFromCache($cacheKey);
+        if (false === $hit) {
+            $accountId = null;
+            $accounts = $this->getAllAccounts();
 
-        foreach ($accounts as $account) {
-            $accountContacts = $this->getAllAccountContacts($account['id']);
-            foreach ($accountContacts as $contact) {
-                if (isset($contact['email']) && $contact['email'] === $email) {
-                    return $account['id'];
+            foreach ($accounts as $account) {
+                $accountContacts = $this->getAllAccountContacts($account['id']);
+                foreach ($accountContacts as $contact) {
+                    if (isset($contact['email']) && $contact['email'] === $email) {
+                        $accountId = $account['id'];
+                        break 2;
+                    }
                 }
             }
+            $this->zohoApiService->saveToCache($cacheKey, $accountId);
+
+            return $accountId;
         }
 
-        return null;
+        return $hit;
     }
 
     public function getAllAccountContacts(string $accountId): array

@@ -75,6 +75,9 @@ class TicketAttachmentService
 
     public function createTicketAttachment(string $file, int $ticketId, string $fileName = null): array
     {
+        $cacheKey = sprintf('zoho_desk_ticket_attachments_%s', md5((string) $ticketId));
+        $this->zohoApiService->deleteCacheByKey($cacheKey);
+
         $organisationId = $this->organizationService->getOrganizationId();
 
         /** @var string $fileMime */
@@ -93,6 +96,9 @@ class TicketAttachmentService
 
     public function removeTicketAttachment(int $ticketId, int $attachmentId): array
     {
+        $cacheKey = sprintf('zoho_desk_ticket_attachments_%s', md5((string) $ticketId));
+        $this->zohoApiService->deleteCacheByKey($cacheKey);
+
         $organisationId = $this->organizationService->getOrganizationId();
 
         return $this->zohoApiService->delete('tickets/'.$ticketId.'/attachments/'.$attachmentId, $organisationId, []);

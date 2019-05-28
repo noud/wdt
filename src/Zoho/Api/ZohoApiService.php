@@ -28,7 +28,7 @@ class ZohoApiService
 
     public function __construct(
         ZohoAccessTokenService $zohoAccessTokenService,
-        string $apiBaseUrl
+        string $apiBaseUrl = ''
     ) {
         $this->zohoAccessTokenService = $zohoAccessTokenService;
         $this->apiBaseUrl = $apiBaseUrl;

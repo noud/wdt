@@ -79,6 +79,9 @@ class TicketCommentService
 
     public function createTicketComment(TicketComment $ticketComment, int $ticketId)
     {
+        $cacheKey = sprintf('zoho_desk_ticket_comments_%s', md5((string) $ticketId));
+        $this->zohoApiService->deleteCacheByKey($cacheKey);
+
         $data = [
             'isPublic' => 'true',
             'content' => $ticketComment->getContent(),
