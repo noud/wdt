@@ -174,11 +174,20 @@ class TicketService
 
     public function getTicket(int $ticketId): array
     {
-        $organisationId = $this->organizationService->getOrganizationId();
+        $cacheKey = sprintf('zoho_desk_ticket_%s', md5((string) $ticketId));
+        $hit = $this->zohoApiService->getFromCache($cacheKey);
+        if (false === $hit) {
+            $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('tickets/'.$ticketId, $organisationId, [
-            'include' => 'contacts,products,assignee,departments,team',
-        ]);
+            $ticket = $this->zohoApiService->get('tickets/'.$ticketId, $organisationId, [
+                'include' => 'contacts,products,assignee,departments,team',
+            ]);
+            $this->zohoApiService->saveToCache($cacheKey, $ticket);
+
+            return $ticket;
+        }
+
+        return $hit;
     }
 
     public function addTicket(TicketAddData $ticketData): ?array

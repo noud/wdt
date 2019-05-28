@@ -2,6 +2,8 @@
 
 namespace App\Zoho\Api;
 
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+
 class ZohoApiService
 {
     /**
@@ -14,12 +16,25 @@ class ZohoApiService
      */
     private $apiBaseUrl;
 
+    /**
+     * @var FilesystemAdapter
+     */
+    private $cache;
+
+    /**
+     * @var int
+     */
+    private $ttl;
+
     public function __construct(
         ZohoAccessTokenService $zohoAccessTokenService,
         string $apiBaseUrl
     ) {
         $this->zohoAccessTokenService = $zohoAccessTokenService;
         $this->apiBaseUrl = $apiBaseUrl;
+
+        $this->cache = new FilesystemAdapter('', 0, null);
+        $this->ttl = 7200;
     }
 
     public function init(): void
@@ -135,5 +150,32 @@ class ZohoApiService
         }
 
         return $result;
+    }
+
+    /**
+     * @return mixed|bool
+     */
+    public function getFromCache(string $key)
+    {
+        $item = $this->cache->getItem($key);
+        if ($item->isHit()) {
+            return unserialize($item->get());
+        }
+
+        return false;
+    }
+
+    public function saveToCache(string $key, $values): void
+    {
+        $item = $this->cache->getItem($key);
+        if (!$item->isHit()) {
+            $item->set(serialize($values));
+            $this->cache->save($item);
+        }
+    }
+
+    public function deleteCacheByKey(string $key): void
+    {
+        $this->cache->deleteItem($key);
     }
 }
