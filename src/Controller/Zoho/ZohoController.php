@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Zoho\Development;
+namespace App\Controller\Zoho;
 
 use App\Zoho\Api\ZohoAccessTokenService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

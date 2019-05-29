@@ -18,9 +18,6 @@ class TicketCommentService
      */
     private $organizationService;
 
-    /**
-     * DepartmentService constructor.
-     */
     public function __construct(
         ZohoApiService $zohoDeskApiService,
         OrganizationService $organizationService

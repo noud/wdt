@@ -121,6 +121,26 @@
                                                         <span class="btn-inner--icon"><i class="fas fa-long-arrow-alt-right"></i></span>
                                                     </a>
                                                 </div>
+                                                <div class="row">
+                                                    <ul>
+                                                    {% for ticketThread in ticketThreads %}
+                                                        <li>
+                                                        <div class="row">
+                                                            <b>{{ ticketThread.fromEmailAddress }}</b>
+                                                        </div>
+                                                        <div class="row">
+                                                            {{ ticketThread.content|raw }}
+                                                        </div>
+                                                        </li>
+                                                    {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                <div class="row">
+                                                    <a href="{{ path('ticket_reply_create', {ticketId: ticket.id }) }}" type="submit" class="btn btn-sm btn-primary btn-icon rounded-pill">
+                                                        <span class="btn-inner--text">{{ 'ticket_comment.field.add_reply'|trans }}</span>
+                                                        <span class="btn-inner--icon"><i class="fas fa-long-arrow-alt-right"></i></span>
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     <br/>

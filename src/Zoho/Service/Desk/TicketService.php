@@ -29,21 +29,25 @@ class TicketService
     private $departmentService;
 
     /**
-     * DepartmentService constructor.
+     * @var SearchService
      */
+    private $searchService;
+
     public function __construct(
         ZohoApiService $zohoDeskApiService,
         OrganizationService $organizationService,
         AccountService $accountService,
-        DepartmentService $departmentService
+        DepartmentService $departmentService,
+        SearchService $searchService
     ) {
         $this->zohoApiService = $zohoDeskApiService;
         $this->organizationService = $organizationService;
         $this->accountService = $accountService;
         $this->departmentService = $departmentService;
+        $this->searchService = $searchService;
     }
 
-    public function searchTickets(string $email, string $status): array
+    public function searchTickets(string $email, string $status = null): array
     {
         $accountId = $this->accountService->getAccountIdByEmail($email);
         $organisationId = $this->organizationService->getOrganizationId();
@@ -53,13 +57,16 @@ class TicketService
         $totalResult = [];
 
         while (true) {
-            $result = $this->zohoApiService->get('tickets/search', $organisationId, [
+            $params = [
                 'from' => $from,
                 'limit' => $limit,
                 'accountId' => $accountId,
-                'status' => $status,
                 'sortBy' => '-createdTime',
-            ]);
+            ];
+            if ($status) {
+                $params['status'] = $status;
+            }
+            $result = $this->zohoApiService->get('tickets/search', $organisationId, $params);
             if (isset($result['data']) && \count($result['data'])) {
                 $totalResult = array_merge($totalResult, $result['data']);
                 $from += $limit;
@@ -117,25 +124,48 @@ class TicketService
      */
     public function getTickets(string $email): array
     {
-        $accountId = $this->accountService->getAccountIdByEmail($email);
         $organisationId = $this->organizationService->getOrganizationId();
 
         $from = 0;
         $limit = 100;
         $totalResult = [];
 
-        while (true) {
-            $result = $this->zohoApiService->get('accounts/'.$accountId.'/tickets', $organisationId, [
-                'include' => 'products,assignee,departments,team,isRead',
-                'from' => $from,
-                'limit' => $limit,
-                'sortBy' => '-createdTime',
-            ]);
-            if (isset($result['data']) && \count($result['data'])) {
-                $totalResult = array_merge($totalResult, $result['data']);
-                $from += $limit;
+        $accountId = $this->accountService->getAccountIdByEmail($email);
+        if ($accountId) {
+            while (true) {
+                $result = $this->zohoApiService->get('accounts/'.$accountId.'/tickets', $organisationId, [
+                    'include' => 'products,assignee,departments,team,isRead',
+                    'from' => $from,
+                    'limit' => $limit,
+                    'sortBy' => '-createdTime',
+                ]);
+                if (isset($result['data']) && \count($result['data'])) {
+                    $totalResult = array_merge($totalResult, $result['data']);
+                    $from += $limit;
+                } else {
+                    break;
+                }
+            }
+        } else {
+            $result = $this->searchService->search($email, 'contacts');
+            if ($result) {
+                $contactId = $result['data'][0]['id'];
+                while (true) {
+                    $result = $this->zohoApiService->get('contacts/'.$contactId.'/tickets', $organisationId, [
+                            'include' => 'assignee,departments,team,isRead',
+                            'from' => $from,
+                            'limit' => $limit,
+                            'sortBy' => '-createdTime',
+                        ]);
+                    if (isset($result['data']) && \count($result['data'])) {
+                        $totalResult = array_merge($totalResult, $result['data']);
+                        $from += $limit;
+                    } else {
+                        break;
+                    }
+                }
             } else {
-                break;
+                $result = [];
             }
         }
 

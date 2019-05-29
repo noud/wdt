@@ -16,9 +16,6 @@ class DepartmentService
      */
     private $organizationService;
 
-    /**
-     * DepartmentService constructor.
-     */
     public function __construct(
         ZohoApiService $zohoDeskApiService,
         OrganizationService $organizationService
@@ -57,6 +54,6 @@ class DepartmentService
     {
         $departments = $this->getAllDepartments();
 
-        return (isset($departments['data'][0])) ? $departments['data'][0]['id'] : null;
+        return (isset($departments[0])) ? $departments[0]['id'] : null;
     }
 }

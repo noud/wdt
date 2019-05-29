@@ -16,9 +16,6 @@ class AccountService
      */
     private $organizationService;
 
-    /**
-     * DepartmentService constructor.
-     */
     public function __construct(
         ZohoApiService $zohoDeskApiService,
         OrganizationService $organizationService
@@ -63,6 +60,8 @@ class AccountService
                 }
             }
         }
+
+        return null;
     }
 
     public function getAllAccountContacts(string $accountId): array

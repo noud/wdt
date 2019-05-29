@@ -16,9 +16,6 @@ class ContactService
      */
     private $organizationService;
 
-    /**
-     * DepartmentService constructor.
-     */
     public function __construct(
         ZohoApiService $zohoDeskApiService,
         OrganizationService $organizationService
@@ -37,7 +34,7 @@ class ContactService
 
         while (true) {
             $result = $this->zohoApiService->get('contacts', $organisationId, [
-                'include' => 'accounts',
+                'include' => 'accounts,contacts',
                 'from' => $from,
                 'limit' => $limit,
             ]);
