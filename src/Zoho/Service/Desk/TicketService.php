@@ -208,15 +208,12 @@ class TicketService
         return $hit;
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
-     */
     public function addTicket(TicketAddData $ticketData, string $email): ?array
     {
         // delete the old tickets caches..
         $cacheKey = sprintf('zoho_desk_tickets_%s', md5($email.TicketStatusEnum::OPEN));
         $this->cacheService->deleteCacheByKey($cacheKey);
-        $cacheKey = sprintf('zoho_desk_tickets_%s', md5($email.null));
+        $cacheKey = sprintf('zoho_desk_tickets_%s', md5($email));
         $this->cacheService->deleteCacheByKey($cacheKey);
 
         $ticket = new Ticket();
