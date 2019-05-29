@@ -31,7 +31,7 @@
                                     	{% for ticket in tickets %}
                                             <div class="row">
                                             	<div class="col-sm-2">
-                                            	    <a href="{{ path('ticket_view', {'id' : ticket.id}) }}">{{ ticket.ticketNumber }}</a>
+                                            	    <a href="{{ path('ticket_view', {'ticketId' : ticket.id}) }}">{{ ticket.ticketNumber }}</a>
                                             	</div>
                                             	<div class="col-sm-6">
                                             	    {{ ticket.subject }}

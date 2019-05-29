@@ -112,16 +112,17 @@ class TicketController extends AbstractController
     }
 
     /**
-     * @Route("/ticket/view/{id}", name="ticket_view")
+     * @Route("/ticket/view/{ticketId}", name="ticket_view")
      *
      * @throws \Doctrine\ORM\ORMException
      */
-    public function view(int $id): Response
+    public function view(int $ticketId): Response
     {
-        $ticket = $this->ticketService->getTicket($id);
-        $resolutionHistory = $this->resolutionHistoryService->getAllResolutionHistory($id);
-        $ticketComments = $this->ticketCommentService->getAllPublicTicketComments($id);
-        $ticketAttachments = $this->ticketAttachmentService->getAllPublicTicketAttachments($id);
+        $this->denyAccessUnlessGranted('TICKET', $ticketId);
+        $ticket = $this->ticketService->getTicket($ticketId);
+        $resolutionHistory = $this->resolutionHistoryService->getAllResolutionHistory($ticketId);
+        $ticketComments = $this->ticketCommentService->getAllPublicTicketComments($ticketId);
+        $ticketAttachments = $this->ticketAttachmentService->getAllPublicTicketAttachments($ticketId);
 
         return $this->render('ticket/view.html.twig', [
             'ticket' => $ticket,
