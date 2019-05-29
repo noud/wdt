@@ -61,6 +61,13 @@ class PageFixtures extends Fixture
         $page->setMetaTitle('Vul je nieuwe wachtwoord in');
         $page->setContent('Vul je nieuwe wachtwoord in.');
         $manager->persist($page);
+
+        $page = new Page();
+        $page->setSlug('/wachtwoord-veranderd-bedankt');
+        $page->setTitle('Wachtwoord is veranderd');
+        $page->setMetaTitle('Wachtwoord is veranderd.');
+        $page->setContent('Wachtwoord is veranderd.');
+        $manager->persist($page);
     }
 
     private function loadLogin(ObjectManager $manager): void
