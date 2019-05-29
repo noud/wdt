@@ -3,6 +3,7 @@
 namespace App\Zoho\Api;
 
 use Psr\SimpleCache\CacheInterface;
+//use Symfony\Component\Cache\Simple\FilesystemCache;
 
 class ZohoApiService
 {
@@ -14,10 +15,10 @@ class ZohoApiService
     /**
      * @var string
      */
-    private $apiBaseUrl;
+    private $apiBaseUrl = '';
 
     /**
-     * @var CacheInterface
+     * @var FilesystemCache
      */
     private $cache;
 
@@ -28,9 +29,9 @@ class ZohoApiService
 
     public function __construct(
         ZohoAccessTokenService $zohoAccessTokenService,
-        string $apiBaseUrl,
+        string $apiBaseUrl = '',
         CacheInterface $cache,
-        int $cacheTtl = 7200
+        int $cacheTtl = 0
     ) {
         $this->zohoAccessTokenService = $zohoAccessTokenService;
         $this->apiBaseUrl = $apiBaseUrl;
