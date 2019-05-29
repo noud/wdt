@@ -28,13 +28,14 @@ class ZohoApiService
 
     public function __construct(
         ZohoAccessTokenService $zohoAccessTokenService,
-        string $apiBaseUrl = ''
+        string $apiBaseUrl = '',
+        int $cacheTtl = 7200
     ) {
         $this->zohoAccessTokenService = $zohoAccessTokenService;
         $this->apiBaseUrl = $apiBaseUrl;
 
         $this->cache = new FilesystemAdapter('', 0, null);
-        $this->ttl = 7200;
+        $this->ttl = $cacheTtl;
     }
 
     public function init(): void
