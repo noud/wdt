@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Zoho\Form\Handler\Desk;
+namespace App\Form\Handler\Desk;
 
-use App\Zoho\Form\Data\Desk\TicketCommentAddData;
+use App\Form\Data\Desk\TicketCommentAddData;
 use App\Zoho\Service\Desk\TicketCommentService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
@@ -34,7 +34,7 @@ class TicketCommentAddHandler
     /**
      * @throws \Doctrine\ORM\ORMException
      */
-    public function handleRequest(FormInterface $form, Request $request, string $ticketId): bool
+    public function handleRequest(FormInterface $form, Request $request, int $ticketId): bool
     {
         $form->handleRequest($request);
 

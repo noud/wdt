@@ -21,6 +21,9 @@ parameters:
     zoho.books.api.base_url: 'https://books.zoho.eu/api/v3/'
     zoho.crm.api.base_url: ''
     zoho.desk.api.base_url: 'https://desk.zoho.eu/api/v1/'
+    ticket_attachments_dir: '%kernel.project_dir%%env(TICKET_ATTACHMENTS_DIR)%'
+    ticket_tmpupload_dir: '%kernel.project_dir%/userdata/tmp/uploads'
+    cache_ttl: "%env(CACHE_TTL)%"
 
 services:
     # default configuration for services in *this* file
@@ -31,6 +34,7 @@ services:
             $zohoCrmApiService: '@zoho.crm.api.service'
             $zohoBooksApiService: '@zoho.books.api.service'
             $zohoDeskApiService: '@zoho.desk.api.service'
+            $ticketAttachmentPath: '%ticket_attachments_dir%'
                  
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -94,3 +98,19 @@ services:
         arguments:
             - ''
             - '%zoho.desk.api.base_url%'
+            
+    App\Zoho\Service\CacheService:
+            - ''
+            - '%cache_ttl%'
+            
+    Symfony\Component\Cache\Simple\FilesystemCache:
+    
+    Psr\SimpleCache\CacheInterface: '@Symfony\Component\Cache\Simple\FilesystemCache'
+
+    App\Controller\Zoho\Development\ZohoCrmController:
+        arguments:
+            - '%kernel.environment%'
+            
+    App\Controller\Zoho\Development\ZohoDeskController:
+        arguments:
+            - '%kernel.environment%' 

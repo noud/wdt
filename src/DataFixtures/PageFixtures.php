@@ -61,6 +61,13 @@ class PageFixtures extends Fixture
         $page->setMetaTitle('Vul je nieuwe wachtwoord in');
         $page->setContent('Vul je nieuwe wachtwoord in.');
         $manager->persist($page);
+
+        $page = new Page();
+        $page->setSlug('/wachtwoord-veranderd-bedankt');
+        $page->setTitle('Wachtwoord is veranderd');
+        $page->setMetaTitle('Wachtwoord is veranderd.');
+        $page->setContent('Wachtwoord is veranderd.');
+        $manager->persist($page);
     }
 
     private function loadLogin(ObjectManager $manager): void
@@ -115,6 +122,20 @@ class PageFixtures extends Fixture
         $page->setTitle('Ticket commentaar aangemaakt');
         $page->setMetaTitle('Je ticket commentaar is aangemaakt en wordt in behandeling genomen');
         $page->setContent('Je ticket commentaar is aangemaakt en wordt in behandeling genomen.');
+        $manager->persist($page);
+
+        $page = new Page();
+        $page->setSlug('/ticket/reply/create');
+        $page->setTitle('Ticket reactie aanmaken');
+        $page->setMetaTitle('Je kunt hier ticket reactie aanmaken');
+        $page->setContent('Je kunt hier ticket reactie aanmaken.');
+        $manager->persist($page);
+
+        $page = new Page();
+        $page->setSlug('/ticket/reply/create/success');
+        $page->setTitle('Ticket reactie aangemaakt');
+        $page->setMetaTitle('Je ticket reactie is aangemaakt en wordt in behandeling genomen');
+        $page->setContent('Je ticket reactie is aangemaakt en wordt in behandeling genomen.');
         $manager->persist($page);
     }
 

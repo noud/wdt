@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Zoho\Form\Data\Desk;
+namespace App\Form\Data;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class TicketCommentAddData
+class AttachmentRemoveEditData
 {
     /**
      * @var string
      * @Assert\NotBlank()
      */
-    public $content;
+    public $filename;
 }

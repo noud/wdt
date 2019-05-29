@@ -1,6 +1,11 @@
 {% extends 'base.html.twig' %}
 {% trans_default_domain 'ticket' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('dropzone') }}
+{% endblock %}
+
 {% block navbar %}navbar-dark bg-dark border-bottom{% endblock %}
 {% block title %}{{ page.title }}{% endblock %}
 {% block body %}
@@ -23,47 +28,89 @@
                                                     {{ 'ticket.field.status'|trans }}
                                                 </div>
                                                  <div class="row">
-                                                    <b>{{ ticket.status }}</b>
+                                                    <strong>{{ ticket.status }}</strong>
                                                 </div>
                                                  <div class="row">
                                                     {{ 'ticket.field.due_date'|trans }}
                                                 </div>
                                                  <div class="row">
-                                                     <b>{{ ticket.dueDate|date('d-m-Y') }}</b>
+                                                     <strong>{{ ticket.dueDate|date('d-m-Y') }}</strong>
+                                                </div>
+                                                 <div class="row">
+                                                    {{ 'ticket.field.classification'|trans }}
+                                                </div>
+                                                 <div class="row">
+                                                     <strong>{{ ticket.classification }}</strong>
                                                 </div>
                                                 <div class="row">
                                                     {{ 'ticket.field.custom_fields.aantal_minuten_ingeschat'|trans }}
                                                 </div>
                                                  <div class="row">
-                                                    <b>{{ attribute(ticket.customFields, 'Aantal minuten ingeschat') }}</b>
+                                                    <strong>{{ attribute(ticket.customFields, 'Aantal minuten ingeschat') }}</strong>
                                                 </div>
                                                 <div class="row">
                                                     {{ 'ticket.field.custom_fields.aantal_uur_ingeschat'|trans }}
                                                 </div>
                                                  <div class="row">
-                                                    <b>{{ attribute(ticket.customFields, 'Aantal uur ingeschat') }}</b>
+                                                    <strong>{{ attribute(ticket.customFields, 'Aantal uur ingeschat') }}</strong>
                                                 </div>
                                                  <div class="row">
                                                     {{ 'ticket.field.priority'|trans }}
                                                 </div>
                                                  <div class="row">
-                                                    <b>{{ ticket.priority }}</b>
+                                                    <strong>{{ ticket.priority }}</strong>
+                                                </div>
+                                                 <div class="row">
+                                                    {{ 'ticket.field.attachments'|trans }}
+                                                </div>
+                                                 <div class="row">
+                                                    <ul>
+                                                    {% for ticketAttachment in ticketAttachments %}
+                                                        <li>
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <strong><a href="{{ ticketAttachment.href }}?portalname=webdesigntilburg&inline=true" target="_blank">{{ ticketAttachment.name }}</a></strong>
+                                                                <form action="{{ path('ticket_attachment_edit_remove', {ticketId: ticket.id, attachmentId: ticketAttachment.id }) }}" class="attachment-remove" method="post" data-message="{{ 'ticket.field.attachments_delete_confirm'|trans({'%ticketAttachmentName%': ticketAttachment.name}) }}">
+                                                                    <input type="hidden" name="_method" value="DELETE" />
+                                                                    <input type="hidden" name="token" value="{{ csrf_token('ticket-attachment-delete') }}" />
+                                                                    <button type="submit" class="delete-link" class="btn btn-sm btn-primary btn-icon rounded-pill">{{ 'ticket.field.remove'|trans }}</button>
+                                                                </form>
+                                                             </div>
+                                                         </div>
+                                                        </li>
+                                                    {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                        <div class="form-group">
+                                                            <label class="control-label">{{ 'ticket.field.attachments_add'|trans }}</label>
+                                                            <div action="/" class="dropzone" id="ticket-dropzone">
+                                                                <div class="dz-message" data-dz-message><span>{{ 'ticket.field.attachments_drag'|trans }}</span></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-8">
                                                 <div class="row">
-                                                    <b>{{ 'ticket.field.nr'|trans }} {{ ticket.ticketNumber }} {{ ticket.subject }}</b>
+                                                    <strong>{{ 'ticket.field.nr'|trans }} {{ ticket.ticketNumber }} {{ ticket.subject }}</strong>
                                                 </div>
                                                 <div class="row">
                                                     <ul>
                                                     {% for ticketComment in ticketComments %}
                                                         <li>
-                                                        <div class="row">
-                                                            <b>{{ ticketComment.commenter.name }}</b>
-                                                        </div>
-                                                        <div class="row">
-                                                            {{ ticketComment.content }}
-                                                        </div>
+                                                            <div class="row">
+                                                                <div class="col-sm-6">
+                                                                    <strong>{{ ticketComment.commenter.name }}</strong>
+                                                                 </div>
+                                                                <div class="col-sm-6">
+                                                                    {{ ticketComment.commentedTime|date('d-m-Y H:i') }}
+                                                                 </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                {{ ticketComment.content }}
+                                                            </div>
                                                         </li>
                                                     {% endfor %}
                                                     </ul>
@@ -71,6 +118,26 @@
                                                 <div class="row">
                                                     <a href="{{ path('ticket_comment_create', {ticketId: ticket.id }) }}" type="submit" class="btn btn-sm btn-primary btn-icon rounded-pill">
                                                         <span class="btn-inner--text">{{ 'ticket_comment.field.add_comment'|trans }}</span>
+                                                        <span class="btn-inner--icon"><i class="fas fa-long-arrow-alt-right"></i></span>
+                                                    </a>
+                                                </div>
+                                                <div class="row">
+                                                    <ul>
+                                                    {% for ticketThread in ticketThreads %}
+                                                        <li>
+                                                        <div class="row">
+                                                            <b>{{ ticketThread.fromEmailAddress }}</b>
+                                                        </div>
+                                                        <div class="row">
+                                                            {{ ticketThread.content|raw }}
+                                                        </div>
+                                                        </li>
+                                                    {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                <div class="row">
+                                                    <a href="{{ path('ticket_reply_create', {ticketId: ticket.id }) }}" type="submit" class="btn btn-sm btn-primary btn-icon rounded-pill">
+                                                        <span class="btn-inner--text">{{ 'ticket_comment.field.add_reply'|trans }}</span>
                                                         <span class="btn-inner--icon"><i class="fas fa-long-arrow-alt-right"></i></span>
                                                     </a>
                                                 </div>
@@ -85,4 +152,10 @@
             </div>
         </section>
     </div>
+    <div id="urls" data-attachment-post="{{path('ticket_attachment_edit', {'ticketId':ticket.id}) }}" data-attachment-post-csrf="{{ csrf_token('ticket_attachment_edit') }}" data-attachment-remove="{{path('attachment_edit_new_remove', {'ticketId':ticket.id}) }}" data-attachment-remove-csrf="{{ csrf_token('attachment_remove_edit') }}" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('dropzone') }}
+{#     {{ encore_entry_script_tags('delete_confirm') }}#}
 {% endblock %}

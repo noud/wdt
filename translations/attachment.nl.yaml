@@ -1,0 +1,4 @@
+attachment:
+  message:
+    file_type: 'Upload is waarschijnlijk het verkeerde bestandstype, kies voor pdf, png, gif of jpg.'
+    file_not_exist: 'Upload bestaat niet.'
