@@ -18,7 +18,7 @@ class CacheService
 
     public function __construct(
         CacheInterface $cache,
-        int $cacheTtl = 0
+        int $cacheTtl
     ) {
         $this->cache = $cache;
         $this->ttl = $cacheTtl;
