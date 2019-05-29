@@ -31,8 +31,12 @@ class MailerService
      */
     private $defaultFromName;
 
-    public function __construct(Swift_Mailer $mailer, Twig_Environment $twig, string $defaultFromEmail, string $defaultFromName)
-    {
+    public function __construct(
+        Swift_Mailer $mailer,
+        Twig_Environment $twig,
+        string $defaultFromEmail,
+        string $defaultFromName
+    ) {
         $this->mailer = $mailer;
         $this->twig = $twig;
         $this->defaultFromEmail = $defaultFromEmail;
@@ -64,8 +68,12 @@ class MailerService
         return $this->mailer->send($mailMessage);
     }
 
-    public function sendMessage(Swift_Message $message): ?int
+    public function sendMessage(Swift_Message $message, string $email = null): ?int
     {
+        if ($email) {
+            $message->setFrom($email);
+        }
+
         return $this->mailer->send($message);
     }
 

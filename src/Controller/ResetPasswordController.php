@@ -86,7 +86,7 @@ class ResetPasswordController extends AbstractController
         $data = new ResetPasswordData();
         $form = $this->createForm(ResetPasswordType::class, $data);
 
-        if ($result = $resetPasswordHandler->handleRequest($form, $request, $resetPasswordRequest)) {
+        if ($resetPasswordHandler->handleRequest($form, $request, $resetPasswordRequest)) {
             $this->addFlash('success',
                 $this->translator->trans(
                     'reset_password.message.password_changed %name%',
@@ -95,7 +95,7 @@ class ResetPasswordController extends AbstractController
                 )
             );
 
-            return $result;
+            return $this->redirectToRoute('app_reset_password_thanks');
         }
 
         $path = $request->getPathInfo();
@@ -104,6 +104,17 @@ class ResetPasswordController extends AbstractController
         return $this->render('security/reset_password.html.twig', [
             'form' => $form->createView(),
             'page' => $this->pageService->getPageBySlug('/'.$slug[1]),
+        ]);
+    }
+
+    /**
+     * @Route("/wachtwoord-veranderd-bedankt", name="app_reset_password_thanks")
+     */
+    public function resetPasswordThanks(Request $request): Response
+    {
+        return $this->render('user/thanks.html.twig', [
+            'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
+            'showLoginButton' => true,
         ]);
     }
 }
