@@ -98,7 +98,7 @@ class TicketController extends AbstractController
     {
         $this->denyAccessUnlessGranted('TICKET', $ticketId);
         $ticket = $this->ticketService->getTicket($ticketId);
-        $resolutionHistory = $this->resolutionHistoryService->getAllResolutionHistory($ticketId);
+        $resolutionHistory = $this->ticketResolutionHistoryService->getAllTicketResolutionHistory($ticketId);
         $ticketComments = $this->ticketCommentService->getAllPublicTicketComments($ticketId);
         $ticketAttachments = $this->ticketAttachmentService->getAllPublicTicketAttachments($ticketId);
 
