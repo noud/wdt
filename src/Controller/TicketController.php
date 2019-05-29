@@ -2,19 +2,19 @@
 
 namespace App\Controller;
 
-use App\Form\Data\Desk\TicketAddData;
-use App\Form\Handler\Desk\TicketAddHandler;
-use App\Form\Type\Desk\TicketAddType;
+use App\Form\Data\Desk\TicketStatusData;
+use App\Form\Handler\Desk\TicketStatusHandler;
+use App\Form\Type\Desk\TicketStatusType;
 use App\Service\PageService;
-use App\Zoho\Service\Desk\ResolutionHistoryService;
 use App\Zoho\Service\Desk\TicketAttachmentService;
 use App\Zoho\Service\Desk\TicketCommentService;
+use App\Zoho\Service\Desk\TicketResolutionHistoryService;
 use App\Zoho\Service\Desk\TicketService;
+use App\Zoho\Service\Desk\TicketThreadService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TicketController extends AbstractController
 {
@@ -24,14 +24,19 @@ class TicketController extends AbstractController
     private $ticketService;
 
     /**
-     * @var ResolutionHistoryService
+     * @var TicketResolutionHistoryService
      */
-    private $resolutionHistoryService;
+    private $ticketResolutionHistoryService;
 
     /**
      * @var TicketCommentService
      */
     private $ticketCommentService;
+
+    /**
+     * @var TicketThreadService
+     */
+    private $ticketThreadService;
 
     /**
      * @var TicketAttachmentService
@@ -43,70 +48,43 @@ class TicketController extends AbstractController
      */
     private $pageService;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
     public function __construct(
         TicketService $ticketService,
-        ResolutionHistoryService $resolutionHistoryService,
+        TicketResolutionHistoryService $ticketResolutionHistoryService,
         TicketCommentService $ticketCommentService,
+        TicketThreadService $ticketThreadService,
         TicketAttachmentService $ticketAttachmentService,
-        PageService $pageService,
-        TranslatorInterface $translator
+        PageService $pageService
     ) {
         $this->ticketService = $ticketService;
-        $this->resolutionHistoryService = $resolutionHistoryService;
+        $this->ticketResolutionHistoryService = $ticketResolutionHistoryService;
         $this->ticketCommentService = $ticketCommentService;
+        $this->ticketThreadService = $ticketThreadService;
         $this->ticketAttachmentService = $ticketAttachmentService;
         $this->pageService = $pageService;
-        $this->translator = $translator;
     }
 
     /**
      * @Route("/ticket/overview", name="ticket_overview")
      */
-    public function overview(Request $request): Response
+    public function overviewWithStatus(TicketStatusHandler $ticketStatusHandler, Request $request): Response
     {
         $user = $this->getUser();
         /** @var string $email */
         $email = $user->getEmail();
-        $tickets = $this->ticketService->getTickets($email);
 
-        return $this->render('ticket/overview.html.twig', [
-            'tickets' => $tickets,
-            'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
-        ]);
-    }
+        $data = new TicketStatusData();
+        $form = $this->createForm(TicketStatusType::class, $data);
 
-    /**
-     * @Route("/ticket/create", name="ticket_create")
-     */
-    public function createTicket(TicketAddHandler $ticketAddHandler, Request $request): Response
-    {
-        $user = $this->getUser();
-        $data = new TicketAddData($user);
-        $form = $this->createForm(TicketAddType::class, $data);
-
-        if ($ticketAddHandler->handleRequest($form, $request)) {
-            $this->addFlash('success', 'ticket.message.added');
-
-            return $this->redirectToRoute('ticket_create_thanks');
+        if ($status = $ticketStatusHandler->handleRequest($form, $request)) {
+            $tickets = $this->ticketService->searchTickets($email, $status);
+        } else {
+            $tickets = $this->ticketService->searchTickets($email);
         }
 
-        return $this->render('ticket/create.html.twig', [
+        return $this->render('ticket/overview.html.twig', [
             'form' => $form->createView(),
-            'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
-        ]);
-    }
-
-    /**
-     * @Route("/ticket/create-thanks", name="ticket_create_thanks")
-     */
-    public function addThanks(Request $request): Response
-    {
-        return $this->render('ticket/thanks.html.twig', [
+            'tickets' => $tickets,
             'page' => $this->pageService->getPageBySlug($request->getPathInfo()),
         ]);
     }
@@ -120,7 +98,7 @@ class TicketController extends AbstractController
     {
         $this->denyAccessUnlessGranted('TICKET', $ticketId);
         $ticket = $this->ticketService->getTicket($ticketId);
-        $resolutionHistory = $this->resolutionHistoryService->getAllResolutionHistory($ticketId);
+        $resolutionHistory = $this->ticketResolutionHistoryService->getAllTicketResolutionHistory($ticketId);
         $ticketComments = $this->ticketCommentService->getAllPublicTicketComments($ticketId);
         $ticketAttachments = $this->ticketAttachmentService->getAllPublicTicketAttachments($ticketId);
 
@@ -128,6 +106,7 @@ class TicketController extends AbstractController
             'ticket' => $ticket,
             'resolutionHistory' => $resolutionHistory,
             'ticketComments' => $ticketComments,
+            'ticketThreads' => $ticketThreads,
             'ticketAttachments' => $ticketAttachments,
             'page' => $this->pageService->getPageBySlug('/ticket/view'),
         ]);

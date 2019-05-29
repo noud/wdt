@@ -4,7 +4,7 @@ namespace App\Zoho\Service\Desk;
 
 use App\Zoho\Api\ZohoApiService;
 
-class ResolutionHistoryService
+class SearchService
 {
     /**
      * @var ZohoApiService
@@ -16,9 +16,6 @@ class ResolutionHistoryService
      */
     private $organizationService;
 
-    /**
-     * DepartmentService constructor.
-     */
     public function __construct(
         ZohoApiService $zohoDeskApiService,
         OrganizationService $organizationService
@@ -27,10 +24,15 @@ class ResolutionHistoryService
         $this->organizationService = $organizationService;
     }
 
-    public function getAllResolutionHistory(int $ticketId)
+    public function search(string $searchStr, string $module = null): array
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('tickets/'.$ticketId.'/resolutionHistory', $organisationId);
+        $params['searchStr'] = $searchStr;
+        if ($module) {
+            $params['module'] = $module;
+        }
+
+        return $this->zohoApiService->get('search', $organisationId, $params);
     }
 }

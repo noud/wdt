@@ -97,3 +97,11 @@ services:
         arguments:
             - ''
             - '%zoho.desk.api.base_url%'
+            
+    App\Controller\Zoho\Development\ZohoCrmController:
+           arguments:
+            - '%kernel.environment%'
+            
+    App\Controller\Zoho\Development\ZohoDeskController:
+           arguments:
+            - '%kernel.environment%' 

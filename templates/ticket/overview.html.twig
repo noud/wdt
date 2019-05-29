@@ -18,6 +18,11 @@
                                     </div>
                                     <span class="clearfix"></span>
                                         <div class="row">
+                                            {{ form_start(form, {'attr': {'autocomplete' : 'off', 'id' : 'ticket_status'}}) }}
+                                               {{ form_row(form.status) }}                                    
+                                            {{ form_end(form) }}
+                                        </div>
+                                        <div class="row">
                                         	<div class="col-sm-2">
                                         	    <strong>{{ 'ticket.field.nr'|trans }}</strong>
                                         	</div>
@@ -28,7 +33,7 @@
                                         	    <strong>{{ 'ticket.field.status'|trans }}</strong>
                                         	</div>
                                         </div>
-                                    	{% for ticket in tickets %}
+                                        {% for ticket in tickets %}
                                             <div class="row">
                                             	<div class="col-sm-2">
                                             	    <a href="{{ path('ticket_view', {'ticketId' : ticket.id}) }}">{{ ticket.ticketNumber }}</a>
@@ -50,4 +55,8 @@
             </div>
         </section>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('ticket_status') }}
 {% endblock %}

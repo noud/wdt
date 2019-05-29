@@ -31,9 +31,25 @@ class TicketAttachmentService
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('tickets/'.$ticketId.'/attachments', $organisationId, [
-            'sortBy' => '-createdTime',
-        ]);
+        $from = 0;
+        $limit = 99;
+        $totalResult = [];
+
+        while (true) {
+            $result = $this->zohoApiService->get('tickets/'.$ticketId.'/attachments', $organisationId, [
+                'from' => $from,
+                'limit' => $limit,
+                'sortBy' => '-createdTime',
+            ]);
+            if (isset($result['data']) && \count($result['data'])) {
+                $totalResult = array_merge($totalResult, $result['data']);
+                $from += $limit;
+            } else {
+                break;
+            }
+        }
+
+        return $totalResult;
     }
 
     public function getAllPublicTicketAttachments(int $ticketId): array
@@ -42,7 +58,7 @@ class TicketAttachmentService
         if (!$ticketAttachments) {
             return [];
         }
-        $publicTicketAttachments = array_filter($ticketAttachments['data'], function ($var) {
+        $publicTicketAttachments = array_filter($ticketAttachments, function ($var) {
             return $var['isPublic'];
         });
 

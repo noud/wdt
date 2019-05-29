@@ -6,6 +6,7 @@ login:
     password: 'Wachtwoord'
   button:
     submit: 'Inloggen'
+    register: 'Registeer'
     logout: 'Uitloggen'
   messages:
     data_invalid: 'Gegevens zijn ongeldig.'

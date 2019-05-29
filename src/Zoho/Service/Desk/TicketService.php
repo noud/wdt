@@ -29,36 +29,94 @@ class TicketService
     private $departmentService;
 
     /**
-     * DepartmentService constructor.
+     * @var SearchService
      */
+    private $searchService;
+
     public function __construct(
         ZohoApiService $zohoDeskApiService,
         OrganizationService $organizationService,
         AccountService $accountService,
-        DepartmentService $departmentService
+        DepartmentService $departmentService,
+        SearchService $searchService
     ) {
         $this->zohoApiService = $zohoDeskApiService;
         $this->organizationService = $organizationService;
         $this->accountService = $accountService;
         $this->departmentService = $departmentService;
+        $this->searchService = $searchService;
+    }
+
+    public function searchTickets(string $email, string $status = null): array
+    {
+        $accountId = $this->accountService->getAccountIdByEmail($email);
+        $organisationId = $this->organizationService->getOrganizationId();
+
+        $from = 0;
+        $limit = 100;
+        $totalResult = [];
+
+        while (true) {
+            $params = [
+                'from' => $from,
+                'limit' => $limit,
+                'accountId' => $accountId,
+                'sortBy' => '-createdTime',
+            ];
+            if ($status) {
+                $params['status'] = $status;
+            }
+            $result = $this->zohoApiService->get('tickets/search', $organisationId, $params);
+            if (isset($result['data']) && \count($result['data'])) {
+                $totalResult = array_merge($totalResult, $result['data']);
+                $from += $limit;
+            } else {
+                break;
+            }
+        }
+
+        return $this->copyTickets($totalResult);
+    }
+
+    private function copyTickets(array $ticketsData): array
+    {
+        $tickets = [];
+        foreach ($ticketsData as $ticketData) {
+            $ticket = new Ticket();
+            $ticket->setId($ticketData['id']);
+            $ticket->setTicketNumber($ticketData['ticketNumber']);
+            $ticket->setSubject($ticketData['subject']);
+            $ticket->setStatus($ticketData['status']);
+            $tickets[] = $ticket;
+        }
+
+        return $tickets;
     }
 
     public function getAllTickets(): array
     {
         $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('tickets', $organisationId, [
-            'include' => 'contacts,assignee,departments,team,isRead',
-        ]);
-    }
+        $from = 0;
+        $limit = 99;
+        $totalResult = [];
 
-    private function sortTicketsByNumber(array $tickets): array
-    {
-        usort($tickets, function ($a, $b) {
-            return $b['ticketNumber'] <=> $a['ticketNumber'];
-        });
+        while (true) {
+            $result = $this->zohoApiService->get('tickets', $organisationId, [
+                'from' => $from,
+                'limit' => $limit,
+                'include' => 'contacts,assignee,departments,team,isRead',
+                'sortBy' => '-createdTime',
+            ]);
+            if (isset($result['data']) && \count($result['data'])) {
+                $totalResult = array_merge($totalResult, $result['data']);
+                $from += $limit;
+            } else {
+                break;
+            }
+        }
 
-        return $tickets;
+        return $totalResult;
     }
 
     /**
@@ -66,31 +124,52 @@ class TicketService
      */
     public function getTickets(string $email): array
     {
-        $accountId = $this->accountService->getAccountIdByEmail($email);
-
         $organisationId = $this->organizationService->getOrganizationId();
-        $result = $this->zohoApiService->get('accounts/'.$accountId.'/tickets', $organisationId, [
-            'include' => 'products,assignee,departments,team,isRead',
-            'limit' => '100',
-        ]);
 
-        if ($result) {
-            $resultSorted = $this->sortTicketsByNumber($result['data']);
+        $from = 0;
+        $limit = 100;
+        $totalResult = [];
 
-            $tickets = [];
-            foreach ($resultSorted as $ticketData) {
-                $ticket = new Ticket();
-                $ticket->setId($ticketData['id']);
-                $ticket->setTicketNumber($ticketData['ticketNumber']);
-                $ticket->setSubject($ticketData['subject']);
-                $ticket->setStatus($ticketData['status']);
-                $tickets[] = $ticket;
+        $accountId = $this->accountService->getAccountIdByEmail($email);
+        if ($accountId) {
+            while (true) {
+                $result = $this->zohoApiService->get('accounts/'.$accountId.'/tickets', $organisationId, [
+                    'include' => 'products,assignee,departments,team,isRead',
+                    'from' => $from,
+                    'limit' => $limit,
+                    'sortBy' => '-createdTime',
+                ]);
+                if (isset($result['data']) && \count($result['data'])) {
+                    $totalResult = array_merge($totalResult, $result['data']);
+                    $from += $limit;
+                } else {
+                    break;
+                }
             }
-
-            return $tickets;
+        } else {
+            $result = $this->searchService->search($email, 'contacts');
+            if ($result) {
+                $contactId = $result['data'][0]['id'];
+                while (true) {
+                    $result = $this->zohoApiService->get('contacts/'.$contactId.'/tickets', $organisationId, [
+                            'include' => 'assignee,departments,team,isRead',
+                            'from' => $from,
+                            'limit' => $limit,
+                            'sortBy' => '-createdTime',
+                        ]);
+                    if (isset($result['data']) && \count($result['data'])) {
+                        $totalResult = array_merge($totalResult, $result['data']);
+                        $from += $limit;
+                    } else {
+                        break;
+                    }
+                }
+            } else {
+                $result = [];
+            }
         }
 
-        return [];
+        return $this->copyTickets($totalResult);
     }
 
     public function getTicket(int $ticketId): array

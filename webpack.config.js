@@ -18,6 +18,7 @@ Encore
     .addEntry('password', './assets/js/password.js')
     .addEntry('dropzone', './assets/js/dropzone.js')
     .addEntry('add_ticket', './assets/js/add_ticket.js')
+    .addEntry('ticket_status', './assets/js/ticket_status.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
