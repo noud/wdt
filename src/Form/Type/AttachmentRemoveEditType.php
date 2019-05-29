@@ -5,7 +5,6 @@ namespace App\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AttachmentRemoveEditType extends AbstractType
 {
@@ -24,22 +23,10 @@ class AttachmentRemoveEditType extends AbstractType
     /**
      * {@inheritdoc}
      *
-     * @see \Symfony\Component\Form\AbstractType::configureOptions()
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'csrf_protection' => false,
-        ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
      * @see \Symfony\Component\Form\AbstractType::getBlockPrefix()
      */
     public function getBlockPrefix()
     {
-        return '';
+        return 'attachment_remove_edit';    // form name
     }
 }

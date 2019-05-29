@@ -3,6 +3,7 @@
 namespace App\Form\Handler;
 
 use App\Form\Data\PostAttachmentData;
+use App\Service\StringService;
 use App\Zoho\Service\Desk\TicketAttachmentService;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +36,9 @@ class PostAttachmentHandler
             /** @var PostAttachmentData $data */
             $data = $form->getData();
 
+            // prevent climbing the path
             $fileName = $data->filename;
+            $fileName = StringService::checkFilename($fileName);
             $binary = $data->file;
             $dirName = $this->ticketAttachmentPath.\DIRECTORY_SEPARATOR.$id.\DIRECTORY_SEPARATOR;
             if (!is_dir($dirName)) {
@@ -44,6 +47,7 @@ class PostAttachmentHandler
             $fullName = $dirName.$fileName;
             if (move_uploaded_file($binary, $fullName)) {
                 $this->ticketAttachmentService->createTicketAttachment($fullName, $id);
+
                 unlink($fullName);
                 rmdir($dirName);
 

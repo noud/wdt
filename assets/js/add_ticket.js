@@ -5,6 +5,7 @@ import Dropzone from 'dropzone';
 const endpoint = $("#uploader").data('endpoint');
 const uploadFormId = $("#uploader").data('upload-form-id');
 const attachmentRemove =  $("#attachment_remove").data('attachment_remove');
+const attachmentRemoveCsrf =  $("#attachment_remove").data('attachment_remove_csrf');
 
 Dropzone.autoDiscover = false;
 
@@ -55,7 +56,7 @@ myDropzone.on("removedfile", function (file) {
     $.ajax({
         type: 'POST',
         url: attachmentRemove,
-        data: {'removeAttachment[name]': name, 'removeAttachment[id]': id, 'removeAttachment[uploadFormId]': uploadFormId, 'removeAttachment[uniqueUploadId]': uniqueUploadId},
+        data: {'attachment_remove_new[name]': name, 'attachment_remove_new[id]': id, 'attachment_remove_new[uploadFormId]': uploadFormId, 'attachment_remove_new[uniqueUploadId]': uniqueUploadId, 'attachment_remove_new[_token]': attachmentRemoveCsrf},
         success: function (data) {
         	const currentValue = $('#ticket_add_attachments').val();
             let myarr = currentValue.split(", ");

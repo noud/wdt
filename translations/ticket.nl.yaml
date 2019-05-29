@@ -16,6 +16,8 @@ ticket:
       aantal_minuten_ingeschat: 'Aantal minuten ingeschat'
       aantal_uur_ingeschat: 'Aantal uur ingeschat'
     submit: 'Ticket registreren'
+    remove: 'verwijder'
+    attachments_delete_confirm: 'Weet u zeker dat u %ticketAttachmentName% wilt verwijderen?'
   placeholder:
     priority: '-Geen-'
     status: '-Alle-'

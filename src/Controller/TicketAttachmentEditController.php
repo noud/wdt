@@ -8,7 +8,9 @@ use App\Form\Handler\AttachmentRemoveEditHandler;
 use App\Form\Handler\PostAttachmentHandler;
 use App\Form\Type\AttachmentRemoveEditType;
 use App\Form\Type\PostAttachmentType;
+use App\Zoho\Service\Desk\AccountService;
 use App\Zoho\Service\Desk\TicketAttachmentService;
+use App\Zoho\Service\Desk\TicketService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,28 +26,43 @@ class TicketAttachmentEditController extends AbstractController
     private $ticketAttachmentService;
 
     /**
+     * @var AccountService
+     */
+    private $accountService;
+
+    /**
+     * @var TicketService
+     */
+    private $ticketService;
+
+    /**
      * @var TranslatorInterface
      */
     private $translator;
 
     public function __construct(
         TicketAttachmentService $ticketAttachmentService,
+        AccountService $accountService,
+        TicketService $ticketService,
         TranslatorInterface $translator
     ) {
         $this->ticketAttachmentService = $ticketAttachmentService;
+        $this->accountService = $accountService;
+        $this->ticketService = $ticketService;
         $this->translator = $translator;
     }
 
     /**
-     * @Route("/ticket/attachment/post/{id}", methods={"POST"}, name="ticket_attachment_edit")
+     * @Route("/ticket/attachment/post/{ticketId}", methods={"POST"}, name="ticket_attachment_edit")
      */
     public function edit(
         Request $request,
         PostAttachmentHandler $formHandler,
-        int $id
+        int $ticketId
     ): Response {
+        $this->denyAccessUnlessGranted('TICKET', $ticketId);
         $form = $this->createForm(PostAttachmentType::class);
-        if ($formHandler->handleRequest($form, $request, $id)) {
+        if ($formHandler->handleRequest($form, $request, $ticketId)) {
             return new Response('', 201);
         }
 
@@ -62,13 +79,19 @@ class TicketAttachmentEditController extends AbstractController
      */
     public function remove(Request $request, int $ticketId, int $attachmentId): Response
     {
+        $params = [
+            'ticketId' => $ticketId,
+            'attachmentId' => $attachmentId,
+        ];
+        $this->denyAccessUnlessGranted('TICKET_ATTACHMENT', $params);
+
         $submittedToken = $request->request->get('token');
 
         if ($this->isCsrfTokenValid('ticket-attachment-delete', $submittedToken)) {
             $this->ticketAttachmentService->removeTicketAttachment($ticketId, $attachmentId);
         }
 
-        return $this->redirectToRoute('ticket_view', ['id' => $ticketId]);
+        return $this->redirectToRoute('ticket_view', ['ticketId' => $ticketId]);
     }
 
     /**
@@ -79,6 +102,7 @@ class TicketAttachmentEditController extends AbstractController
         AttachmentRemoveEditHandler $formHandler,
         int $ticketId
     ): Response {
+        $this->denyAccessUnlessGranted('TICKET', $ticketId);
         $data = new AttachmentRemoveEditData();
 
         $form = $this->createForm(AttachmentRemoveEditType::class, $data);
