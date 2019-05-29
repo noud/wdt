@@ -43,7 +43,7 @@ class SupportEmailAddressService
     public function getFirstSupportEmailAddress(): string
     {
         $departments = $this->departmentService->getAllDepartments();
-        $supportEmailAddresses = $this->getAllSupportEmailAddresses($departments['data'][0]['id']);
+        $supportEmailAddresses = $this->getAllSupportEmailAddresses($departments[0]['id']);
 
         return $supportEmailAddresses['data'][0]['address'];
     }

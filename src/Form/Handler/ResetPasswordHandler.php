@@ -9,7 +9,6 @@ use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 class ResetPasswordHandler
@@ -49,7 +48,7 @@ class ResetPasswordHandler
     /**
      * @throws \Doctrine\ORM\ORMException
      */
-    public function handleRequest(FormInterface $form, Request $request, ResetPasswordRequest $resetPasswordRequest): ?Response
+    public function handleRequest(FormInterface $form, Request $request, ResetPasswordRequest $resetPasswordRequest): ?bool
     {
         $form->handleRequest($request);
 
@@ -64,13 +63,7 @@ class ResetPasswordHandler
             $newPassword = $data->getPlainPassword();
             $user = $this->userService->changePassword($resetPasswordRequest->getUsername(), $newPassword);
             if ($user) {
-                return $this->guardAuthenticatorHandler
-                    ->authenticateUserAndHandleSuccess(
-                        $user,
-                        $request,
-                        $this->authenticator,
-                        'main'
-                    );
+                return true;
             }
         }
 
