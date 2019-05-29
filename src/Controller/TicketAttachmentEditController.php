@@ -53,15 +53,16 @@ class TicketAttachmentEditController extends AbstractController
     }
 
     /**
-     * @Route("/ticket/attachment/post/{id}", methods={"POST"}, name="ticket_attachment_edit")
+     * @Route("/ticket/attachment/post/{ticketId}", methods={"POST"}, name="ticket_attachment_edit")
      */
     public function edit(
         Request $request,
         PostAttachmentHandler $formHandler,
-        int $id
+        int $ticketId
     ): Response {
+        $this->denyAccessUnlessGranted('TICKET', $ticketId);
         $form = $this->createForm(PostAttachmentType::class);
-        if ($formHandler->handleRequest($form, $request, $id)) {
+        if ($formHandler->handleRequest($form, $request, $ticketId)) {
             return new Response('', 201);
         }
 
@@ -78,18 +79,19 @@ class TicketAttachmentEditController extends AbstractController
      */
     public function remove(Request $request, int $ticketId, int $attachmentId): Response
     {
+        $params = [
+            'ticketId' => $ticketId,
+            'attachmentId' => $attachmentId,
+        ];
+        $this->denyAccessUnlessGranted('TICKET_ATTACHMENT', $params);
+
         $submittedToken = $request->request->get('token');
 
         if ($this->isCsrfTokenValid('ticket-attachment-delete', $submittedToken)) {
-            $params = [
-                'ticketId' => $ticketId,
-                'attachmentId' => $attachmentId,
-            ];
-            $this->denyAccessUnlessGranted('TICKET_ATTACHMENT', $params);
             $this->ticketAttachmentService->removeTicketAttachment($ticketId, $attachmentId);
         }
 
-        return $this->redirectToRoute('ticket_view', ['id' => $ticketId]);
+        return $this->redirectToRoute('ticket_view', ['ticketId' => $ticketId]);
     }
 
     /**

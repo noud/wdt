@@ -96,7 +96,7 @@ class ZohoApiService
             }
         }
 
-        if ($delete or '' === $result) {
+        if ($delete || '' === $result) {
             return [];
         }
 
