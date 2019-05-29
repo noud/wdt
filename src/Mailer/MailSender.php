@@ -113,6 +113,6 @@ class MailSender
 
         $message->addTo($email);
 
-        $this->mailerService->sendMessageAsUser($message, $from);
+        $this->mailerService->sendMessage($message, $from);
     }
 }

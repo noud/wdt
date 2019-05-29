@@ -42,7 +42,7 @@ class TicketReplyService
         $this->cacheService = $cacheService;
     }
 
-    public function addTicketReply(TicketCommentAddData $ticketCommentData, int $ticketId, string $from)
+    public function addTicketReply(TicketCommentAddData $ticketCommentData, int $ticketId, string $from): void
     {
         $cacheKey = sprintf('zoho_desk_ticket_threads_%s', md5((string) $ticketId));
         $this->cacheService->deleteCacheByKey($cacheKey);

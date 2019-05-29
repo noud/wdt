@@ -34,7 +34,6 @@ class PostAttachmentType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => PostAttachmentData::class,
-            'csrf_protection' => false,
         ]);
     }
 
@@ -45,6 +44,6 @@ class PostAttachmentType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return '';
+        return 'ticket_attachment_edit';
     }
 }

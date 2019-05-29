@@ -81,22 +81,22 @@ class TicketAttachmentService
         return $hit;
     }
 
-    public function createTicketAttachment(string $file, int $ticketId, string $fileName = null): array
+    public function createTicketAttachment(string $name, int $ticketId, string $postname = null): array
     {
         $cacheKey = sprintf('zoho_desk_ticket_attachments_%s', md5((string) $ticketId));
         $this->cacheService->deleteCacheByKey($cacheKey);
 
         $organisationId = $this->organizationService->getOrganizationId();
 
-        /** @var string $fileMime */
-        $fileMime = mime_content_type($file);
-        if (!$fileName) {
-            $fileName = basename($file);
+        /** @var string $mime */
+        $mime = mime_content_type($name);
+        if (!$postname) {
+            $postname = basename($name);
         }
 
         $data = [
             'isPublic' => 'true',
-            'file' => new \CURLFile($file, $fileMime, $fileName),
+            'file' => new \CURLFile($name, $mime, $postname),
         ];
 
         return $this->zohoApiService->post('tickets/'.$ticketId.'/attachments', $organisationId, [], $data);

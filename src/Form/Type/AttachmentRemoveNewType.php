@@ -34,7 +34,6 @@ class AttachmentRemoveNewType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => AttachmentRemoveNewData::class,
-            'csrf_protection' => false,
         ]);
     }
 
@@ -45,6 +44,6 @@ class AttachmentRemoveNewType extends AbstractType
      */
     public function getBlockPrefix(): ?string
     {
-        return 'removeAttachment';
+        return 'attachment_remove_new';
     }
 }

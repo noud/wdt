@@ -68,14 +68,11 @@ class MailerService
         return $this->mailer->send($mailMessage);
     }
 
-    public function sendMessage(Swift_Message $message): ?int
+    public function sendMessage(Swift_Message $message, string $email = null): ?int
     {
-        return $this->mailer->send($message);
-    }
-
-    public function sendMessageAsUser(Swift_Message $message, string $email): ?int
-    {
-        $message->setFrom($email);
+        if ($email) {
+            $message->setFrom($email);
+        }
 
         return $this->mailer->send($message);
     }

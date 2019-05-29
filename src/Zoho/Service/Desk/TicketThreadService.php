@@ -102,7 +102,7 @@ class TicketThreadService
         return $hit;
     }
 
-    public function addTicketThread(TicketCommentAddData $ticketThreadData, int $ticketId, string $email)
+    public function addTicketThread(TicketCommentAddData $ticketThreadData, int $ticketId, string $email): void
     {
         $ticketThread = new TicketThread();
         $ticketThread->setContent($ticketThreadData->content);
@@ -110,7 +110,7 @@ class TicketThreadService
         $this->createTicketThread($ticketThread, $ticketId, $email);
     }
 
-    public function createTicketThread(TicketThread $ticketThread, int $ticketId, string $email)
+    public function createTicketThread(TicketThread $ticketThread, int $ticketId, string $email): array
     {
         $to = $this->supportEmailAddressService->getFirstSupportEmailAddress();
 

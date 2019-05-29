@@ -57,6 +57,7 @@ class ZohoDeskController extends AbstractController
     private $pageService;
 
     public function __construct(
+        string $environment,
         OrganizationService $organizationService,
         DepartmentService $departmentService,
         SupportEmailAddressService $supportEmailAddressService,
@@ -66,6 +67,9 @@ class ZohoDeskController extends AbstractController
         TicketResolutionHistoryService $ticketResolutionHistoryService,
         PageService $pageService
     ) {
+        if ('dev' !== $environment) {
+            throw $this->createAccessDeniedException('GET OUT!');
+        }
         $this->organizationService = $organizationService;
         $this->departmentService = $departmentService;
         $this->supportEmailAddressService = $supportEmailAddressService;
@@ -109,7 +113,7 @@ class ZohoDeskController extends AbstractController
     }
 
     /**
-     * @Route("/desk/department/{departmentId}/supportEmailAddress", name="zoho_desk_department_ support_email_addresss")
+     * @Route("/desk/department/{departmentId}/supportEmailAddress", name="zoho_desk_department_support_email_address")
      */
     public function getDeskDepartmentSupportEmailAddresses(string $departmentId): Response
     {
@@ -121,7 +125,7 @@ class ZohoDeskController extends AbstractController
 
         return new Response(
             '<html><body>SupportEmailAddresses: <br />'.$mailsInfo.'</body></html>'
-            );
+        );
     }
 
     /**

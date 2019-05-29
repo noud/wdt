@@ -51,8 +51,6 @@ class TicketReplyAddHandler
             $email = $user->getEmail();
             // send with e-mail
             $this->ticketReplyService->addTicketReply($ticketReplyData, $ticketId, $email);
-            // use the API
-            //$this->ticketReplyService->addTicketThread($ticketReplyData, $ticketId, $email);
 
             return true;
         }

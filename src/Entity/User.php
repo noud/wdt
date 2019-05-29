@@ -47,8 +47,8 @@ class User implements UserInterface
     private $lastName;
 
     /**
-     * @var string
-     * @ORM\Column(type="string", nullable=true)
+     * @var ?string
+     * @ORM\Column(type="string", nullable=true, unique=true)
      */
     private $token;
 
@@ -207,12 +207,12 @@ class User implements UserInterface
         $this->lastName = $lastName;
     }
 
-    public function getToken(): string
+    public function getToken(): ?string
     {
         return $this->token;
     }
 
-    public function setToken(string $token): void
+    public function setToken(?string $token): void
     {
         $this->token = $token;
     }

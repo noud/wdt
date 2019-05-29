@@ -16,8 +16,12 @@ class ZohoCrmController extends AbstractController
     private $zohoCrmApiService;
 
     public function __construct(
+        string $environment,
         ZohoCrmApiService $zohoCrmService
     ) {
+        if ('dev' !== $environment) {
+            throw $this->createAccessDeniedException('GET OUT!');
+        }
         $this->zohoCrmApiService = $zohoCrmService;
     }
 

@@ -79,7 +79,6 @@ class TicketController extends AbstractController
         if ($status = $ticketStatusHandler->handleRequest($form, $request)) {
             $tickets = $this->ticketService->searchTickets($email, $status);
         } else {
-            //$tickets = $this->ticketService->getTickets($email);
             $tickets = $this->ticketService->searchTickets($email);
         }
 
@@ -91,17 +90,18 @@ class TicketController extends AbstractController
     }
 
     /**
-     * @Route("/ticket/view/{id}", name="ticket_view")
+     * @Route("/ticket/view/{ticketId}", name="ticket_view")
      *
      * @throws \Doctrine\ORM\ORMException
      */
-    public function view(int $id): Response
+    public function view(int $ticketId): Response
     {
-        $ticket = $this->ticketService->getTicket($id);
-        $resolutionHistory = $this->ticketResolutionHistoryService->getAllTicketResolutionHistory($id);
-        $ticketComments = $this->ticketCommentService->getAllPublicTicketComments($id);
-        $ticketThreads = $this->ticketThreadService->getAllPublicTicketThreads($id);
-        $ticketAttachments = $this->ticketAttachmentService->getAllPublicTicketAttachments($id);
+        $this->denyAccessUnlessGranted('TICKET', $ticketId);
+        $ticket = $this->ticketService->getTicket($ticketId);
+        $resolutionHistory = $this->ticketResolutionHistoryService->getAllTicketResolutionHistory($ticketId);
+        $ticketComments = $this->ticketCommentService->getAllPublicTicketComments($ticketId);
+        $ticketAttachments = $this->ticketAttachmentService->getAllPublicTicketAttachments($ticketId);
+        $ticketThreads = $this->ticketThreadService->getAllPublicTicketThreads($ticketId);
 
         return $this->render('ticket/view.html.twig', [
             'ticket' => $ticket,

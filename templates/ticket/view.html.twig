@@ -69,11 +69,11 @@
                                                         <li>
                                                         <div class="row">
                                                             <div class="col-sm-6">
-                                                                <strong><a href="{{ ticketAttachment.href }}?portalname=webdesigntilburg&inline=true" target="_blank">{{ ticketAttachment.name }}</a></strong> 
-                                                                <form action="{{ path('ticket_attachment_edit_remove', {ticketId: ticket.id, attachmentId: ticketAttachment.id }) }}" onsubmit="return window.confirm('Weet u zeker dat u {{ ticketAttachment.name|e('html_attr') }} wilt verwijderen?');" method="post">
+                                                                <strong><a href="{{ ticketAttachment.href }}?portalname=webdesigntilburg&inline=true" target="_blank">{{ ticketAttachment.name }}</a></strong>
+                                                                <form action="{{ path('ticket_attachment_edit_remove', {ticketId: ticket.id, attachmentId: ticketAttachment.id }) }}" class="attachment-remove" method="post" data-message="{{ 'ticket.field.attachments_delete_confirm'|trans({'%ticketAttachmentName%': ticketAttachment.name}) }}">
                                                                     <input type="hidden" name="_method" value="DELETE" />
                                                                     <input type="hidden" name="token" value="{{ csrf_token('ticket-attachment-delete') }}" />
-                                                                    <button type="submit" class="delete-link" class="btn btn-sm btn-primary btn-icon rounded-pill">verwijder</button>
+                                                                    <button type="submit" class="delete-link" class="btn btn-sm btn-primary btn-icon rounded-pill">{{ 'ticket.field.remove'|trans }}</button>
                                                                 </form>
                                                              </div>
                                                          </div>
@@ -152,9 +152,10 @@
             </div>
         </section>
     </div>
-    <div id="urls" data-attachment-post="{{path('ticket_attachment_edit', {'id':ticket.id}) }}" data-attachment-remove="{{path('attachment_edit_new_remove', {'ticketId':ticket.id}) }}" />
+    <div id="urls" data-attachment-post="{{path('ticket_attachment_edit', {'ticketId':ticket.id}) }}" data-attachment-post-csrf="{{ csrf_token('ticket_attachment_edit') }}" data-attachment-remove="{{path('attachment_edit_new_remove', {'ticketId':ticket.id}) }}" data-attachment-remove-csrf="{{ csrf_token('attachment_remove_edit') }}" />
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('dropzone') }}
+{#     {{ encore_entry_script_tags('delete_confirm') }}#}
 {% endblock %}
