@@ -101,6 +101,7 @@ class TicketController extends AbstractController
         $resolutionHistory = $this->ticketResolutionHistoryService->getAllTicketResolutionHistory($ticketId);
         $ticketComments = $this->ticketCommentService->getAllPublicTicketComments($ticketId);
         $ticketAttachments = $this->ticketAttachmentService->getAllPublicTicketAttachments($ticketId);
+        $ticketThreads = $this->ticketThreadService->getAllPublicTicketThreads($ticketId);
 
         return $this->render('ticket/view.html.twig', [
             'ticket' => $ticket,

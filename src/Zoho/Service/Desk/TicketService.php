@@ -5,6 +5,8 @@ namespace App\Zoho\Service\Desk;
 use App\Form\Data\Desk\TicketAddData;
 use App\Zoho\Api\ZohoApiService;
 use App\Zoho\Entity\Desk\Ticket;
+use App\Zoho\Enum\TicketStatusEnum;
+use App\Zoho\Service\CacheService;
 
 class TicketService
 {
@@ -33,49 +35,65 @@ class TicketService
      */
     private $searchService;
 
+    /**
+     * @var CacheService
+     */
+    private $cacheService;
+
     public function __construct(
         ZohoApiService $zohoDeskApiService,
         OrganizationService $organizationService,
         AccountService $accountService,
         DepartmentService $departmentService,
-        SearchService $searchService
+        SearchService $searchService,
+        CacheService $cacheService
     ) {
         $this->zohoApiService = $zohoDeskApiService;
         $this->organizationService = $organizationService;
         $this->accountService = $accountService;
         $this->departmentService = $departmentService;
         $this->searchService = $searchService;
+        $this->cacheService = $cacheService;
     }
 
     public function searchTickets(string $email, string $status = null): array
     {
-        $accountId = $this->accountService->getAccountIdByEmail($email);
-        $organisationId = $this->organizationService->getOrganizationId();
+        $cacheKey = sprintf('zoho_desk_tickets_%s', md5($email.$status));
+        $hit = $this->cacheService->getFromCache($cacheKey);
+        if (false === $hit) {
+            $accountId = $this->accountService->getAccountIdByEmail($email);
+            $organisationId = $this->organizationService->getOrganizationId();
 
-        $from = 0;
-        $limit = 100;
-        $totalResult = [];
+            $from = 0;
+            $limit = 100;
+            $totalResult = [];
 
-        while (true) {
-            $params = [
-                'from' => $from,
-                'limit' => $limit,
-                'accountId' => $accountId,
-                'sortBy' => '-createdTime',
-            ];
-            if ($status) {
-                $params['status'] = $status;
+            while (true) {
+                $params = [
+                    'from' => $from,
+                    'limit' => $limit,
+                    'accountId' => $accountId,
+                    'sortBy' => '-createdTime',
+                ];
+                if ($status) {
+                    $params['status'] = $status;
+                }
+                $result = $this->zohoApiService->get('tickets/search', $organisationId, $params);
+                if (isset($result['data']) && \count($result['data'])) {
+                    $totalResult = array_merge($totalResult, $result['data']);
+                    $from += $limit;
+                } else {
+                    break;
+                }
             }
-            $result = $this->zohoApiService->get('tickets/search', $organisationId, $params);
-            if (isset($result['data']) && \count($result['data'])) {
-                $totalResult = array_merge($totalResult, $result['data']);
-                $from += $limit;
-            } else {
-                break;
-            }
+
+            $tickets = $this->copyTickets($totalResult);
+            $this->cacheService->saveToCache($cacheKey, $tickets);
+
+            return $tickets;
         }
 
-        return $this->copyTickets($totalResult);
+        return $hit;
     }
 
     private function copyTickets(array $ticketsData): array
@@ -174,15 +192,30 @@ class TicketService
 
     public function getTicket(int $ticketId): array
     {
-        $organisationId = $this->organizationService->getOrganizationId();
+        $cacheKey = sprintf('zoho_desk_ticket_%s', md5((string) $ticketId));
+        $hit = $this->cacheService->getFromCache($cacheKey);
+        if (false === $hit) {
+            $organisationId = $this->organizationService->getOrganizationId();
 
-        return $this->zohoApiService->get('tickets/'.$ticketId, $organisationId, [
-            'include' => 'contacts,products,assignee,departments,team',
-        ]);
+            $ticket = $this->zohoApiService->get('tickets/'.$ticketId, $organisationId, [
+                'include' => 'contacts,products,assignee,departments,team',
+            ]);
+            $this->cacheService->saveToCache($cacheKey, $ticket);
+
+            return $ticket;
+        }
+
+        return $hit;
     }
 
-    public function addTicket(TicketAddData $ticketData): ?array
+    public function addTicket(TicketAddData $ticketData, string $email): ?array
     {
+        // delete the old tickets caches..
+        $cacheKey = sprintf('zoho_desk_tickets_%s', md5($email.TicketStatusEnum::OPEN));
+        $this->cacheService->deleteCacheByKey($cacheKey);
+        $cacheKey = sprintf('zoho_desk_tickets_%s', md5($email));
+        $this->cacheService->deleteCacheByKey($cacheKey);
+
         $ticket = new Ticket();
         $ticket->setDepartmentId($this->departmentService->getDepartmentId());
         /** @var string $contactId */

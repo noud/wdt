@@ -30,10 +30,11 @@ class TicketCreateController extends AbstractController
     public function createTicket(TicketAddHandler $ticketAddHandler, Request $request): Response
     {
         $user = $this->getUser();
+        $email = $user->getEmail();
         $data = new TicketAddData($user);
         $form = $this->createForm(TicketAddType::class, $data);
 
-        if ($ticketAddHandler->handleRequest($form, $request)) {
+        if ($ticketAddHandler->handleRequest($form, $request, $email)) {
             $this->addFlash('success', 'ticket.message.added');
 
             return $this->redirectToRoute('ticket_create_thanks');

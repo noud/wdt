@@ -3,6 +3,7 @@
 namespace App\Zoho\Service\Desk;
 
 use App\Zoho\Api\ZohoApiService;
+use App\Zoho\Service\CacheService;
 
 class AccountService
 {
@@ -16,12 +17,19 @@ class AccountService
      */
     private $organizationService;
 
+    /**
+     * @var CacheService
+     */
+    private $cacheService;
+
     public function __construct(
         ZohoApiService $zohoDeskApiService,
-        OrganizationService $organizationService
+        OrganizationService $organizationService,
+        CacheService $cacheService
     ) {
         $this->zohoApiService = $zohoDeskApiService;
         $this->organizationService = $organizationService;
+        $this->cacheService = $cacheService;
     }
 
     public function getAllAccounts(): array
@@ -50,18 +58,27 @@ class AccountService
 
     public function getAccountIdByEmail(string $email): ?string
     {
-        $accounts = $this->getAllAccounts();
+        $cacheKey = sprintf('zoho_desk_account_id_%s', md5($email));
+        $hit = $this->cacheService->getFromCache($cacheKey);
+        if (false === $hit) {
+            $accountId = null;
+            $accounts = $this->getAllAccounts();
 
-        foreach ($accounts as $account) {
-            $accountContacts = $this->getAllAccountContacts($account['id']);
-            foreach ($accountContacts as $contact) {
-                if (isset($contact['email']) && $contact['email'] === $email) {
-                    return $account['id'];
+            foreach ($accounts as $account) {
+                $accountContacts = $this->getAllAccountContacts($account['id']);
+                foreach ($accountContacts as $contact) {
+                    if (isset($contact['email']) && $contact['email'] === $email) {
+                        $accountId = $account['id'];
+                        break 2;
+                    }
                 }
             }
+            $this->cacheService->saveToCache($cacheKey, $accountId);
+
+            return $accountId;
         }
 
-        return null;
+        return $hit;
     }
 
     public function getAllAccountContacts(string $accountId): array

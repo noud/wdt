@@ -3,6 +3,7 @@
 namespace App\Zoho\Service\Desk;
 
 use App\Zoho\Api\ZohoApiService;
+use App\Zoho\Service\CacheService;
 
 class OrganizationService
 {
@@ -11,9 +12,17 @@ class OrganizationService
      */
     private $zohoApiService;
 
-    public function __construct(ZohoApiService $zohoDeskApiService)
-    {
+    /**
+     * @var CacheService
+     */
+    private $cacheService;
+
+    public function __construct(
+        ZohoApiService $zohoDeskApiService,
+        CacheService $cacheService
+    ) {
         $this->zohoApiService = $zohoDeskApiService;
+        $this->cacheService = $cacheService;
     }
 
     public function getAllOrganizations(): array
@@ -23,8 +32,17 @@ class OrganizationService
 
     public function getOrganizationId(): ?int
     {
-        $organizations = $this->getAllOrganizations();
+        $cacheKey = 'zoho_desk_organization_id';
+        $hit = $this->cacheService->getFromCache($cacheKey);
+        if (false === $hit) {
+            $organizations = $this->getAllOrganizations();
 
-        return isset($organizations['data'][0]) ? $organizations['data'][0]['id'] : null;
+            $organizationId = isset($organizations['data'][0]) ? $organizations['data'][0]['id'] : null;
+            $this->cacheService->saveToCache($cacheKey, $organizationId);
+
+            return $organizationId;
+        }
+
+        return $hit;
     }
 }
