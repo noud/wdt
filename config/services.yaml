@@ -23,6 +23,7 @@ parameters:
     zoho.desk.api.base_url: 'https://desk.zoho.eu/api/v1/'
     ticket_attachments_dir: '%kernel.project_dir%%env(TICKET_ATTACHMENTS_DIR)%'
     ticket_tmpupload_dir: '%kernel.project_dir%/userdata/tmp/uploads'
+    cache_ttl: "%env(CACHE_TTL)%"
 
 services:
     # default configuration for services in *this* file
@@ -85,15 +86,25 @@ services:
         arguments:
             - ''
             - '%zoho.books.api.base_url%'
+            - ''
+            - '%cache_ttl%'
             
     zoho.crm.api.service:
         class: App\Zoho\Api\ZohoApiService
         arguments:
             - ''
             - '%zoho.crm.api.base_url%'
+            - ''
+            - '%cache_ttl%'
             
     zoho.desk.api.service:
         class: App\Zoho\Api\ZohoApiService
         arguments:
             - ''
             - '%zoho.desk.api.base_url%'
+            - ''
+            - '%cache_ttl%'
+            
+    Symfony\Component\Cache\Simple\FilesystemCache:
+    
+    Psr\SimpleCache\CacheInterface: '@Symfony\Component\Cache\Simple\FilesystemCache'

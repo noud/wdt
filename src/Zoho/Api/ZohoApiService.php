@@ -2,7 +2,7 @@
 
 namespace App\Zoho\Api;
 
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Psr\SimpleCache\CacheInterface;
 
 class ZohoApiService
 {
@@ -17,7 +17,7 @@ class ZohoApiService
     private $apiBaseUrl;
 
     /**
-     * @var FilesystemAdapter
+     * @var CacheInterface
      */
     private $cache;
 
@@ -28,13 +28,14 @@ class ZohoApiService
 
     public function __construct(
         ZohoAccessTokenService $zohoAccessTokenService,
-        string $apiBaseUrl = '',
+        string $apiBaseUrl,
+        CacheInterface $cache,
         int $cacheTtl = 7200
     ) {
         $this->zohoAccessTokenService = $zohoAccessTokenService;
         $this->apiBaseUrl = $apiBaseUrl;
 
-        $this->cache = new FilesystemAdapter('', 0, null);
+        $this->cache = $cache;
         $this->ttl = $cacheTtl;
     }
 
@@ -158,9 +159,9 @@ class ZohoApiService
      */
     public function getFromCache(string $key)
     {
-        $item = $this->cache->getItem($key);
-        if ($item->isHit()) {
-            return unserialize($item->get());
+        $item = $this->cache->get($key);
+        if ($item) {
+            return unserialize($item);
         }
 
         return false;
@@ -168,15 +169,14 @@ class ZohoApiService
 
     public function saveToCache(string $key, $values): void
     {
-        $item = $this->cache->getItem($key);
-        if (!$item->isHit()) {
-            $item->set(serialize($values));
-            $this->cache->save($item);
+        $item = $this->cache->get($key);
+        if (!$item) {
+            $this->cache->set($key, serialize($values));
         }
     }
 
     public function deleteCacheByKey(string $key): void
     {
-        $this->cache->deleteItem($key);
+        $this->cache->delete($key);
     }
 }
