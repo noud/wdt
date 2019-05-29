@@ -10,12 +10,12 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class LockingService
 {
-    /*
+    /**
      * @var FailedLoginAttemptRepository
      */
     private $failedLoginAttemptRepository;
 
-    /*
+    /**
      * @var LockedIpAddressRepository
      */
     private $lockedIpAddressRepository;
