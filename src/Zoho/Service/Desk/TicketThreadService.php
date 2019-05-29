@@ -5,6 +5,7 @@ namespace App\Zoho\Service\Desk;
 use App\Form\Data\Desk\TicketCommentAddData;
 use App\Zoho\Api\ZohoApiService;
 use App\Zoho\Entity\Desk\TicketThread;
+use App\Zoho\Service\CacheService;
 
 class TicketThreadService
 {
@@ -28,16 +29,23 @@ class TicketThreadService
      */
     private $supportEmailAddressService;
 
+    /**
+     * @var CacheService
+     */
+    private $cacheService;
+
     public function __construct(
         ZohoApiService $zohoDeskApiService,
         OrganizationService $organizationService,
         DepartmentService $departmentService,
-        SupportEmailAddressService $supportEmailAddressService
+        SupportEmailAddressService $supportEmailAddressService,
+        CacheService $cacheService
     ) {
         $this->zohoApiService = $zohoDeskApiService;
         $this->organizationService = $organizationService;
         $this->departmentService = $departmentService;
         $this->supportEmailAddressService = $supportEmailAddressService;
+        $this->cacheService = $cacheService;
     }
 
     public function getAllTicketThreads(int $ticketId): array
@@ -68,7 +76,7 @@ class TicketThreadService
     public function getAllPublicTicketThreads(int $ticketId): array
     {
         $cacheKey = sprintf('zoho_desk_ticket_threads_%s', md5((string) $ticketId));
-        $hit = $this->zohoApiService->getFromCache($cacheKey);
+        $hit = $this->cacheService->getFromCache($cacheKey);
         if (false === $hit) {
             $ticketThreads = $this->getAllTicketThreads($ticketId);
             $publicTicketThreads = array_filter($ticketThreads['data'], function ($comment) {
@@ -86,7 +94,7 @@ class TicketThreadService
                 ];
             }
 
-            $this->zohoApiService->saveToCache($cacheKey, $ticketThreads);
+            $this->cacheService->saveToCache($cacheKey, $ticketThreads);
 
             return $ticketThreads;
         }

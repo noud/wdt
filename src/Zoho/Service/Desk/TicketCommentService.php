@@ -5,6 +5,7 @@ namespace App\Zoho\Service\Desk;
 use App\Form\Data\Desk\TicketCommentAddData;
 use App\Zoho\Api\ZohoApiService;
 use App\Zoho\Entity\Desk\TicketComment;
+use App\Zoho\Service\CacheService;
 
 class TicketCommentService
 {
@@ -18,12 +19,19 @@ class TicketCommentService
      */
     private $organizationService;
 
+    /**
+     * @var CacheService
+     */
+    private $cacheService;
+
     public function __construct(
         ZohoApiService $zohoDeskApiService,
-        OrganizationService $organizationService
+        OrganizationService $organizationService,
+        CacheService $cacheService
     ) {
         $this->zohoApiService = $zohoDeskApiService;
         $this->organizationService = $organizationService;
+        $this->cacheService = $cacheService;
     }
 
     public function getAllTicketComments(int $ticketId): array
@@ -54,14 +62,14 @@ class TicketCommentService
     public function getAllPublicTicketComments(int $ticketId): array
     {
         $cacheKey = sprintf('zoho_desk_ticket_comments_%s', md5((string) $ticketId));
-        $hit = $this->zohoApiService->getFromCache($cacheKey);
+        $hit = $this->cacheService->getFromCache($cacheKey);
         if (false === $hit) {
             $ticketComments = $this->getAllTicketComments($ticketId);
             $publicTicketComments = array_filter($ticketComments, function ($comment) {
                 return $comment['isPublic'];
             });
 
-            $this->zohoApiService->saveToCache($cacheKey, $publicTicketComments);
+            $this->cacheService->saveToCache($cacheKey, $publicTicketComments);
 
             return $publicTicketComments;
         }
@@ -80,7 +88,7 @@ class TicketCommentService
     public function createTicketComment(TicketComment $ticketComment, int $ticketId)
     {
         $cacheKey = sprintf('zoho_desk_ticket_comments_%s', md5((string) $ticketId));
-        $this->zohoApiService->deleteCacheByKey($cacheKey);
+        $this->cacheService->deleteCacheByKey($cacheKey);
 
         $data = [
             'isPublic' => 'true',

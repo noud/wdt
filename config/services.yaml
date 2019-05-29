@@ -86,22 +86,20 @@ services:
         arguments:
             - ''
             - '%zoho.books.api.base_url%'
-            - ''
-            - '%cache_ttl%'
             
     zoho.crm.api.service:
         class: App\Zoho\Api\ZohoApiService
         arguments:
             - ''
             - '%zoho.crm.api.base_url%'
-            - ''
-            - '%cache_ttl%'
             
     zoho.desk.api.service:
         class: App\Zoho\Api\ZohoApiService
         arguments:
             - ''
             - '%zoho.desk.api.base_url%'
+            
+    App\Zoho\Service\CacheService:
             - ''
             - '%cache_ttl%'
             

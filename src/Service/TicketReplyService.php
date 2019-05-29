@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\Form\Data\Desk\TicketCommentAddData;
 use App\Mailer\MailSender;
-use App\Zoho\Api\ZohoApiService;
+use App\Zoho\Service\CacheService;
 use App\Zoho\Service\Desk\SupportEmailAddressService;
 use App\Zoho\Service\Desk\TicketService;
 
@@ -26,26 +26,26 @@ class TicketReplyService
     private $supportEmailAddressService;
 
     /**
-     * @var ZohoApiService
+     * @var CacheService
      */
-    private $zohoApiService;
+    private $cacheService;
 
     public function __construct(
         TicketService $ticketService,
         MailSender $mailSender,
         SupportEmailAddressService $supportEmailAddressService,
-        ZohoApiService $zohoApiService
+        CacheService $cacheService
     ) {
         $this->ticketService = $ticketService;
         $this->mailSender = $mailSender;
         $this->supportEmailAddressService = $supportEmailAddressService;
-        $this->zohoApiService = $zohoApiService;
+        $this->cacheService = $cacheService;
     }
 
     public function addTicketReply(TicketCommentAddData $ticketCommentData, int $ticketId, string $from)
     {
         $cacheKey = sprintf('zoho_desk_ticket_threads_%s', md5((string) $ticketId));
-        $this->zohoApiService->deleteCacheByKey($cacheKey);
+        $this->cacheService->deleteCacheByKey($cacheKey);
 
         $to = $this->supportEmailAddressService->getFirstSupportEmailAddress();
 

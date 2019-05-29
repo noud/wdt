@@ -3,6 +3,7 @@
 namespace App\Zoho\Service\Desk;
 
 use App\Zoho\Api\ZohoApiService;
+use App\Zoho\Service\CacheService;
 
 class TicketResolutionHistoryService
 {
@@ -17,20 +18,27 @@ class TicketResolutionHistoryService
     private $organizationService;
 
     /**
+     * @var CacheService
+     */
+    private $cacheService;
+
+    /**
      * DepartmentService constructor.
      */
     public function __construct(
         ZohoApiService $zohoDeskApiService,
-        OrganizationService $organizationService
+        OrganizationService $organizationService,
+        CacheService $cacheService
     ) {
         $this->zohoApiService = $zohoDeskApiService;
         $this->organizationService = $organizationService;
+        $this->cacheService = $cacheService;
     }
 
     public function getAllTicketResolutionHistory(int $ticketId)
     {
         $cacheKey = sprintf('zoho_desk_ticket_resolution_history_%s', md5((string) $ticketId));
-        $hit = $this->zohoApiService->getFromCache($cacheKey);
+        $hit = $this->cacheService->getFromCache($cacheKey);
         if (false === $hit) {
             $organisationId = $this->organizationService->getOrganizationId();
 
@@ -51,7 +59,7 @@ class TicketResolutionHistoryService
                 }
             }
 
-            $this->zohoApiService->saveToCache($cacheKey, $totalResult);
+            $this->cacheService->saveToCache($cacheKey, $totalResult);
 
             return $totalResult;
         }

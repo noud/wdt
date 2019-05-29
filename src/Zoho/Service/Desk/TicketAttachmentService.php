@@ -3,6 +3,7 @@
 namespace App\Zoho\Service\Desk;
 
 use App\Zoho\Api\ZohoApiService;
+use App\Zoho\Service\CacheService;
 
 class TicketAttachmentService
 {
@@ -17,14 +18,21 @@ class TicketAttachmentService
     private $organizationService;
 
     /**
+     * @var CacheService
+     */
+    private $cacheService;
+
+    /**
      * DepartmentService constructor.
      */
     public function __construct(
         ZohoApiService $zohoDeskApiService,
-        OrganizationService $organizationService
+        OrganizationService $organizationService,
+        CacheService $cacheService
     ) {
         $this->zohoApiService = $zohoDeskApiService;
         $this->organizationService = $organizationService;
+        $this->cacheService = $cacheService;
     }
 
     public function getAllTicketAttachments(int $ticketId): array
@@ -55,7 +63,7 @@ class TicketAttachmentService
     public function getAllPublicTicketAttachments(int $ticketId): array
     {
         $cacheKey = sprintf('zoho_desk_ticket_attachments_%s', md5((string) $ticketId));
-        $hit = $this->zohoApiService->getFromCache($cacheKey);
+        $hit = $this->cacheService->getFromCache($cacheKey);
         if (false === $hit) {
             $ticketAttachments = $this->getAllTicketAttachments($ticketId);
             if (!$ticketAttachments) {
@@ -65,7 +73,7 @@ class TicketAttachmentService
                 return $var['isPublic'];
             });
 
-            $this->zohoApiService->saveToCache($cacheKey, $publicTicketAttachments);
+            $this->cacheService->saveToCache($cacheKey, $publicTicketAttachments);
 
             return $publicTicketAttachments;
         }
@@ -76,7 +84,7 @@ class TicketAttachmentService
     public function createTicketAttachment(string $file, int $ticketId, string $fileName = null): array
     {
         $cacheKey = sprintf('zoho_desk_ticket_attachments_%s', md5((string) $ticketId));
-        $this->zohoApiService->deleteCacheByKey($cacheKey);
+        $this->cacheService->deleteCacheByKey($cacheKey);
 
         $organisationId = $this->organizationService->getOrganizationId();
 
@@ -97,7 +105,7 @@ class TicketAttachmentService
     public function removeTicketAttachment(int $ticketId, int $attachmentId): array
     {
         $cacheKey = sprintf('zoho_desk_ticket_attachments_%s', md5((string) $ticketId));
-        $this->zohoApiService->deleteCacheByKey($cacheKey);
+        $this->cacheService->deleteCacheByKey($cacheKey);
 
         $organisationId = $this->organizationService->getOrganizationId();
 

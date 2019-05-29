@@ -2,8 +2,6 @@
 
 namespace App\Zoho\Api;
 
-use Psr\SimpleCache\CacheInterface;
-
 class ZohoApiService
 {
     /**
@@ -16,27 +14,12 @@ class ZohoApiService
      */
     private $apiBaseUrl = '';
 
-    /**
-     * @var FilesystemCache
-     */
-    private $cache;
-
-    /**
-     * @var int
-     */
-    private $ttl;
-
     public function __construct(
         ZohoAccessTokenService $zohoAccessTokenService,
-        string $apiBaseUrl = '',
-        CacheInterface $cache,
-        int $cacheTtl = 0
+        string $apiBaseUrl
     ) {
         $this->zohoAccessTokenService = $zohoAccessTokenService;
         $this->apiBaseUrl = $apiBaseUrl;
-
-        $this->cache = $cache;
-        $this->ttl = $cacheTtl;
     }
 
     public function init(): void
@@ -152,31 +135,5 @@ class ZohoApiService
         }
 
         return $result;
-    }
-
-    /**
-     * @return mixed|bool
-     */
-    public function getFromCache(string $key)
-    {
-        $item = $this->cache->get($key);
-        if ($item) {
-            return unserialize($item);
-        }
-
-        return false;
-    }
-
-    public function saveToCache(string $key, $values): void
-    {
-        $item = $this->cache->get($key);
-        if (!$item) {
-            $this->cache->set($key, serialize($values));
-        }
-    }
-
-    public function deleteCacheByKey(string $key): void
-    {
-        $this->cache->delete($key);
     }
 }
